@@ -4,4 +4,6 @@
 **/Library/metadata/*
 QuestIt/.DS_Store
 *.sln
+**Temp/*
 *.sln
+*.cache

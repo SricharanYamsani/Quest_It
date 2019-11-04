@@ -29,4 +29,9 @@ public class CameraManagement : MonoBehaviour
             transform.localPosition = new Vector3 ( lookat.transform.position.x , lookat.transform.position.y + height , lookat.transform.position.z - distance );
         }
     }
+
+    void PanCamera()
+    {
+
+    }
 }
