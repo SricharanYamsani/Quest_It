@@ -64,9 +64,9 @@ public class LeftJoystickPlayerController : MonoBehaviour
 
             // rotate the player to face the direction of input
             Vector3 temp = transform.position;
-            temp.x += xMovementLeftJoystick;
+            temp.x += -1 * xMovementLeftJoystick;
             temp.z += zMovementLeftJoystick;
-            Vector3 lookDirection = -1 * ( temp - transform.position );
+            Vector3 lookDirection = ( temp - transform.position );
             if (lookDirection != Vector3.zero)
             {
                 rotationTarget.localRotation = Quaternion.Slerp(rotationTarget.localRotation, Quaternion.LookRotation(lookDirection), rotationSpeed * Time.deltaTime);
