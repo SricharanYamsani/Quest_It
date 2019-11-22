@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraManagement : MonoBehaviour
 {
     [SerializeField]
-    Vector2 positionOffset;
+    Vector2 positionOffset = new Vector2(5, 10);
     
     public GameObject lookat;
 
