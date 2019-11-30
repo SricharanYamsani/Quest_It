@@ -1,32 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
-public class BattleManager : MonoBehaviour
+public class BattleManager : Singleton<BattleManager>
 {
-    private BattleManager instance;
-
-    public BattleManager Instance
-    {
-        get
-        {
-            if ( instance == null )
-            {
-                instance = FindObjectOfType<BattleManager> ( );
-
-                if ( instance == null )
-                {
-                    GameObject nObject = new GameObject ( );
-
-                    nObject.name = "BattleManager";
-
-                    instance = nObject.AddComponent<BattleManager> ( );
-                }
-            }
-            return instance;
-        }
-    }
-
     // VARIABLE SECTION
 
     [Header ( "-BATTLE STATE-" )]
@@ -38,9 +16,21 @@ public class BattleManager : MonoBehaviour
     [Header ( "INTEGERS" )]
     public int mTimer = 0;
 
-    private void Awake ( )
-    {
+    [Header ( "BATTLE PLAYER CURRENT LIST" )]
+    public List<BattlePlayer> validPlayers = new List<BattlePlayer> ( );
 
+    private void Start ( )
+    {
+        CalculatePlayersOnField ( );
+
+        GetValidPlayers ( );
+    }
+
+    public void CalculatePlayersOnField ( )
+    {
+        BattlePlayer [ ] temp = FindObjectsOfType<BattlePlayer> ( );
+
+        validPlayers = temp.ToList ( );
     }
     public void SwitchPlayState (BattleStates mState)
     {
@@ -69,6 +59,8 @@ public class BattleManager : MonoBehaviour
             //If not, play
             //else
             //end
+            StartCoroutine ( BattleAttackChoice ( ) );
+
             break;
 
             case BattleStates.OUTCOME:
@@ -79,11 +71,11 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private IEnumerator StartProcess()
+    private IEnumerator StartProcess ( )
     {
         mTimer = MTime;
 
-        while(mTimer>0)
+        while ( mTimer > 0 )
         {
             yield return new WaitForSeconds ( 1f );
             mTimer--;
@@ -91,6 +83,87 @@ public class BattleManager : MonoBehaviour
         yield return null;
 
         SwitchPlayState ( BattleStates.BATTLE );
+    }
+
+    public void GetValidPlayers ( )
+    {
+        List<BattlePlayer> playerList = new List<BattlePlayer> ( );
+
+        int maxSpeed = 0;
+
+        foreach ( BattlePlayer player in validPlayers )
+        {
+            if ( player.attributes.curHealth <= 0 )
+            {
+                if ( player.attributes.curAgility >= maxSpeed )
+                {
+                    maxSpeed = player.attributes.curAgility;
+                }
+
+                playerList.Add ( player );
+
+                player.gameObject.SetActive ( false );
+            }
+        }
+
+        foreach ( BattlePlayer m in playerList )
+        {
+            validPlayers.Remove ( m );
+        }
+        if ( validPlayers.Count > 1 )
+        {
+            for ( int i = 0 ; i < validPlayers.Count - 1 ; i++ )
+            {
+                for ( int j = 0 ; j < validPlayers.Count - i - 1 ; j++ )
+                {
+                    if ( validPlayers [ j ].attributes.curAgility < validPlayers [ j + 1 ].attributes.curAgility )
+                    {
+                        BattlePlayer temp = validPlayers [ j ];
+
+                        validPlayers [ j ] = validPlayers [ j + 1 ];
+
+                        validPlayers [ j + 1 ] = temp;
+                    }
+                }
+            }
+        }
+        playerList.Clear ( );
+    }
+
+    IEnumerator BattleAttackChoice ( )
+    {
+        foreach ( BattlePlayer player in validPlayers )
+        {
+            if ( player.attributes.curHealth > 0 )
+            {
+                player.currentChoice.mWork ( );
+
+                yield return new WaitForSeconds ( player.currentChoice.endTime );
+            }
+            else
+            {
+                /// Not a Valid entity and needs to be skipped.
+            }
+        }
+
+        int index = 0;
+
+        foreach ( BattlePlayer player in validPlayers )
+        {
+            if ( player.attributes.curHealth > 0 )
+            {
+                index++;
+            }
+        }
+
+        if ( index > 1 )
+        {
+            SwitchPlayState ( BattleStates.CHOICE );
+        }
+        else
+        {
+
+        }
     }
 }
 
