@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Singleton<T> : MonoBehaviour where T:Component
+public abstract class Singleton<T> : MonoBehaviour where T : Component
 {
-    private T instance;
+    private static T instance;
 
-    public T Instance
+    public static T Instance
     {
         get
         {
-            if(instance == null)
+            if ( instance == null )
             {
                 instance = FindObjectOfType<T> ( );
 
-                if(instance == null)
+                if ( instance == null )
                 {
                     GameObject temp = new GameObject ( );
 
@@ -32,16 +32,16 @@ public abstract class Singleton<T> : MonoBehaviour where T:Component
 
     private void Awake ( )
     {
-        if(instance == null)
+        if ( instance == null )
         {
             instance = GetComponent<T> ( );
 
-            if(isDontDestroyOnLoad)
+            if ( isDontDestroyOnLoad )
             {
                 DontDestroyOnLoad ( this.gameObject );
             }
         }
-        else if(instance != this)
+        else if ( instance != this )
         {
             Destroy ( this.gameObject );
         }
