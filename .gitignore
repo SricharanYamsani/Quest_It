@@ -15,7 +15,8 @@ QuestIt/Temp/__Backupscenes/0.backup
 QuestIt/Temp/__Backupscenes/0.backup
 *.backup
 *.backup
-QuestIt/Temp/__Backupscenes/0.backup
+QuestIt/Temp/*
+QuestIt\Temp\*
 QuestIt/Temp/UnityTempFile-005c3fc835c6b5e4f9b04036981c373f
 QuestIt/Temp/UnityTempFile-02d8155f07d21554ba6a5f993406dee1
 QuestIt/Temp/UnityTempFile-07079bdb83d82ee41b4b435614fe3005
@@ -106,3 +107,10 @@ QuestIt/Temp/UnityTempFile-f547344e0262e2f40a828bfc63e19859
 QuestIt/Temp/UnityTempFile-faf88f5f77aabc34f897d9ca7ff386f0
 QuestIt/Temp/UnityTempFile-fec82d2d1cd893e4a800cf4da4df5db6
 QuestIt/Temp/UnityTempFile-ff7def4f718680e4bb087911cdd1d7bf
+QuestIt/Temp/UnityTempFile-005c3fc835c6b5e4f9b04036981c373f
+QuestIt/Temp/UnityTempFile-02d8155f07d21554ba6a5f993406dee1
+QuestIt/Temp/UnityTempFile-07079bdb83d82ee41b4b435614fe3005
+QuestIt/Temp/UnityTempFile-073aa60552d753048a37b2bb61a27b4b
+QuestIt/Temp/UnityTempFile-085c24aedf5e63b42bbca16906039863
+QuestIt/Temp/UnityTempFile-0d4120a1439514149bdb204cb78d41ee
+QuestIt/Temp/UnityTempFile-17ef61707e565ca4db7351e73c9de2fc
