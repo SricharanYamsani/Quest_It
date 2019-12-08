@@ -2,26 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using DG.Tweening;
 
-public class BattleUIManager : MonoBehaviour
+public class BattleUIManager : Singleton<BattleUIManager>
 {
+    public GameObject choiceUI;
+
     public RectTransform slider = null;
 
     public RectTransform sliderPanel = null;
 
+    public TextMeshProUGUI mText;
+
     bool isSliderOn = false;
 
-    private void Awake ( )
+    public BattlePlayer ourPlayer;
+
+    public GameObject gameOverScreen;
+
+    protected override void  Awake ( )
     {
+        base.Awake ( );
+
+        gameOverScreen.SetActive ( false );
+
+        BattleManager.Instance.GameInit += SetPlayer;
+
+        BattleManager.Instance.GameOver += GameOverScreen;
+        
         if ( !isSliderOn )
         {
             slider.sizeDelta = new Vector2 ( 0 , 250 );
 
-            sliderPanel.gameObject.SetActive ( false );
-
             slider.gameObject.SetActive ( false );
         }
+    }
+    private void SetPlayer()
+    {
+        ourPlayer = BattleManager.Instance.currentPlayers [ 0 ];
     }
 
     public void ToggleSlider()
@@ -30,18 +49,28 @@ public class BattleUIManager : MonoBehaviour
         {
             slider.gameObject.SetActive ( true );
 
-            slider.DOSizeDelta ( new Vector2 ( 1500 , 250 ) , 0.35f ).OnKill ( ( ) => { sliderPanel.gameObject.SetActive ( true ); slider.sizeDelta = new Vector2 ( 1500 , 250 ); } );
+            slider.DOSizeDelta ( new Vector2 ( 1500 , 250 ) , 0.35f ).OnKill ( ( ) => { slider.sizeDelta = new Vector2 ( 1500 , 250 ); } );
 
             isSliderOn = true;
         }
         else
         {
-            sliderPanel.gameObject.SetActive ( false );
-
             // Temp OnKill
             slider.DOSizeDelta ( new Vector2 ( 0 , 250 ) , 0.35f ).OnKill ( ( ) => { slider.sizeDelta = new Vector2 ( 0 , 250 ); slider.gameObject.SetActive ( false ); } );
 
             isSliderOn = false;
         }
+    }
+
+    private void FixedUpdate ( )
+    {
+        mText.text = BattleManager.Instance.mTimer.ToString ( "00" );
+    }
+
+    private void GameOverScreen()
+    {
+        choiceUI.gameObject.SetActive ( true );
+
+        gameOverScreen.SetActive ( true );
     }
 }

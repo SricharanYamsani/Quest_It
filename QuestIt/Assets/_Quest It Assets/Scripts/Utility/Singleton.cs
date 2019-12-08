@@ -30,7 +30,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
 
     public bool isDontDestroyOnLoad = false;
 
-    private void Awake ( )
+    protected virtual void Awake ( )
     {
         if ( instance == null )
         {

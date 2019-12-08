@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
+using UnityEngine.Events;
 
 public class BattleManager : Singleton<BattleManager>
 {
@@ -16,14 +18,29 @@ public class BattleManager : Singleton<BattleManager>
     [Header ( "INTEGERS" )]
     public int mTimer = 0;
 
+    public int validPlayersCount = 0;
+
     [Header ( "BATTLE PLAYER CURRENT LIST" )]
     public List<BattlePlayer> validPlayers = new List<BattlePlayer> ( );
+
+    [Header ( "ENEMIES" )]
+    public List<BattlePlayer> currentEnemies = new List<BattlePlayer> ( );
+
+    public List<BattlePlayer> currentPlayers = new List<BattlePlayer> ( );
+
+    public event Action GameInit;
+
+    public event Action GameOver;
 
     private void Start ( )
     {
         CalculatePlayersOnField ( );
 
         GetValidPlayers ( );
+
+        SwitchPlayState ( BattleStates.CHOICE );
+
+        GameInit?.Invoke ( );
     }
 
     public void CalculatePlayersOnField ( )
@@ -31,6 +48,18 @@ public class BattleManager : Singleton<BattleManager>
         BattlePlayer [ ] temp = FindObjectsOfType<BattlePlayer> ( );
 
         validPlayers = temp.ToList ( );
+
+        foreach(BattlePlayer mEnemies in validPlayers)
+        {
+            if(!mEnemies.isPlayer)
+            {
+                currentEnemies.Add ( mEnemies );
+            }
+            else
+            {
+                currentPlayers.Add ( mEnemies );
+            }
+        }
     }
     public void SwitchPlayState (BattleStates mState)
     {
@@ -66,6 +95,7 @@ public class BattleManager : Singleton<BattleManager>
             case BattleStates.OUTCOME:
 
             // Show the Outcome
+            GameOver?.Invoke ( );
             // End the Lobby
             break;
         }
@@ -75,12 +105,17 @@ public class BattleManager : Singleton<BattleManager>
     {
         mTimer = MTime;
 
+        BattleUIManager.Instance.choiceUI.SetActive ( true );
+
         while ( mTimer > 0 )
         {
             yield return new WaitForSeconds ( 1f );
+
             mTimer--;
         }
         yield return null;
+
+        BattleUIManager.Instance.choiceUI.SetActive ( false );
 
         SwitchPlayState ( BattleStates.BATTLE );
     }
@@ -136,8 +171,8 @@ public class BattleManager : Singleton<BattleManager>
         {
             if ( player.attributes.curHealth > 0 )
             {
-                player.currentChoice.mWork ( );
-
+                player.CommitChoice ( );
+               
                 yield return new WaitForSeconds ( player.currentChoice.endTime );
             }
             else
@@ -162,11 +197,27 @@ public class BattleManager : Singleton<BattleManager>
         }
         else
         {
-
+            SwitchPlayState ( BattleStates.OUTCOME );
         }
     }
-}
 
+    private void CommunicateChoice (BattlePlayer mPlayer , BattleChoice mChoice)
+    {
+        switch ( mChoice.AttackStyle )
+        {
+            case ChoiceStyle.ATTACK:
+            mPlayer.target.Health ( -mChoice.healthChange );
+            break;
+
+            case ChoiceStyle.DEFEND:
+            mPlayer.Health ( mChoice.healthChange );
+            break;
+        }
+
+        Debug.Log ( ":: CALLED" );
+
+    }
+}
 public enum BattleStates
 {
     NONE,
