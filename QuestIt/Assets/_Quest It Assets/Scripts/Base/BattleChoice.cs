@@ -2,25 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BattleChoice : ScriptableObject
+public abstract class  BattleChoice : ScriptableObject
 {
     public ChoiceStyle AttackStyle = ChoiceStyle.NONE;
 
-    public float endTime = 5f;
+    public AttackRange AttackValue = AttackRange.ONEENEMY;
+
+    public MoveDuration MoveTurnsType;
 
     public int healthChange;
 
-    public string mAnimationClip;
+    public AnimationType mAnimationClip;
 
-    public AttackRange AttackValue = AttackRange.ONEENEMY;
+    public float endTime = 5f;
 
     public string moveName;
 
-    public abstract void mWork (BattlePlayer mPlayer);
+    public int amount;
+
+    public abstract void MoveWork ( );
 }
 public enum ChoiceStyle
 {
     NONE,
     ATTACK,
-    DEFEND
+    DEFEND,
+    HEAL
 }

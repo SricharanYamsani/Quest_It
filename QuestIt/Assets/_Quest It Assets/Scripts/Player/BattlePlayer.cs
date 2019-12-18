@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class BattlePlayer : MonoBehaviour
 {
@@ -15,9 +16,23 @@ public class BattlePlayer : MonoBehaviour
 
     public List<BattlePlayer> teamPlayers = new List<BattlePlayer> ( );
 
-    public BattlePlayer target;
+    public List<BattlePlayer> target = new List<BattlePlayer> ( );
 
     public Transform WorldUI = null;
+
+    // Transforms for spawning Objects
+
+    public Transform rightHandSpawnInside;
+
+    public Transform rightHandSpawnOutside;
+
+    public Transform headSpawn;
+
+    public Transform faceSpawn;
+
+    public Transform leftHandSpawnInside;
+
+    public Transform leftHandSpawnOutside;
 
     [Header ( "UI OBJECTS" )]
     public Image fillingHpBar;
@@ -29,6 +44,8 @@ public class BattlePlayer : MonoBehaviour
 
     private int fakeCurrentHealth;
 
+    private Coroutine mCoroutine;
+
     private void Awake ( )
     {
         BattleManager.Instance.GameInit += SetArenaTargets;
@@ -39,35 +56,58 @@ public class BattlePlayer : MonoBehaviour
         {
             currentChoice = validChoices [ 0 ];
         }
+
+        fakeCurrentHealth = attributes.curHealth;
     }
     private void SetArenaTargets ( )
     {
-        targetEnemies = BattleManager.Instance.currentEnemies;
+        if ( isPlayer )
+        {
+            targetEnemies = BattleManager.Instance.currentEnemies;
 
-        teamPlayers = BattleManager.Instance.currentPlayers;
+            teamPlayers = BattleManager.Instance.currentPlayers;
+        }
+        else
+        {
+            targetEnemies = BattleManager.Instance.currentPlayers;
+
+            teamPlayers = BattleManager.Instance.currentEnemies;
+        }
     }
 
     private void LateUpdate ( )
     {
         if ( WorldUI )
         {
-            WorldUI.transform.position = transform.position;
-
             fillingHpBar.fillAmount = ( float ) attributes.curHealth / attributes.maxHealth;
         }
     }
 
-    public void Health (int mHealth)
+    public void Health (int mHealth , ChoiceStyle attackType)
     {
-        if ( attributes.curHealth + mHealth > 0 )
+        GraphicHealthRun ( mHealth , attackType );
+    }
+
+    public void SetTargets ( )
+    {
+        if ( currentChoice.AttackStyle == ChoiceStyle.ATTACK )
         {
-            attributes.curHealth = attributes.curHealth + mHealth > attributes.maxHealth ? attributes.maxHealth : attributes.curHealth + mHealth;
+            if ( currentChoice.AttackValue == AttackRange.ALLENEMY )
+            {
+                target.InsertRange ( 0 , targetEnemies );
+            }
+            else if ( currentChoice.AttackValue == AttackRange.ONEENEMY )
+            {
+                target.Add ( targetEnemies [ 0 ] );
+            }
+            else if ( currentChoice.AttackValue == AttackRange.TWOENEMY )
+            {
+
+            }
         }
         else
         {
-            attributes.curHealth = 0;
-
-            mPlayerController.SetTrigger ( "Dying" );
+            //target = teamPlayers [ 0 ];
         }
     }
     public void CommitChoice ( )
@@ -77,38 +117,77 @@ public class BattlePlayer : MonoBehaviour
             currentChoice = validChoices [ 0 ];
         }
 
-        if ( isPlayer )
-        {
-            if ( currentChoice.AttackStyle == ChoiceStyle.ATTACK )
-            {
-                target = targetEnemies [ 0 ];
-            }
-            else
-            {
-                target = teamPlayers [ 0 ];
-            }
-        }
-        else
-        {
-            if ( currentChoice.AttackStyle == ChoiceStyle.ATTACK )
-            {
-                target = teamPlayers [ 0 ];
-            }
-            else
-            {
-                target = targetEnemies [ 0 ];
-            }
-
-        }
-        currentChoice.mWork ( target );
+        currentChoice.MoveWork ( );
 
         StartCoroutine ( GetBackToIdle ( currentChoice.endTime ) );
 
-        mPlayerController.SetTrigger ( "Attack" );
+        target.Clear ( );
+    }
+
+    public void ShowReaction ( )
+    {
+        if ( currentChoice.AttackStyle == ChoiceStyle.DEFEND )
+        {
+            mPlayerController.SetTrigger ( AnimationType.BLOCK.ToString ( ) );
+        }
+        else if ( currentChoice.AttackStyle == ChoiceStyle.ATTACK )
+        {
+            StartCoroutine ( UpdateHealth ( BattleManager.Instance.currentPlayer.currentChoice.healthChange , BattleManager.Instance.currentPlayer.currentChoice.AttackStyle ) );
+
+            mPlayerController.SetTrigger ( AnimationType.HIT.ToString ( ) );
+        }
+        else
+        {
+            // Heal animation
+        }
     }
 
     private IEnumerator GetBackToIdle (float waitTime)
     {
         yield return new WaitForSeconds ( waitTime );
+    }
+
+    public void GraphicHealthRun (int mx , ChoiceStyle attackType)
+    {
+        if ( mCoroutine == null )
+        {
+            mCoroutine = StartCoroutine ( UpdateHealth ( mx , attackType ) );
+        }
+    }
+
+    IEnumerator UpdateHealth (int changeInHealth , ChoiceStyle attackType)
+    {
+        int xFactor = 1;
+
+        int oldValue = attributes.curHealth;
+
+        if ( attackType == ChoiceStyle.DEFEND || attackType == ChoiceStyle.HEAL )
+        {
+            while ( attributes.curHealth > oldValue + changeInHealth )
+            {
+                yield return null;
+
+                attributes.curHealth -= xFactor;
+            }
+            attributes.curHealth = Mathf.Clamp ( oldValue + changeInHealth , 0 , attributes.maxHealth );
+        }
+        else
+        {
+            while ( attributes.curHealth > oldValue - changeInHealth )
+            {
+                yield return null;
+
+                attributes.curHealth -= xFactor;
+            }
+
+            attributes.curHealth = Mathf.Clamp ( oldValue - changeInHealth , 0 , attributes.maxHealth );
+        }
+
+        if ( attributes.curHealth <= 0 )
+        {
+            mPlayerController.SetTrigger ( AnimationType.DEAD.ToString ( ) );
+        }
+
+        mCoroutine = null;
     }
 }

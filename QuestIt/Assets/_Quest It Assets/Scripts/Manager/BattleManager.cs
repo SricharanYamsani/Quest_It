@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 using UnityEngine.Events;
+using DG.Tweening;
 
 public class BattleManager : Singleton<BattleManager>
 {
@@ -28,12 +29,54 @@ public class BattleManager : Singleton<BattleManager>
 
     public List<BattlePlayer> currentPlayers = new List<BattlePlayer> ( );
 
+    public List<BattlePlayer> targetPlayers = new List<BattlePlayer> ( );
+
+    [Header ( "CurrentMove - BattlePlayer" )]
+    public BattlePlayer currentPlayer = null;
+
+    public BattlePlayer playerPrefabRef;
+
+    [Header ( "Transforms" )]
+    [Space ( 20 )]
+    public Transform [ ] playerSpawn;
+
+    public Transform [ ] enemySpawn;
+
     public event Action GameInit;
+
+    public event Action TurnOver;
+
+    public event Action RoundOver;
 
     public event Action GameOver;
 
     private void Start ( )
     {
+        StartCoroutine ( LoadAllPlayers ( ) );
+    }
+
+    IEnumerator LoadAllPlayers()
+    {
+        yield return null;
+
+        BattlePlayer mPlayer = Instantiate ( playerPrefabRef , playerSpawn [ 0 ] );
+
+        mPlayer.isPlayer = true;
+
+        mPlayer.tag = "Player";
+
+        validPlayers.Add ( mPlayer );
+
+        mPlayer = Instantiate ( playerPrefabRef , enemySpawn [ 0 ] );
+
+        mPlayer.isPlayer = false;
+
+        mPlayer.tag = "Enemy";
+
+        mPlayer.transform.rotation = new Quaternion ( 0 , 180 , 0 , 0 );
+
+        validPlayers.Add ( mPlayer );
+
         CalculatePlayersOnField ( );
 
         GetValidPlayers ( );
@@ -41,14 +84,11 @@ public class BattleManager : Singleton<BattleManager>
         SwitchPlayState ( BattleStates.CHOICE );
 
         GameInit?.Invoke ( );
+
     }
 
     public void CalculatePlayersOnField ( )
     {
-        BattlePlayer [ ] temp = FindObjectsOfType<BattlePlayer> ( );
-
-        validPlayers = temp.ToList ( );
-
         foreach(BattlePlayer mEnemies in validPlayers)
         {
             if(!mEnemies.isPlayer)
@@ -82,12 +122,6 @@ public class BattleManager : Singleton<BattleManager>
 
             case BattleStates.BATTLE:
 
-            // Check Who Attacks First
-            // Play
-            //Check If Dead or Not
-            //If not, play
-            //else
-            //end
             StartCoroutine ( BattleAttackChoice ( ) );
 
             break;
@@ -167,13 +201,59 @@ public class BattleManager : Singleton<BattleManager>
 
     IEnumerator BattleAttackChoice ( )
     {
+        // Play Everyone Who Chose Defense
+        foreach(BattlePlayer player  in validPlayers)
+        {
+            if(player.currentChoice.AttackStyle == ChoiceStyle.DEFEND)
+            {
+                currentPlayer = player;
+
+                currentPlayer.SetTargets ( );
+
+                currentPlayer.CommitChoice ( );
+
+                yield return new WaitForSeconds ( player.currentChoice.endTime );
+
+                TurnOver?.Invoke ( );
+            }
+        }
+        // Play Everyone Who Chose Attack
         foreach ( BattlePlayer player in validPlayers )
         {
             if ( player.attributes.curHealth > 0 )
             {
-                player.CommitChoice ( );
-               
-                yield return new WaitForSeconds ( player.currentChoice.endTime );
+                targetPlayers.Clear ( );
+
+                if ( player.currentChoice.AttackStyle == ChoiceStyle.ATTACK )
+                {
+                    currentPlayer = player;
+
+                    player.SetTargets ( );
+
+                    targetPlayers.InsertRange ( 0 , player.targetEnemies );
+
+                    player.CommitChoice ( );
+
+                    yield return new WaitForSeconds ( player.currentChoice.endTime );
+
+                    TurnOver?.Invoke ( );
+
+                    bool isBack = false;
+
+                    player.mPlayerController.SetBool ( "Walking" , true );
+
+                    player.transform.DOLocalMove ( new Vector3 ( 0 , 0.1f , 0 ) , 0.5f ).OnComplete(()=>{
+
+                        player.mPlayerController.SetBool ( "Walking" , false );
+
+                        isBack = true;
+                    });
+
+                    while(!isBack)
+                    {
+                        yield return null;
+                    }
+                }
             }
             else
             {
@@ -191,6 +271,8 @@ public class BattleManager : Singleton<BattleManager>
             }
         }
 
+        RoundOver?.Invoke ( );
+
         if ( index > 1 )
         {
             SwitchPlayState ( BattleStates.CHOICE );
@@ -201,21 +283,14 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
-    private void CommunicateChoice (BattlePlayer mPlayer , BattleChoice mChoice)
+    public void TriggerTargetPlayer()
     {
-        switch ( mChoice.AttackStyle )
+        foreach(BattlePlayer player in targetPlayers)
         {
-            case ChoiceStyle.ATTACK:
-            mPlayer.target.Health ( -mChoice.healthChange );
-            break;
-
-            case ChoiceStyle.DEFEND:
-            mPlayer.Health ( mChoice.healthChange );
-            break;
+            player.ShowReaction ( );
         }
 
-        Debug.Log ( ":: CALLED" );
-
+        targetPlayers.Clear ( );
     }
 }
 public enum BattleStates
