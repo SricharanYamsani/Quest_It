@@ -16,7 +16,7 @@ MonoBehaviour:
   AttackValue: 2
   MoveTurnsType: 2
   healthChange: 45
-  mAnimationClip: 1
+  mAnimationClip: 2
   endTime: 8
   moveName: SwordSlash
   amount: 0
