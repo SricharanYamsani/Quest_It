@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 using DG.Tweening;
 
 public class BattlePlayer : MonoBehaviour
@@ -46,6 +47,10 @@ public class BattlePlayer : MonoBehaviour
 
     private Coroutine mCoroutine;
 
+    private delegate void onComplete ( );
+
+    onComplete coroutineComplete = null;
+
     private void Awake ( )
     {
         BattleManager.Instance.GameInit += SetArenaTargets;
@@ -58,6 +63,10 @@ public class BattlePlayer : MonoBehaviour
         }
 
         fakeCurrentHealth = attributes.curHealth;
+    }
+    private void Start ( )
+    {
+        
     }
     private void SetArenaTargets ( )
     {
@@ -132,7 +141,7 @@ public class BattlePlayer : MonoBehaviour
         }
         else if ( currentChoice.AttackStyle == ChoiceStyle.ATTACK )
         {
-            StartCoroutine ( UpdateHealth ( BattleManager.Instance.currentPlayer.currentChoice.healthChange , BattleManager.Instance.currentPlayer.currentChoice.AttackStyle ) );
+            GraphicHealthRun ( BattleManager.Instance.currentPlayer.currentChoice.healthChange , BattleManager.Instance.currentPlayer.currentChoice.AttackStyle );
 
             mPlayerController.SetTrigger ( AnimationType.HIT.ToString ( ) );
         }
@@ -149,17 +158,42 @@ public class BattlePlayer : MonoBehaviour
 
     public void GraphicHealthRun (int mx , ChoiceStyle attackType)
     {
-        if ( mCoroutine == null )
+        if ( mCoroutine != null )
         {
-            mCoroutine = StartCoroutine ( UpdateHealth ( mx , attackType ) );
+            coroutineComplete?.Invoke ( );
+
+            coroutineComplete = null;
         }
+
+        mCoroutine = StartCoroutine ( UpdateHealth ( mx , attackType, ()=> {
+
+            if(attackType == ChoiceStyle.ATTACK)
+            {
+                attributes.curHealth -= mx;
+            }
+            else if(attackType == ChoiceStyle.DEFEND)
+            {
+
+            }
+
+
+            if(attributes.curHealth<= 0)
+            {
+                mPlayerController.SetTrigger ( AnimationType.DEAD.ToString ( ) );
+            }
+
+        }
+
+        ) );
     }
 
-    IEnumerator UpdateHealth (int changeInHealth , ChoiceStyle attackType)
+    IEnumerator UpdateHealth (int changeInHealth , ChoiceStyle attackType , onComplete complete = null)
     {
         int xFactor = 1;
 
         int oldValue = attributes.curHealth;
+
+        coroutineComplete = complete;
 
         if ( attackType == ChoiceStyle.DEFEND || attackType == ChoiceStyle.HEAL )
         {
@@ -169,6 +203,7 @@ public class BattlePlayer : MonoBehaviour
 
                 attributes.curHealth -= xFactor;
             }
+
             attributes.curHealth = Mathf.Clamp ( oldValue + changeInHealth , 0 , attributes.maxHealth );
         }
         else
@@ -179,15 +214,8 @@ public class BattlePlayer : MonoBehaviour
 
                 attributes.curHealth -= xFactor;
             }
-
-            attributes.curHealth = Mathf.Clamp ( oldValue - changeInHealth , 0 , attributes.maxHealth );
         }
 
-        if ( attributes.curHealth <= 0 )
-        {
-            mPlayerController.SetTrigger ( AnimationType.DEAD.ToString ( ) );
-        }
-
-        mCoroutine = null;
+        coroutineComplete?.Invoke ( );
     }
 }

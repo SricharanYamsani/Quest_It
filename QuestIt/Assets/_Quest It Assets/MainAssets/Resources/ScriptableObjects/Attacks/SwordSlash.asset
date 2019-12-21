@@ -15,9 +15,13 @@ MonoBehaviour:
   AttackStyle: 1
   AttackValue: 2
   MoveTurnsType: 2
-  healthChange: 45
-  mAnimationClip: 2
+  m_AnimationClip: 1
+  m_Currency: 2
+  m_CurrencyAmount: 5
+  moveAffectDuration: 0
+  healthChange: 20
   endTime: 8
   moveName: SwordSlash
-  amount: 0
+  description: 
+  ICON: {fileID: 0}
   sword: {fileID: 5288576339935000147, guid: f4e0cbed4315640519c7d071a57e42aa, type: 3}

@@ -17,7 +17,7 @@ public class SwordSlash : BattleChoice
         {
             IWeapon mObject = Instantiate<IWeapon> ( sword , tPlayer.rightHandSpawnInside );
 
-            mObject.amount = amount;
+            mObject.amount = moveAffectDuration;
 
             mObject.moveDuration = MoveTurnsType;
 
@@ -31,7 +31,7 @@ public class SwordSlash : BattleChoice
                    {
                        tPlayer.mPlayerController.SetBool ( "Walking" , false );
 
-                       tPlayer.mPlayerController.SetTrigger ( mAnimationClip.ToString ( ) );
+                       tPlayer.mPlayerController.SetTrigger ( m_AnimationClip.ToString ( ) );
                    } );
         }
     }

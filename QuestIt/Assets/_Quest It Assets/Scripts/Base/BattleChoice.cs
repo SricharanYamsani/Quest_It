@@ -10,15 +10,23 @@ public abstract class  BattleChoice : ScriptableObject
 
     public MoveDuration MoveTurnsType;
 
-    public int healthChange;
+    public AnimationType m_AnimationClip;
 
-    public AnimationType mAnimationClip;
+    public CURRENCY m_Currency = CURRENCY.NONE;
+
+    public int m_CurrencyAmount = 0;
+
+    public int moveAffectDuration;
+
+    public int healthChange;
 
     public float endTime = 5f;
 
     public string moveName;
 
-    public int amount;
+    public string description = string.Empty;
+
+    public Sprite ICON;
 
     public abstract void MoveWork ( );
 }
@@ -28,4 +36,16 @@ public enum ChoiceStyle
     ATTACK,
     DEFEND,
     HEAL
+}
+public enum AttackType
+{
+    MELEE,
+    RANGE,
+    MAGIC
+}
+public enum CURRENCY
+{
+    NONE,
+    MANA,
+    BRUTE
 }

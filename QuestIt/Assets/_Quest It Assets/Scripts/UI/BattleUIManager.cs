@@ -21,6 +21,9 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
     public GameObject gameOverScreen;
 
+    [SerializeField]
+    List<BaseUIChoice> t_Choices = new List<BaseUIChoice> ( ); 
+
     protected override void  Awake ( )
     {
         base.Awake ( );
@@ -38,9 +41,25 @@ public class BattleUIManager : Singleton<BattleUIManager>
             slider.gameObject.SetActive ( false );
         }
     }
-    private void SetPlayer()
+    private void SetPlayer ( )
     {
         ourPlayer = BattleManager.Instance.currentPlayers [ 0 ];
+
+        for ( int i = 0 ; i < t_Choices.Count ; i++ )
+        {
+            if ( i < ourPlayer.validChoices.Count )
+            {
+                t_Choices [ i ].m_Choice = ourPlayer.validChoices [ i ];
+
+                t_Choices [ i ].SetupChoice ( );
+
+                t_Choices [ i ].gameObject.SetActive ( true );
+            }
+            else
+            {
+                t_Choices [ i ].gameObject.SetActive ( false );
+            }
+        }
     }
 
     public void ToggleSlider()

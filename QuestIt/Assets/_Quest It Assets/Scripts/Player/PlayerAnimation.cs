@@ -8,4 +8,14 @@ public class PlayerAnimation : MonoBehaviour
     {
         BattleManager.Instance.TriggerTargetPlayer ( );
     }
+
+    public void OnAnimationStart()
+    {
+
+    }
+
+    public void OnAnimationEnd()
+    {
+
+    }
 }
