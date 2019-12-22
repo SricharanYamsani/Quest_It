@@ -9,5 +9,6 @@ public enum AnimationType
     HARDSWORDATTACK,
     BLOCK,
     HIT,
+    ARROWSHOTONE,
     DEAD
 }

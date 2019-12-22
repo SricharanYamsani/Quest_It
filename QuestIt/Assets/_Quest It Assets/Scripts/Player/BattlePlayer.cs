@@ -38,6 +38,8 @@ public class BattlePlayer : MonoBehaviour
 
     public Transform meleeAttackSpawn;
 
+    public Transform torsoTransform;
+
     public RectTransform reactionLabel;
 
     [Header ( "UI OBJECTS" )]
@@ -73,8 +75,6 @@ public class BattlePlayer : MonoBehaviour
         }
 
         fakeCurrentHealth = attributes.curHealth;
-
-        m_Sequence = DOTween.Sequence ( );
     }
     private void SetArenaTargets ( )
     {
@@ -152,18 +152,29 @@ public class BattlePlayer : MonoBehaviour
 
         if ( m_Sequence != null )
         {
-            m_Sequence.Kill ( );
+            DOTween.Kill ( m_Sequence );
         }
+
+        m_Sequence = DOTween.Sequence ( );
+
         reactionLabel.gameObject.SetActive ( true );
 
-        m_Sequence.Append ( reactionLabel.DOAnchorPos ( new Vector2 ( 0 , 3 ) , 0.5f ).SetEase ( Ease.Linear ) ).Join ( reactionText.DOFade ( 0.2f , 0.45f ) ).OnKill ( ( ) =>
-
+        m_Sequence.Append ( reactionLabel.DOAnchorPos ( new Vector2 ( 0 , 0.8f ) , 0.4f ).SetEase ( Ease.InQuad ) ).Join ( DOVirtual.DelayedCall(0.1f,()=> { reactionText.DOFade ( 0.2f , 0.3f ); } )).OnKill ( ( ) =>
         {
-            reactionLabel.anchoredPosition = Vector2.one;
+            reactionLabel.anchoredPosition = Vector2.zero;
 
             reactionText.color = objectcolor;
 
             reactionLabel.gameObject.SetActive ( false );
+
+        } ).OnComplete(()=> {
+
+            reactionLabel.anchoredPosition = Vector2.zero;
+
+            reactionText.color = objectcolor;
+
+            reactionLabel.gameObject.SetActive ( false );
+
         } );
     }
 
@@ -189,6 +200,11 @@ public class BattlePlayer : MonoBehaviour
             if ( WorldUI )
             {
                 fillingHpBar.fillAmount = ( float ) fakeCurrentHealth / attributes.maxHealth;
+
+                if ( attributes.curHealth <= 0 )
+                {
+                    mPlayerController.SetTrigger ( AnimationType.DEAD.ToString ( ) );
+                }
             }
         } );
     }

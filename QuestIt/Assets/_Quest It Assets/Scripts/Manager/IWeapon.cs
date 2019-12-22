@@ -15,7 +15,7 @@ public abstract class IWeapon : MonoBehaviour
         Irounds = 0;
     }
 
-    public void Trigger ( )
+    public virtual void Trigger ( )
     {
         if(moveDuration == MoveDuration.ROUNDS)
         {

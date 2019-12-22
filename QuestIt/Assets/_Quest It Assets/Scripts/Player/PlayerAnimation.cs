@@ -18,4 +18,8 @@ public class PlayerAnimation : MonoBehaviour
     {
 
     }
+    public void TriggerRelease()
+    {
+
+    }
 }
