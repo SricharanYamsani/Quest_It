@@ -147,6 +147,8 @@ public class BattleManager : Singleton<BattleManager>
 
             mTimer--;
         }
+        mTimer = 0;
+
         yield return null;
 
         BattleUIManager.Instance.choiceUI.SetActive ( false );

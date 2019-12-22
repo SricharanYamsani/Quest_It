@@ -31,13 +31,15 @@ public class MoveManager : Singleton<MoveManager>
 
         if ( x <= m_Player.attributes.curLuck )
         {
-            // He needs to be Saved
-            // Show a miss animation
+            m_Player.m_PlayerState = PlayerState.BLOCK;
+
             Debug.Log ( "SAVE" );
         }
         else
         {
             m_Player.attributes.curHealth -= m_Choice.healthChange;
+
+            m_Player.m_PlayerState = PlayerState.BLOCK;
 
             Debug.Log ( "HIT" );
         }

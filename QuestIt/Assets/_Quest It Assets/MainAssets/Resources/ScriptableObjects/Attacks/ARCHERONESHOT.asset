@@ -20,7 +20,7 @@ MonoBehaviour:
   m_CurrencyAmount: 0
   moveAffectDuration: 0
   healthChange: 25
-  endTime: 5
+  endTime: 7
   moveName: ARROW HIT
   description: 
   ICON: {fileID: 0}

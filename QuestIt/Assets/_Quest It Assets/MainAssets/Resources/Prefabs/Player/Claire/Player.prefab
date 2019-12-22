@@ -659,7 +659,7 @@ MonoBehaviour:
     curAgility: 9999
     maxDefense: 10
     curDefense: 10
-    maxLuck: 10
+    maxLuck: 15
     curLuck: 10
   validChoices:
   - {fileID: 11400000, guid: 2c71a54bb4de84339852d518dc2346d6, type: 2}
@@ -683,6 +683,7 @@ MonoBehaviour:
   reactionText: {fileID: 5934813037460052489}
   isPlayer: 1
   mPlayerController: {fileID: 4853397142694897806}
+  m_PlayerState: 0
 --- !u!1 &1413614632647375838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1939,7 +1940,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4914718924895784902}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.75}
+  m_LocalPosition: {x: 0, y: 0, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1413614632199641696}

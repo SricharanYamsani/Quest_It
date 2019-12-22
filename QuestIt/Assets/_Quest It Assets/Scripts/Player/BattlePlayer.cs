@@ -63,6 +63,8 @@ public class BattlePlayer : MonoBehaviour
 
     private Color objectcolor = new Color ( 255 , 255 , 255 , 255 );
 
+    public PlayerState m_PlayerState = PlayerState.NONE;
+
     private void Awake ( )
     {
         BattleManager.Instance.GameInit += SetArenaTargets;
@@ -127,8 +129,6 @@ public class BattlePlayer : MonoBehaviour
         currentChoice.MoveWork ( );
 
         StartCoroutine ( GetBackToIdle ( currentChoice.endTime ) );
-
-        target.Clear ( );
     }
 
     public void ShowReaction ( )
@@ -136,14 +136,21 @@ public class BattlePlayer : MonoBehaviour
         if ( currentChoice.AttackStyle == ChoiceStyle.DEFEND )
         {
             mPlayerController.SetTrigger ( AnimationType.BLOCK.ToString ( ) );
-
-            reactionText.text = "MISS!";
         }
         else if ( currentChoice.AttackStyle == ChoiceStyle.ATTACK )
         {
-            mPlayerController.SetTrigger ( AnimationType.HIT.ToString ( ) );
+            if ( m_PlayerState == PlayerState.BLOCK )
+            {
+                mPlayerController.SetTrigger ( AnimationType.BLOCK.ToString ( ) );
 
-            reactionText.text = "HIT";
+                reactionText.text = "MISS!";
+            }
+            else
+            {
+                mPlayerController.SetTrigger ( AnimationType.HIT.ToString ( ) );
+
+                reactionText.text = "HIT";
+            }
         }
         else
         {
@@ -181,6 +188,8 @@ public class BattlePlayer : MonoBehaviour
     private IEnumerator GetBackToIdle (float waitTime)
     {
         yield return new WaitForSeconds ( waitTime );
+
+        target.Clear ( );
     }
 
     public void UpdateHealth ( )

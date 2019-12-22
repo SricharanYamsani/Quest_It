@@ -7,4 +7,7 @@ public enum PlayerState
     NONE,
     MOVING,
     ATTACK,
+    DEFENDING,
+    HURT,
+    BLOCK
 }

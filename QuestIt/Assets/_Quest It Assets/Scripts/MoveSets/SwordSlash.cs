@@ -23,7 +23,7 @@ public class SwordSlash : BattleChoice
 
             tPlayer.mPlayerController.SetBool ( "Walking" , true );
 
-            tPlayer.transform.DOMove ( new Vector3 ( tPlayer.meleeAttackSpawn.position.x ,tPlayer.transform.position.y ,tPlayer.meleeAttackSpawn.position.z ) , 0.5f ).OnComplete ( ( ) =>
+            tPlayer.transform.DOMove ( new Vector3 ( tPlayer.meleeAttackSpawn.position.x ,tPlayer.transform.position.y ,tPlayer.target[0].meleeAttackSpawn.position.z ) , 1.25f ).OnComplete ( ( ) =>
                    {
                        tPlayer.mPlayerController.SetBool ( "Walking" , false );
 
