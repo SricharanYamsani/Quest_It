@@ -53,7 +53,7 @@ public class BattlePlayer : MonoBehaviour
 
     private Coroutine mCoroutine;
 
-    private Sequence m_Sequence = DOTween.Sequence ( );
+    private Sequence m_Sequence;
 
     private delegate void onComplete ( );
 
@@ -73,6 +73,8 @@ public class BattlePlayer : MonoBehaviour
         }
 
         fakeCurrentHealth = attributes.curHealth;
+
+        m_Sequence = DOTween.Sequence ( );
     }
     private void SetArenaTargets ( )
     {
