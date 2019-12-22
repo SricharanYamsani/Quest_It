@@ -9,19 +9,37 @@ public class MoveManager : Singleton<MoveManager>
         base.Awake ( );
     }
 
-    public void SetMoveDuration(MoveDuration mDuration, int rounds)
+    public void SetMoveDuration (MoveDuration mDuration , int rounds)
     {
-        if(mDuration == MoveDuration.TURNS)
+        if ( mDuration == MoveDuration.TURNS )
         {
             // Affect for turns
         }
-        else if(mDuration == MoveDuration.ROUNDS)
+        else if ( mDuration == MoveDuration.ROUNDS )
         {
             // Affect for Rounds
         }
-        else if(mDuration == MoveDuration.NONE)
+        else if ( mDuration == MoveDuration.NONE )
         {
             // Nothing to happen
+        }
+    }
+
+    public void CalculateDamage (BattleChoice m_Choice , BattlePlayer m_Player)
+    {
+        int x = Random.Range ( 0 , 100 );
+
+        if ( x <= m_Player.attributes.curLuck )
+        {
+            // He needs to be Saved
+            // Show a miss animation
+            Debug.Log ( "SAVE" );
+        }
+        else
+        {
+            m_Player.attributes.curHealth -= m_Choice.healthChange;
+
+            Debug.Log ( "HIT" );
         }
     }
 }

@@ -214,6 +214,11 @@ public class BattleManager : Singleton<BattleManager>
 
                 yield return new WaitForSeconds ( player.currentChoice.endTime );
 
+                foreach ( BattlePlayer mPlayer in currentPlayer.target )
+                {
+                    mPlayer.UpdateHealth ( );
+                }
+
                 TurnOver?.Invoke ( );
             }
         }
@@ -236,6 +241,13 @@ public class BattleManager : Singleton<BattleManager>
 
                     yield return new WaitForSeconds ( player.currentChoice.endTime );
 
+                    foreach ( BattlePlayer mPlayer in targetPlayers )
+                    {
+                        mPlayer.UpdateHealth ( );
+                    }
+
+                    targetPlayers.Clear ( );
+
                     TurnOver?.Invoke ( );
 
                     bool isBack = false;
@@ -246,6 +258,8 @@ public class BattleManager : Singleton<BattleManager>
 
                         player.mPlayerController.SetBool ( "Walking" , false );
 
+                        player.transform.localPosition = new Vector3 ( 0 , 0.1f , 0 );
+
                         isBack = true;
                     });
 
@@ -253,6 +267,7 @@ public class BattleManager : Singleton<BattleManager>
                     {
                         yield return null;
                     }
+
                 }
             }
             else
@@ -289,8 +304,6 @@ public class BattleManager : Singleton<BattleManager>
         {
             player.ShowReaction ( );
         }
-
-        targetPlayers.Clear ( );
     }
 }
 public enum BattleStates

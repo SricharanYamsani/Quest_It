@@ -11,8 +11,6 @@ public class SwordSlash : BattleChoice
     {
         BattlePlayer tPlayer = BattleManager.Instance.currentPlayer;
 
-        Debug.Log ( "Player : " );
-
         if ( tPlayer != null )
         {
             IWeapon mObject = Instantiate<IWeapon> ( sword , tPlayer.rightHandSpawnInside );
@@ -25,14 +23,21 @@ public class SwordSlash : BattleChoice
 
             tPlayer.mPlayerController.SetBool ( "Walking" , true );
 
-            float posZ = tPlayer.isPlayer ? -1.5f : 1.5f;
-
-            tPlayer.transform.DOMove ( new Vector3 ( tPlayer.transform.position.x , tPlayer.transform.position.y , posZ ) , 0.5f ).OnComplete ( ( ) =>
+            tPlayer.transform.DOMove ( new Vector3 ( tPlayer.meleeAttackSpawn.position.x ,tPlayer.transform.position.y ,tPlayer.meleeAttackSpawn.position.z ) , 0.5f ).OnComplete ( ( ) =>
                    {
                        tPlayer.mPlayerController.SetBool ( "Walking" , false );
 
                        tPlayer.mPlayerController.SetTrigger ( m_AnimationClip.ToString ( ) );
+
+                       Debug.Log ( tPlayer.mPlayerController.GetCurrentAnimatorClipInfo ( 0 ).Length );// + 2f;
+
+                       Debug.Log ( endTime );
                    } );
+
+            foreach(BattlePlayer m_Player in tPlayer.target)
+            {
+                MoveManager.Instance.CalculateDamage ( this , m_Player );
+            }
         }
     }
 }

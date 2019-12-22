@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
 using DG.Tweening;
 
 public class BattlePlayer : MonoBehaviour
@@ -35,11 +36,16 @@ public class BattlePlayer : MonoBehaviour
 
     public Transform leftHandSpawnOutside;
 
+    public Transform meleeAttackSpawn;
+
+    public RectTransform reactionLabel;
+
     [Header ( "UI OBJECTS" )]
     public Image fillingHpBar;
 
-    public bool isPlayer = false;
+    public TextMeshProUGUI reactionText;
 
+    public bool isPlayer = false;
 
     public Animator mPlayerController;
 
@@ -47,9 +53,13 @@ public class BattlePlayer : MonoBehaviour
 
     private Coroutine mCoroutine;
 
+    private Sequence m_Sequence = DOTween.Sequence ( );
+
     private delegate void onComplete ( );
 
     onComplete coroutineComplete = null;
+
+    private Color objectcolor = new Color ( 255 , 255 , 255 , 255 );
 
     private void Awake ( )
     {
@@ -63,10 +73,6 @@ public class BattlePlayer : MonoBehaviour
         }
 
         fakeCurrentHealth = attributes.curHealth;
-    }
-    private void Start ( )
-    {
-        
     }
     private void SetArenaTargets ( )
     {
@@ -82,19 +88,6 @@ public class BattlePlayer : MonoBehaviour
 
             teamPlayers = BattleManager.Instance.currentEnemies;
         }
-    }
-
-    private void LateUpdate ( )
-    {
-        if ( WorldUI )
-        {
-            fillingHpBar.fillAmount = ( float ) attributes.curHealth / attributes.maxHealth;
-        }
-    }
-
-    public void Health (int mHealth , ChoiceStyle attackType)
-    {
-        GraphicHealthRun ( mHealth , attackType );
     }
 
     public void SetTargets ( )
@@ -121,9 +114,12 @@ public class BattlePlayer : MonoBehaviour
     }
     public void CommitChoice ( )
     {
-        if ( validChoices.Count > 0 )
+        if ( currentChoice == null )
         {
-            currentChoice = validChoices [ 0 ];
+            if ( validChoices.Count > 0 )
+            {
+                currentChoice = validChoices [ 0 ];
+            }
         }
 
         currentChoice.MoveWork ( );
@@ -138,17 +134,35 @@ public class BattlePlayer : MonoBehaviour
         if ( currentChoice.AttackStyle == ChoiceStyle.DEFEND )
         {
             mPlayerController.SetTrigger ( AnimationType.BLOCK.ToString ( ) );
+
+            reactionText.text = "MISS!";
         }
         else if ( currentChoice.AttackStyle == ChoiceStyle.ATTACK )
         {
-            GraphicHealthRun ( BattleManager.Instance.currentPlayer.currentChoice.healthChange , BattleManager.Instance.currentPlayer.currentChoice.AttackStyle );
-
             mPlayerController.SetTrigger ( AnimationType.HIT.ToString ( ) );
+
+            reactionText.text = "HIT";
         }
         else
         {
             // Heal animation
         }
+
+        if ( m_Sequence != null )
+        {
+            m_Sequence.Kill ( );
+        }
+        reactionLabel.gameObject.SetActive ( true );
+
+        m_Sequence.Append ( reactionLabel.DOAnchorPos ( new Vector2 ( 0 , 3 ) , 0.5f ).SetEase ( Ease.Linear ) ).Join ( reactionText.DOFade ( 0.2f , 0.45f ) ).OnKill ( ( ) =>
+
+        {
+            reactionLabel.anchoredPosition = Vector2.one;
+
+            reactionText.color = objectcolor;
+
+            reactionLabel.gameObject.SetActive ( false );
+        } );
     }
 
     private IEnumerator GetBackToIdle (float waitTime)
@@ -156,66 +170,24 @@ public class BattlePlayer : MonoBehaviour
         yield return new WaitForSeconds ( waitTime );
     }
 
-    public void GraphicHealthRun (int mx , ChoiceStyle attackType)
+    public void UpdateHealth ( )
     {
-        if ( mCoroutine != null )
+        Debug.Log ( this.name );
+
+        DOTween.To ( ( ) => fakeCurrentHealth , x => fakeCurrentHealth = x , attributes.curHealth , 1 ).OnUpdate ( ( ) =>
         {
-            coroutineComplete?.Invoke ( );
-
-            coroutineComplete = null;
-        }
-
-        mCoroutine = StartCoroutine ( UpdateHealth ( mx , attackType, ()=> {
-
-            if(attackType == ChoiceStyle.ATTACK)
+            if ( WorldUI )
             {
-                attributes.curHealth -= mx;
-            }
-            else if(attackType == ChoiceStyle.DEFEND)
-            {
-
+                fillingHpBar.fillAmount = ( float ) fakeCurrentHealth / attributes.maxHealth;
             }
 
-
-            if(attributes.curHealth<= 0)
-            {
-                mPlayerController.SetTrigger ( AnimationType.DEAD.ToString ( ) );
-            }
-
-        }
-
-        ) );
-    }
-
-    IEnumerator UpdateHealth (int changeInHealth , ChoiceStyle attackType , onComplete complete = null)
-    {
-        int xFactor = 1;
-
-        int oldValue = attributes.curHealth;
-
-        coroutineComplete = complete;
-
-        if ( attackType == ChoiceStyle.DEFEND || attackType == ChoiceStyle.HEAL )
+        } ).OnComplete ( ( ) =>
         {
-            while ( attributes.curHealth > oldValue + changeInHealth )
+
+            if ( WorldUI )
             {
-                yield return null;
-
-                attributes.curHealth -= xFactor;
+                fillingHpBar.fillAmount = ( float ) fakeCurrentHealth / attributes.maxHealth;
             }
-
-            attributes.curHealth = Mathf.Clamp ( oldValue + changeInHealth , 0 , attributes.maxHealth );
-        }
-        else
-        {
-            while ( attributes.curHealth > oldValue - changeInHealth )
-            {
-                yield return null;
-
-                attributes.curHealth -= xFactor;
-            }
-        }
-
-        coroutineComplete?.Invoke ( );
+        } );
     }
 }

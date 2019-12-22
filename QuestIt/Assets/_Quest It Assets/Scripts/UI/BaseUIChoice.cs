@@ -22,11 +22,12 @@ public class BaseUIChoice : MonoBehaviour
 
     public TextMeshProUGUI m_ChoiceStyle;
 
-    private void OnEnable ( )
-    {
-        SetupChoice ( );
-    }
+    private Button m_Button;
 
+    private void Awake ( )
+    {
+        m_Button = GetComponent<Button> ( );   
+    }
     public void SetupChoice ( )
     {
         if ( m_Choice )
@@ -63,5 +64,12 @@ public class BaseUIChoice : MonoBehaviour
                 m_CurrencyText.text = m_Choice.m_CurrencyAmount.ToString ( );
             }
         }
+    }
+
+    public void SetCurrentChoice()
+    {
+        BattleUIManager.Instance.ourPlayer.currentChoice = m_Choice;
+
+        BattleManager.Instance.mTimer = 0;
     }
 }

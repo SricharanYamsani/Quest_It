@@ -36,14 +36,14 @@ public class BattleUIManager : Singleton<BattleUIManager>
         
         if ( !isSliderOn )
         {
-            slider.sizeDelta = new Vector2 ( 0 , 250 );
+            slider.sizeDelta = new Vector2 ( 0 , slider.sizeDelta.y );
 
             slider.gameObject.SetActive ( false );
         }
     }
     private void SetPlayer ( )
     {
-        ourPlayer = BattleManager.Instance.currentPlayers [ 0 ];
+        ourPlayer = BattleManager.Instance.validPlayers.Find ( (BattlePlayer p) => { return p.isPlayer == true; } );
 
         for ( int i = 0 ; i < t_Choices.Count ; i++ )
         {
@@ -62,20 +62,20 @@ public class BattleUIManager : Singleton<BattleUIManager>
         }
     }
 
-    public void ToggleSlider()
+    public void ToggleSlider(bool isSlider = false)
     {
         if(!isSliderOn)
         {
             slider.gameObject.SetActive ( true );
 
-            slider.DOSizeDelta ( new Vector2 ( 1500 , 250 ) , 0.35f ).OnKill ( ( ) => { slider.sizeDelta = new Vector2 ( 1500 , 250 ); } );
+            slider.DOSizeDelta ( new Vector2 ( 1500 , slider.sizeDelta.y ) , 0.35f ).OnKill ( ( ) => { slider.sizeDelta = new Vector2 ( 1500 , slider.sizeDelta.y ); } );
 
             isSliderOn = true;
         }
         else
         {
             // Temp OnKill
-            slider.DOSizeDelta ( new Vector2 ( 0 , 250 ) , 0.35f ).OnKill ( ( ) => { slider.sizeDelta = new Vector2 ( 0 , 250 ); slider.gameObject.SetActive ( false ); } );
+            slider.DOSizeDelta ( new Vector2 ( 0 , slider.sizeDelta.y ) , 0.35f ).OnKill ( ( ) => { slider.sizeDelta = new Vector2 ( 0 , slider.sizeDelta.y ); slider.gameObject.SetActive ( false ); } );
 
             isSliderOn = false;
         }
