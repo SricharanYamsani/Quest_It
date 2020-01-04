@@ -81,6 +81,11 @@ public class BattleUIManager : Singleton<BattleUIManager>
         }
     }
 
+    public void ShowTargetChoices ( )
+    {
+
+    }
+
     private void FixedUpdate ( )
     {
         mText.text = BattleManager.Instance.mTimer.ToString ( "00" );

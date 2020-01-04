@@ -91,7 +91,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1389349539
 RectTransform:
   m_ObjectHideFlags: 0
@@ -670,6 +670,9 @@ MonoBehaviour:
   teamPlayers: []
   target: []
   WorldUI: {fileID: 1389349539}
+  playerIcon: {fileID: 0}
+  turnIndex: 0
+  additionalAgility: 0
   rightHandSpawnInside: {fileID: 1413614633342860573}
   rightHandSpawnOutside: {fileID: 1413614632918570050}
   headSpawn: {fileID: 0}
@@ -682,6 +685,7 @@ MonoBehaviour:
   fillingHpBar: {fileID: 49211248}
   reactionText: {fileID: 5934813037460052489}
   isPlayer: 1
+  isTeam: 0
   mPlayerController: {fileID: 4853397142694897806}
   m_PlayerState: 0
 --- !u!1 &1413614632647375838
@@ -3097,7 +3101,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 64
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!1 &7541855866610148335
 GameObject:

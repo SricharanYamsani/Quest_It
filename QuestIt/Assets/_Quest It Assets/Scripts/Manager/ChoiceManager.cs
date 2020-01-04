@@ -8,7 +8,28 @@ public class ChoiceManager : Singleton<ChoiceManager>
 
     public LayerMask playerMask;
 
+    public bool isSelectingTarget;
+
+    public int targetIndex;
+
+    private int currentTargets;
+
     private void Update ( )
+    {
+        if ( isSelectingTarget )
+        {
+            if ( currentTargets < targetIndex )
+            {
+                LookForInput ( );
+            }
+        }
+    }
+    private void OnDrawGizmos ( )
+    {
+
+    }
+
+    private void LookForInput ( )
     {
         if ( Input.GetMouseButtonDown ( 0 ) )
         {
@@ -17,6 +38,12 @@ public class ChoiceManager : Singleton<ChoiceManager>
                 if ( getHit.collider.gameObject.CompareTag ( "Player" ) )
                 {
                     // Selections
+                    currentTargets++;
+
+                    if ( currentTargets == targetIndex )
+                    {
+                        isSelectingTarget = false;
+                    }
                 }
                 else
                 {
@@ -25,8 +52,23 @@ public class ChoiceManager : Singleton<ChoiceManager>
             }
         }
     }
-    private void OnDrawGizmos ( )
+    public void StartSelecting (AttackRange range)
     {
-        
+        switch ( range )
+        {
+            case AttackRange.ONEENEMY:
+            case AttackRange.ONETEAM:
+            isSelectingTarget = true;
+            break;
+            case AttackRange.ALLENEMY:
+            //SHOW ALL TARGETED ENEMIES
+            break;
+            case AttackRange.ALLTEAM:
+            //SHOW ALL TARGETED TEAMS
+            break;
+            case AttackRange.EVERYONE:
+            //SHOW ALL
+            break;
+        }
     }
 }

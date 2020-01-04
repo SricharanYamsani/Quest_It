@@ -19,8 +19,8 @@ MonoBehaviour:
   m_Currency: 2
   m_CurrencyAmount: 5
   moveAffectDuration: 0
-  healthChange: 20
-  endTime: 4
+  healthChange: 45
+  endTime: 5.5
   moveName: Swordister
   description: 
   ICON: {fileID: 0}

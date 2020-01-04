@@ -31,7 +31,7 @@ namespace SNAP
             packageToAdd = new List<PackageEntry>();
             listRequest = null;
 
-
+             
             if (!File.Exists(filePath))
             {
                 var packageListFile = Directory.GetFiles(Application.dataPath, "PackageImportList.txt", SearchOption.AllDirectories);
@@ -75,7 +75,7 @@ namespace SNAP
                     for (int i = 0; i < installRequired.Length; i++)
                         installRequired[i] = true;
 
-                    
+                     
                     
                     foreach (var package in listRequest.Result)
                     {
@@ -84,14 +84,30 @@ namespace SNAP
                             if (package.packageId.Contains(packageToAdd[i].name))
                             {
                                 installRequired[i] = false;
+
+                                if (package.versions.latestCompatible != "" && package.version != "")
+                                {
+
+                                    if (GreaterThan(package.versions.latestCompatible, package.version))
+                                    {
+                                        installRequired[i] = EditorUtility.DisplayDialog("Confirm Package Upgrade", string.Format("The version of \"{0}\" in this project is not the latest version. Would you like to upgrade it to the latest version? (Recommmended)", packageToAdd[i].name), "Yes", "No");
+
+                                        if (installRequired[i])
+                                            packageToAdd[i].version = package.versions.latestCompatible;
+
+                                    }
+                                }
                             }
                         }
 
                     }
-                    
+                
 
-                    for (int i=0;i<packageToAdd.Count;i++)
-                        addRequests[i] = InstallSelectedPackage(packageToAdd[i].name, packageToAdd[i].version);
+                    for (int i = 0; i < packageToAdd.Count; i++)
+                    {
+                        if (installRequired[i])
+                            addRequests[i] = InstallSelectedPackage(packageToAdd[i].name, packageToAdd[i].version);
+                    }
 
 
                     
@@ -124,20 +140,58 @@ namespace SNAP
             return newPackage;
         }
      
-    
+     
 
         static void ReimportPackagesByKeyword()
         {
-            foreach (bool needToInstall in installRequired)
-            {
-                if (needToInstall)
-                {
-                    AssetDatabase.Refresh();
-                    AssetDatabase.ImportAsset(PackageKeyword, ImportAssetOptions.ImportRecursive);
-                    break;
-                }
-            }
+
+            AssetDatabase.Refresh();
+            AssetDatabase.ImportAsset(PackageKeyword, ImportAssetOptions.ImportRecursive);
+
         }
+
+         
+
+        static private bool GreaterThan(string versionA, string versionB)
+        {
+            var versionASplit = versionA.Split('.');
+            var versionBSplit = versionB.Split('.');
+
+            int previewA = 0;
+            int previewB = 0;
+            int patchA = 0;
+            int patchB = 0;
+
+            var majorA = Convert.ToInt32(versionASplit[0]);
+            var minorA = Convert.ToInt32(versionASplit[1]);
+            if (versionASplit.Length > 3)
+            {
+                patchA = Convert.ToInt32(versionASplit[2].Substring(0, versionASplit[2].Length - 8));
+                previewA = Convert.ToInt32(versionASplit[3]);
+            }
+            else
+            {
+                patchA = Convert.ToInt32(versionASplit[2]);
+            }
+
+            var majorB = Convert.ToInt32(versionBSplit[0]);
+            var minorB = Convert.ToInt32(versionBSplit[1]);
+            if (versionBSplit.Length > 3)
+            {
+                patchA = Convert.ToInt32(versionBSplit[2].Substring(0, versionBSplit[2].Length - 8));
+                previewA = Convert.ToInt32(versionBSplit[3]);
+            }
+            else
+            {
+                patchA = Convert.ToInt32(versionBSplit[2]);
+            }
+
+            if (versionASplit.Length > 3 && versionBSplit.Length > 3)
+                return (majorA >= majorB && minorA >= minorB && patchA >= patchB && previewA > previewB);
+
+            return (majorA >= majorB && minorA >= minorB && patchA > patchB);
+        }
+
 
 
         public class PackageEntry

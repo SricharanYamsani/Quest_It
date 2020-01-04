@@ -22,6 +22,22 @@ public class BattlePlayer : MonoBehaviour
 
     public Transform WorldUI = null;
 
+    public PlayerIcon playerIcon;
+
+    private int fakeCurrentHealth;
+
+    public int turnIndex = 0;
+
+    public int additionalAgility = 0;
+
+    public int currentAgility
+    {
+        get
+        {
+            return additionalAgility + attributes.curAgility;
+        }
+    }
+
     // Transforms for spawning Objects
 
     public Transform rightHandSpawnInside;
@@ -49,9 +65,9 @@ public class BattlePlayer : MonoBehaviour
 
     public bool isPlayer = false;
 
-    public Animator mPlayerController;
+    public bool isTeam = false;
 
-    private int fakeCurrentHealth;
+    public Animator mPlayerController;
 
     private Coroutine mCoroutine;
 
@@ -61,7 +77,7 @@ public class BattlePlayer : MonoBehaviour
 
     onComplete coroutineComplete = null;
 
-    private Color objectcolor = new Color ( 255 , 255 , 255 , 255 );
+    private Color objectcolor = new Color ( 168 , 168 , 168 , 255 );
 
     public PlayerState m_PlayerState = PlayerState.NONE;
 
@@ -78,9 +94,10 @@ public class BattlePlayer : MonoBehaviour
 
         fakeCurrentHealth = attributes.curHealth;
     }
+
     private void SetArenaTargets ( )
     {
-        if ( isPlayer )
+        if ( isTeam )
         {
             targetEnemies = BattleManager.Instance.currentEnemies;
 
@@ -94,26 +111,11 @@ public class BattlePlayer : MonoBehaviour
         }
     }
 
-    public void SetTargets ( )
+    public void SetTargets ( BattlePlayer mPlayer)
     {
-        if ( currentChoice.AttackStyle == ChoiceStyle.ATTACK )
+        if(!target.Contains(mPlayer))
         {
-            if ( currentChoice.AttackValue == AttackRange.ALLENEMY )
-            {
-                target.InsertRange ( 0 , targetEnemies );
-            }
-            else if ( currentChoice.AttackValue == AttackRange.ONEENEMY )
-            {
-                target.Add ( targetEnemies [ 0 ] );
-            }
-            else if ( currentChoice.AttackValue == AttackRange.TWOENEMY )
-            {
-
-            }
-        }
-        else
-        {
-            //target = teamPlayers [ 0 ];
+            target.Add ( mPlayer );
         }
     }
     public void CommitChoice ( )
@@ -166,7 +168,7 @@ public class BattlePlayer : MonoBehaviour
 
         reactionLabel.gameObject.SetActive ( true );
 
-        m_Sequence.Append ( reactionLabel.DOAnchorPos ( new Vector2 ( 0 , 0.8f ) , 0.4f ).SetEase ( Ease.InQuad ) ).Join ( DOVirtual.DelayedCall(0.1f,()=> { reactionText.DOFade ( 0.2f , 0.3f ); } )).OnKill ( ( ) =>
+        m_Sequence.Append ( reactionLabel.DOAnchorPos ( new Vector2 ( 0 , 0.8f ) , 0.4f ).SetEase ( Ease.InQuad ) ).Join ( DOVirtual.DelayedCall(0.1f,()=> { reactionText.DOFade ( 0.1f , 0.3f ); } )).OnKill ( ( ) =>
         {
             reactionLabel.anchoredPosition = Vector2.zero;
 
@@ -190,31 +192,81 @@ public class BattlePlayer : MonoBehaviour
         yield return new WaitForSeconds ( waitTime );
 
         target.Clear ( );
+
+        BattleManager.Instance.isSelecting = false;
     }
 
     public void UpdateHealth ( )
     {
-        Debug.Log ( this.name );
-
-        DOTween.To ( ( ) => fakeCurrentHealth , x => fakeCurrentHealth = x , attributes.curHealth , 1 ).OnUpdate ( ( ) =>
-        {
-            if ( WorldUI )
-            {
-                fillingHpBar.fillAmount = ( float ) fakeCurrentHealth / attributes.maxHealth;
-            }
-
-        } ).OnComplete ( ( ) =>
+        if ( playerIcon )
         {
 
-            if ( WorldUI )
-            {
-                fillingHpBar.fillAmount = ( float ) fakeCurrentHealth / attributes.maxHealth;
+            Debug.Log ( this.name );
 
-                if ( attributes.curHealth <= 0 )
+            DOTween.To ( ( ) => fakeCurrentHealth , x => fakeCurrentHealth = x , attributes.curHealth , 1 ).OnUpdate ( ( ) =>
+            {
+                if ( WorldUI )
                 {
-                    mPlayerController.SetTrigger ( AnimationType.DEAD.ToString ( ) );
+                    playerIcon.healthBar.fillAmount = ( float ) fakeCurrentHealth / attributes.maxHealth;
                 }
+
+            } ).OnComplete ( ( ) =>
+            {
+
+                if ( WorldUI )
+                {
+                    playerIcon.healthBar.fillAmount = ( float ) fakeCurrentHealth / attributes.maxHealth;
+
+                    if ( attributes.curHealth <= 0 )
+                    {
+                        mPlayerController.SetTrigger ( AnimationType.DEAD.ToString ( ) );
+                    }
+                }
+            } );
+        }
+    }
+
+    public void TakePartInBattle(bool isTrue)
+    {
+        if(isTrue)
+        {
+            BattleManager.Instance.TurnStart += TurnStart;
+
+            BattleManager.Instance.RoundOver += RoundOver;
+        }
+        else
+        {
+            BattleManager.Instance.TurnStart -= TurnStart;
+
+            BattleManager.Instance.RoundOver -= RoundOver;
+        }
+    }
+
+    public void TurnStart (int currentIndex)
+    {
+        if ( turnIndex == currentIndex )
+        {
+            if ( attributes.curHealth > 0 )
+            {
+                BattleUIManager.Instance.choiceUI.gameObject.SetActive ( true );
+
+                //SelectMove ( );
+
+                CommitChoice ( );
             }
-        } );
+            else
+            {
+                BattleManager.Instance.isSelecting = false;
+            }
+        }
+        else
+        {
+
+        }
+    }
+
+    public void RoundOver()
+    {
+
     }
 }

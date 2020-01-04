@@ -19,7 +19,7 @@ MonoBehaviour:
   m_Currency: 2
   m_CurrencyAmount: 0
   moveAffectDuration: 0
-  healthChange: 25
+  healthChange: 55
   endTime: 7
   moveName: ARROW HIT
   description: 

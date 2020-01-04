@@ -70,6 +70,6 @@ public class BaseUIChoice : MonoBehaviour
     {
         BattleUIManager.Instance.ourPlayer.currentChoice = m_Choice;
 
-        BattleManager.Instance.mTimer = 0;
+        ChoiceManager.Instance.StartSelecting ( m_Choice.AttackValue );
     }
 }

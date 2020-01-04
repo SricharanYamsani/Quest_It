@@ -6,7 +6,7 @@ public class PlayerAnimation : MonoBehaviour
 {
     public void AnimationStrike()
     {
-        BattleManager.Instance.TriggerTargetPlayer ( );
+        //BattleManager.Instance.TriggerTargetPlayer ( );
     }
 
     public void OnAnimationStart()

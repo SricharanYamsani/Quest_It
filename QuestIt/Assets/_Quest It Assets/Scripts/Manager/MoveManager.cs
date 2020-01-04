@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveManager : Singleton<MoveManager>
 {
+    public event Action<BattlePlayer> TurnAffectOnPlayer;
+
     protected override void Awake ( )
     {
         base.Awake ( );
@@ -27,7 +30,7 @@ public class MoveManager : Singleton<MoveManager>
 
     public void CalculateDamage (BattleChoice m_Choice , BattlePlayer m_Player)
     {
-        int x = Random.Range ( 0 , 100 );
+        int x = UnityEngine.Random.Range ( 0 , 100 );
 
         if ( x <= m_Player.attributes.curLuck )
         {
@@ -39,7 +42,7 @@ public class MoveManager : Singleton<MoveManager>
         {
             m_Player.attributes.curHealth -= m_Choice.healthChange;
 
-            m_Player.m_PlayerState = PlayerState.BLOCK;
+            m_Player.m_PlayerState = PlayerState.NONE;
 
             Debug.Log ( "HIT" );
         }

@@ -17,10 +17,10 @@ MonoBehaviour:
   MoveTurnsType: 2
   m_AnimationClip: 1
   m_Currency: 2
-  m_CurrencyAmount: 5
+  m_CurrencyAmount: 0
   moveAffectDuration: 0
   healthChange: 20
-  endTime: 4
+  endTime: 3.5
   moveName: SwordSlash
   description: 
   ICON: {fileID: 0}

@@ -5,11 +5,9 @@ using UnityEngine;
 public enum AttackRange
 {
     NONE,
-    SELF,
     ONEENEMY,
-    TWOENEMY,
     ALLENEMY,
     ONETEAM,
-    TWOTEAM,
-    ALLTEAM
+    ALLTEAM,
+    EVERYONE
 }
