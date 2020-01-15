@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HardSwordAttack
   m_EditorClassIdentifier: 
   AttackStyle: 1
-  AttackValue: 2
+  AttackValue: 1
   MoveTurnsType: 2
   m_AnimationClip: 2
   m_Currency: 2
@@ -23,5 +23,6 @@ MonoBehaviour:
   endTime: 5.5
   moveName: Swordister
   description: 
+  target: []
   ICON: {fileID: 0}
   sword: {fileID: 5288576339935000147, guid: f4e0cbed4315640519c7d071a57e42aa, type: 3}

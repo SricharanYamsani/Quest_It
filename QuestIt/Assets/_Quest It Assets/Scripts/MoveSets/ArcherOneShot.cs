@@ -9,7 +9,7 @@ public class ArcherOneShot : BattleChoice
 
     public IWeapon arrow;
 
-    public override void MoveWork ( )
+    public override void MoveWork (List<BattlePlayer> target )
     {
         BattlePlayer tPlayer = BattleManager.Instance.currentPlayer;
 
@@ -19,20 +19,6 @@ public class ArcherOneShot : BattleChoice
 
             IWeapon mObject = Instantiate<IWeapon> ( Bow , tPlayer.leftHandSpawnInside );
 
-            BattlePlayer enemy = tPlayer.target [ 0 ];
-
-            if(enemy == null)
-            {
-                Debug.LogError ( "NULL ENEMY" );
-            }
-            else
-            {
-                Debug.LogWarning ( enemy.name );
-            }
-            List<BattlePlayer> mPlayerList = new List<BattlePlayer> ( );
-
-            mPlayerList.Add ( enemy );
-
             mObject.amount = moveAffectDuration;
 
             mObject.moveDuration = MoveTurnsType;
@@ -41,13 +27,23 @@ public class ArcherOneShot : BattleChoice
 
             tPlayer.mPlayerController.SetTrigger ( m_AnimationClip.ToString ( ) );
 
-            m_Arrow.Trigger ( mPlayerList );
+            m_Arrow.Trigger ( target );
 
             foreach ( BattlePlayer m_Player in tPlayer.target )
             {
                 MoveManager.Instance.CalculateDamage ( this , m_Player );
             }
+
+            DOVirtual.DelayedCall(endTime, () => { base.MoveWork(null); });
+
+
+            foreach (BattlePlayer player in target)
+            {
+                MoveManager.Instance.CalculateDamage(this, player);
+            }
         }
+
+
     }
 }
 

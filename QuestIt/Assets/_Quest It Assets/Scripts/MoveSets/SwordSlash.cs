@@ -2,41 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-[CreateAssetMenu ( fileName = "Objects" , menuName = "ScriptableObjects/BATTLE CHOICES - SWORD SLASH" )]
+[CreateAssetMenu(fileName = "Objects", menuName = "ScriptableObjects/BATTLE CHOICES - SWORD SLASH")]
 public class SwordSlash : BattleChoice
 {
     public IWeapon sword;
 
-    public override void MoveWork ( )
+    public override void MoveWork(List<BattlePlayer> target)
     {
         BattlePlayer tPlayer = BattleManager.Instance.currentPlayer;
 
-        if ( tPlayer != null )
+        if (tPlayer != null)
         {
-            IWeapon mObject = Instantiate<IWeapon> ( sword , tPlayer.rightHandSpawnInside );
+            IWeapon mObject = Instantiate<IWeapon>(sword, tPlayer.rightHandSpawnInside);
 
             mObject.amount = moveAffectDuration;
 
             mObject.moveDuration = MoveTurnsType;
 
-            mObject.Trigger ( );
+            mObject.Trigger();
 
-            tPlayer.mPlayerController.SetBool ( "Walking" , true );
+            List<BattlePlayer> mPlayers = target;
 
-            tPlayer.transform.DOMove ( (tPlayer.target [ 0 ].meleeAttackSpawn.position) , 1.25f ).OnComplete ( ( ) =>
-                      {
-                          tPlayer.mPlayerController.SetBool ( "Walking" , false );
+            tPlayer.mPlayerController.SetBool("Walking", true);
 
-                          tPlayer.mPlayerController.SetTrigger ( m_AnimationClip.ToString ( ) );
+            Sequence mySequence = DOTween.Sequence();
 
-                          Debug.Log ( tPlayer.mPlayerController.GetCurrentAnimatorClipInfo ( 0 ).Length );// + 2f;
-
-                          Debug.Log ( endTime );
-                      } );
-
-            foreach ( BattlePlayer m_Player in tPlayer.target )
+            mySequence.Append(tPlayer.transform.DOMove((mPlayers[0].meleeAttackSpawn.position), 1.25f)).Append(DOVirtual.DelayedCall(0, () =>
             {
-                MoveManager.Instance.CalculateDamage ( this , m_Player );
+                tPlayer.mPlayerController.SetBool("Walking", false);
+
+                tPlayer.mPlayerController.SetTrigger(m_AnimationClip.ToString());
+
+            })).Append(DOVirtual.DelayedCall(endTime, () => { tPlayer.transform.DOMove(tPlayer.OriginalSpawn.position, 1.25f); }));
+
+            mySequence.OnUpdate(() => { tPlayer.transform.LookAt(mPlayers[0].transform.position); });
+
+            mySequence.OnComplete(() => { base.MoveWork(null); });
+
+            foreach (BattlePlayer m_Player in mPlayers)
+            {
+                MoveManager.Instance.CalculateDamage(this, m_Player);
             }
         }
     }

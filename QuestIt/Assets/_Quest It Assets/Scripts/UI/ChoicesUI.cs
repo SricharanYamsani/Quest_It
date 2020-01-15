@@ -16,9 +16,8 @@ public class ChoicesUI : MonoBehaviour
 
     public void ChooseOption()
     {
-        BattleUIManager.Instance.ourPlayer.currentChoice = battleChoiceOption;
+        BattleManager.Instance.currentPlayer.currentChoice = battleChoiceOption;
 
-        BattleUIManager.Instance.ToggleSlider ( );
-
+        BattleUIManager.Instance.ShowTargetChoices(battleChoiceOption.AttackValue);
     }
 }

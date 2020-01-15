@@ -7,94 +7,214 @@ using DG.Tweening;
 
 public class BattleUIManager : Singleton<BattleUIManager>
 {
-    public GameObject choiceUI;
+    #region ObjectReferences
 
-    public RectTransform slider = null;
+    public RectTransform playerHUD;
+    public RectTransform enemyHUD;
 
-    public RectTransform sliderPanel = null;
+    public PlayerIcon playerIconRef;
+    public PlayerIcon enemyIconRef;
 
-    public TextMeshProUGUI mText;
-
-    bool isSliderOn = false;
-
-    public BattlePlayer ourPlayer;
-
+    public CanvasGroup RadialButton;
     public GameObject gameOverScreen;
 
+    public Button selectTrueButton;
+
+    //Selection
+    public RectTransform targetSelectionScreen;
+    public List<TargetSelection> selectors = new List<TargetSelection>();
+    #endregion
+    public TextMeshProUGUI mText;
+
+    #region Constants
+    public const float fadeTimeRadial = 0.4f;
+    #endregion
+    bool isSliderOn = false;
+
     [SerializeField]
-    List<BaseUIChoice> t_Choices = new List<BaseUIChoice> ( ); 
+    List<BaseUIChoice> t_Choices = new List<BaseUIChoice>();
 
-    protected override void  Awake ( )
+    protected override void Awake()
     {
-        base.Awake ( );
+        base.Awake();
 
-        gameOverScreen.SetActive ( false );
+        gameOverScreen.SetActive(false);
 
-        BattleManager.Instance.GameInit += SetPlayer;
+        BattleManager.Instance.GameInit += LoadAllPlayerUI;
 
         BattleManager.Instance.GameOver += GameOverScreen;
-        
-        if ( !isSliderOn )
-        {
-            slider.sizeDelta = new Vector2 ( 0 , slider.sizeDelta.y );
 
-            slider.gameObject.SetActive ( false );
-        }
+        selectTrueButton.onClick.AddListener(() => { SelectPlayerGo(); });
     }
-    private void SetPlayer ( )
+    private void LoadAllPlayerUI()
     {
-        ourPlayer = BattleManager.Instance.validPlayers.Find ( (BattlePlayer p) => { return p.isPlayer == true; } );
-
-        for ( int i = 0 ; i < t_Choices.Count ; i++ )
+        foreach (BattlePlayer player in BattleManager.Instance.validPlayers)
         {
-            if ( i < ourPlayer.validChoices.Count )
+            RectTransform parentContent = null;
+
+            PlayerIcon iconRef;
+
+            if (player.isTeamRed)
             {
-                t_Choices [ i ].m_Choice = ourPlayer.validChoices [ i ];
-
-                t_Choices [ i ].SetupChoice ( );
-
-                t_Choices [ i ].gameObject.SetActive ( true );
+                parentContent = playerHUD;
+                iconRef = Instantiate<PlayerIcon>(playerIconRef, parentContent);
             }
             else
             {
-                t_Choices [ i ].gameObject.SetActive ( false );
+                parentContent = enemyHUD;
+                iconRef = Instantiate<PlayerIcon>(enemyIconRef, parentContent);
+            }
+
+            iconRef.Setup(player);
+
+            player.playerIcon = iconRef;
+
+            if (player.isPlayer)
+            {
+                for (int i = 0; i < t_Choices.Count; i++)
+                {
+                    if (i < player.validChoices.Count)
+                    {
+                        t_Choices[i].m_Choice = player.validChoices[i];
+                    }
+                    else
+                    {
+                        t_Choices[i].m_Choice = null
+;
+                    }
+
+                    t_Choices[i].SetupChoice();
+                }
             }
         }
     }
 
-    public void ToggleSlider(bool isSlider = false)
+    public void ShowRadial()
     {
-        if(!isSliderOn)
-        {
-            slider.gameObject.SetActive ( true );
-
-            slider.DOSizeDelta ( new Vector2 ( 1500 , slider.sizeDelta.y ) , 0.35f ).OnKill ( ( ) => { slider.sizeDelta = new Vector2 ( 1500 , slider.sizeDelta.y ); } );
-
-            isSliderOn = true;
-        }
-        else
-        {
-            // Temp OnKill
-            slider.DOSizeDelta ( new Vector2 ( 0 , slider.sizeDelta.y ) , 0.35f ).OnKill ( ( ) => { slider.sizeDelta = new Vector2 ( 0 , slider.sizeDelta.y ); slider.gameObject.SetActive ( false ); } );
-
-            isSliderOn = false;
-        }
+        RadialButton.DOFade(1, fadeTimeRadial).OnKill(() => { RadialButton.alpha = 1; });
     }
-
-    public void ShowTargetChoices ( )
+    public void ShowChoices()
     {
 
     }
 
-    private void FixedUpdate ( )
+    #region TargetChoices
+    public void ShowTargetChoices(AttackRange range)
     {
-        mText.text = BattleManager.Instance.mTimer.ToString ( "00" );
+        List<BattlePlayer> myTargets = new List<BattlePlayer>();
+
+        List<BattlePlayer> validPlayers = BattleManager.Instance.validPlayers;
+
+        bool canSelect = false;
+
+        switch (range)
+        {
+            case AttackRange.ONEENEMY:
+
+                foreach (BattlePlayer battlePlayer in validPlayers)
+                {
+                    if (!battlePlayer.isTeamRed)
+                    {
+                        myTargets.Add(battlePlayer);
+                    }
+                }
+                canSelect = true;
+
+                break;
+
+            case AttackRange.ONETEAM:
+
+                myTargets = BattleManager.Instance.currentBlue;
+
+                canSelect = true;
+
+                break;
+
+            case AttackRange.ALLENEMY:
+
+                foreach (BattlePlayer battlePlayer in validPlayers)
+                {
+                    if (!battlePlayer.isTeamRed)
+                    {
+                        myTargets.Add(battlePlayer);
+                    }
+                }
+                canSelect = false;
+
+                break;
+
+            case AttackRange.ALLTEAM:
+                foreach (BattlePlayer battlePlayer in validPlayers)
+                {
+                    if (!battlePlayer.isTeamRed)
+                    {
+                        myTargets.Add(battlePlayer);
+                    }
+                }
+                canSelect = false;
+
+                break;
+
+            case AttackRange.EVERYONE:
+
+                myTargets = validPlayers;
+
+                canSelect = false;
+
+                break;
+        }
+
+        if (myTargets.Count > 0)
+        {
+            LoadTargets(myTargets, canSelect);
+        }
+    }
+    #endregion
+    private void LoadTargets(List<BattlePlayer> targets, bool isSelection = false)
+    {
+        for (int i = 0; i < selectors.Count; i++)
+        {
+            if (i < targets.Count)
+            {
+                selectors[i].Setup(targets[i], isSelection);
+
+                if (!isSelection)
+                {
+                    selectors[i].frame.gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                selectors[i].Setup(null);
+            }
+        }
+
+        targetSelectionScreen.gameObject.SetActive(true);
+    }
+
+    public void SelectPlayerGo()
+    {
+        List<BattlePlayer> targets = new List<BattlePlayer>();
+
+        foreach (TargetSelection targetselector in selectors)
+        {
+            if (targetselector.isSelected)
+            {
+                targets.Add(targetselector.mPlayer);
+            }
+        }
+        targetSelectionScreen.gameObject.SetActive(false);
+
+        BattleManager.Instance.currentPlayer.currentChoice.MoveWork(targets);
+    }
+
+    private void FixedUpdate()
+    {
+        mText.text = BattleManager.Instance.m_Timer.ToString("00");
     }
 
     private void GameOverScreen()
     {
-        choiceUI.gameObject.SetActive ( true );
-
-        gameOverScreen.SetActive ( true );
+        gameOverScreen.SetActive(true);
     }
 }

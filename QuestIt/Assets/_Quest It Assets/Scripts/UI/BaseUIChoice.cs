@@ -63,13 +63,19 @@ public class BaseUIChoice : MonoBehaviour
             {
                 m_CurrencyText.text = m_Choice.m_CurrencyAmount.ToString ( );
             }
+
+            this.gameObject.SetActive(true);
+        }
+        else
+        {
+            this.gameObject.SetActive(false);
         }
     }
 
     public void SetCurrentChoice()
     {
-        BattleUIManager.Instance.ourPlayer.currentChoice = m_Choice;
+        BattleManager.Instance.currentPlayer.currentChoice = m_Choice;
 
-        ChoiceManager.Instance.StartSelecting ( m_Choice.AttackValue );
+        BattleUIManager.Instance.ShowTargetChoices(m_Choice.AttackValue);
     }
 }

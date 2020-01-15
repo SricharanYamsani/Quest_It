@@ -26,9 +26,14 @@ public abstract class  BattleChoice : ScriptableObject
 
     public string description = string.Empty;
 
+    public List<BattlePlayer> target = new List<BattlePlayer>();
+
     public Sprite ICON;
 
-    public abstract void MoveWork ( );
+    public virtual void MoveWork(List<BattlePlayer> targets)
+    {
+        BattleManager.Instance.isSelecting = false;
+    }
 }
 public enum ChoiceStyle
 {

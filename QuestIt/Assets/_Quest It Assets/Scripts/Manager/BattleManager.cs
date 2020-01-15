@@ -10,107 +10,152 @@ public class BattleManager : Singleton<BattleManager>
 {
     // VARIABLE SECTION
 
-    [Header ( "-BATTLE STATE-" )]
+    [Header("-BATTLE STATE-")]
     public BattleStates battleState = BattleStates.NONE;
 
-    [Header ( "CONSTANTS" )]
-    private const int MTime = 15;
+    [Header("CONSTANTS")]
+    private const int MTime = 0;
 
-    [Header ( "INTEGERS" )]
-    public int mTimer = 0;
+    [Header("INTEGERS")]
+    public int m_Timer = 0;
 
     public int validPlayersCount = 0;
 
     private int currentPlayerIndex = -1;
 
-    [Header ( "BATTLE PLAYER CURRENT LIST" )]
-    public List<BattlePlayer> validPlayers = new List<BattlePlayer> ( );
+    [Header("BATTLE PLAYER CURRENT LIST")]
+    public List<BattlePlayer> validPlayers = new List<BattlePlayer>();
 
-    private List<BattlePlayer> roundValidPlayers = new List<BattlePlayer> ( );
+    private List<BattlePlayer> roundValidPlayers = new List<BattlePlayer>();
 
-    [Header ( "ENEMIES" )]
-    public List<BattlePlayer> currentEnemies = new List<BattlePlayer> ( );
+    [Header("ENEMIES")]
+    public List<BattlePlayer> currentRed = new List<BattlePlayer>();
 
-    public List<BattlePlayer> currentPlayers = new List<BattlePlayer> ( );
+    public List<BattlePlayer> currentBlue = new List<BattlePlayer>();
 
-    public List<BattlePlayer> targetPlayers = new List<BattlePlayer> ( );
+    public List<BattlePlayer> targetPlayers = new List<BattlePlayer>();
 
-    [Header ( "CurrentMove - BattlePlayer" )]
+    [Header("CurrentMove - BattlePlayer")]
     public BattlePlayer currentPlayer = null;
 
     public BattlePlayer playerPrefabRef;
 
     public PlayerIcon playerIconRef;
 
-    [Header ( "Transforms" )]
-    [Space ( 20 )]
-    public Transform [ ] playerSpawn;
+    [Header("Transforms")]
+    [Space(20)]
+    public Transform[] playerSpawn;
 
-    public Transform [ ] enemySpawn;
+    public Transform[] enemySpawn;
 
     public event Action GameInit;
 
     public event Action TurnOver;
 
-    public event Action<int> TurnStart;
+    public event Action<BattlePlayer> TurnStart; // send the player 
 
     public event Action RoundOver;
 
     public event Action GameOver;
 
-    public bool isSelecting = false;
+    public bool isSelecting { get; set; } = false;
+
+    public static int uniqueID = 0;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        RoundOver += RoundOverFunc;
+
+        TurnStart += TurnStartFunc;
+    }
+
+    private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over
+    {
+        Debug.LogWarning("Round was Over");
+
+        int hasHealth = 0;
+
+        foreach (BattlePlayer player in roundValidPlayers)
+        {
+            if (player.attributes.curHealth > 0)
+            {
+                hasHealth++;
+            }
+        }
+
+        if (hasHealth > 1)
+        {
+            SwitchPlayState(BattleStates.BATTLE);
+        }
+        else
+        {
+            Debug.LogError("Game Over");
+        }
+    }
+
+    private void TurnStartFunc(BattlePlayer player) // Turn Over Method
+    {
+        Debug.LogWarning(player);
+    }
 
     private void Start ( )
     {
-        StartCoroutine ( LoadAllPlayers ( ) );
+        StartCoroutine ( LoadAllPlayers ( ) ); // Remove It from here need a better process or make the system completely on Ienumerator
     }
 
+    #region Loading all Players On The Field (MAX - 3 OF EACH TEAM)
     IEnumerator LoadAllPlayers()
     {
         yield return null;
 
-        BattlePlayer mPlayer = null;
+        BattlePlayer t_Player = null;
 
         for (int i =0 ;i<playerSpawn.Length ;i++ )
         {
-            mPlayer = Instantiate ( playerPrefabRef , playerSpawn [ i] );
+            t_Player = Instantiate ( playerPrefabRef , playerSpawn [ i] );
 
             //mPlayer.playerIcon = Instantiate<PlayerIcon>(playerIconRef,)
-            mPlayer.attributes = PlayerGenerator.Instance.AttributesGenerator ( );
+            t_Player.attributes = PlayerGenerator.Instance.AttributesGenerator ( );
 
             if ( i == 0 )
             {
-                mPlayer.isPlayer = true;
+                t_Player.isPlayer = true;
             }
             else
             {
-                mPlayer.isPlayer = false;
+                t_Player.isPlayer = false;
             }
 
-            mPlayer.isTeam = true;
+            t_Player.isTeamRed = true;
 
-            mPlayer.tag = "Player";
+            t_Player.tag = "Player";
 
-            validPlayers.Add ( mPlayer );
+            t_Player.OriginalSpawn = playerSpawn[i];
+
+            validPlayers.Add ( t_Player );
         }
 
         for ( int i = 0 ; i < enemySpawn.Length ; i++ )
         {
-            mPlayer = Instantiate ( playerPrefabRef , enemySpawn [ i ] );
+            t_Player = Instantiate ( playerPrefabRef , enemySpawn [ i ] );
 
-            mPlayer.isPlayer = false;
+            t_Player.isPlayer = false;
 
             Debug.Log ( i );
 
-            mPlayer.attributes = PlayerGenerator.Instance.AttributesGenerator ( );
+            t_Player.attributes = PlayerGenerator.Instance.AttributesGenerator ( );
 
-            mPlayer.isTeam = false;
+            t_Player.isTeamRed = false;
 
-            mPlayer.tag = "Enemy";
+            t_Player.OriginalSpawn = enemySpawn[i];
 
-            mPlayer.transform.rotation = new Quaternion ( 0 , 180 , 0 , 0 );
+            t_Player.tag = "Enemy";
 
-            validPlayers.Add ( mPlayer );
+            t_Player.transform.rotation = new Quaternion ( 0 , 180 , 0 , 0 );
+
+            validPlayers.Add ( t_Player );
         }
 
         CalculatePlayers ( true );
@@ -122,18 +167,18 @@ public class BattleManager : Singleton<BattleManager>
         SwitchPlayState ( BattleStates.CHOICE );
 
     }
-
-    public void CalculatePlayersOnField ( )
+    #endregion
+    public void CalculatePlayersOnField ( ) // Calculate if it is Team Red or Team Blue
     {
-        foreach ( BattlePlayer mEnemies in validPlayers )
+        foreach ( BattlePlayer t_Enemies in validPlayers )
         {
-            if ( !mEnemies.isTeam )
+            if ( !t_Enemies.isTeamRed )
             {
-                currentEnemies.Add ( mEnemies );
+                currentRed.Add ( t_Enemies );
             }
             else
             {
-                currentPlayers.Add ( mEnemies );
+                currentBlue.Add ( t_Enemies );
             }
         }
     }
@@ -170,20 +215,21 @@ public class BattleManager : Singleton<BattleManager>
             break;
         }
     }
-    #region Start Battle Rounds
+    // In Process of Removing it
+    #region Start Battle Rounds 
     private IEnumerator StartProcess ( )
     {
-        mTimer = MTime;
+        m_Timer = MTime;
 
         //BattleUIManager.Instance.choiceUI.SetActive ( true );
 
-        while ( mTimer > 0 )
+        while ( m_Timer > 0 )
         {
             yield return new WaitForSeconds ( 1f );
 
-            mTimer--;
+            m_Timer--;
         }
-        mTimer = 0;
+        m_Timer = 0;
 
         yield return null;
 
@@ -193,178 +239,28 @@ public class BattleManager : Singleton<BattleManager>
     }
     #endregion
 
-    public void GetValidPlayers ( )
-    {
-        List<BattlePlayer> playerList = new List<BattlePlayer> ( );
-
-        int maxSpeed = 0;
-
-        foreach ( BattlePlayer player in validPlayers )
-        {
-            if ( player.attributes.curHealth <= 0 )
-            {
-                if ( player.attributes.curAgility >= maxSpeed )
-                {
-                    maxSpeed = player.attributes.curAgility;
-                }
-
-                playerList.Add ( player );
-
-                player.gameObject.SetActive ( false );
-            }
-        }
-
-        foreach ( BattlePlayer m in playerList )
-        {
-            validPlayers.Remove ( m );
-        }
-        if ( validPlayers.Count > 1 )
-        {
-            for ( int i = 0 ; i < validPlayers.Count - 1 ; i++ )
-            {
-                for ( int j = 0 ; j < validPlayers.Count - i - 1 ; j++ )
-                {
-                    if ( validPlayers [ j ].attributes.curAgility < validPlayers [ j + 1 ].attributes.curAgility )
-                    {
-                        BattlePlayer temp = validPlayers [ j ];
-
-                        validPlayers [ j ] = validPlayers [ j + 1 ];
-
-                        validPlayers [ j + 1 ] = temp;
-                    }
-                }
-            }
-        }
-        playerList.Clear ( );
-    }
-
-    #region Old BattleSystem
-    IEnumerator BattleAttackChoice ( )
-    {
-        // Play Everyone Who Chose Defense
-        foreach(BattlePlayer player  in validPlayers)
-        {
-            if(player.currentChoice.AttackStyle == ChoiceStyle.DEFEND)
-            {
-                currentPlayer = player;
-
-                //currentPlayer.SetTargets ( );
-
-                currentPlayer.CommitChoice ( );
-
-                yield return new WaitForSeconds ( player.currentChoice.endTime );
-
-                foreach ( BattlePlayer mPlayer in currentPlayer.target )
-                {
-                    mPlayer.UpdateHealth ( );
-                }
-
-                TurnOver?.Invoke ( );
-            }
-        }
-        // Play Everyone Who Chose Attack
-        foreach ( BattlePlayer player in validPlayers )
-        {
-            if ( player.attributes.curHealth > 0 )
-            {
-                targetPlayers.Clear ( );
-
-                if ( player.currentChoice.AttackStyle == ChoiceStyle.ATTACK )
-                {
-                    currentPlayer = player;
-
-                    //player.SetTargets ( );
-
-                    targetPlayers.InsertRange ( 0 , player.targetEnemies );
-
-                    player.CommitChoice ( );
-
-                    yield return new WaitForSeconds ( player.currentChoice.endTime );
-
-                    foreach ( BattlePlayer mPlayer in targetPlayers )
-                    {
-                        mPlayer.UpdateHealth ( );
-                    }
-
-                    targetPlayers.Clear ( );
-
-                    TurnOver?.Invoke ( );
-
-                    bool isBack = false;
-
-                    player.mPlayerController.SetBool ( "Walking" , true );
-
-                    player.transform.DOLocalMove ( new Vector3 ( 0 , 0.1f , 0 ) , 0.5f ).OnComplete(()=>{
-
-                        player.mPlayerController.SetBool ( "Walking" , false );
-
-                        player.transform.localPosition = new Vector3 ( 0 , 0.1f , 0 );
-
-                        isBack = true;
-                    });
-
-                    while(!isBack)
-                    {
-                        yield return null;
-                    }
-
-                }
-            }
-            else
-            {
-                /// Not a Valid entity and needs to be skipped.
-            }
-        }
-
-        int index = 0;
-
-        foreach ( BattlePlayer player in validPlayers )
-        {
-            if ( player.attributes.curHealth > 0 )
-            {
-                index++;
-            }
-        }
-
-        RoundOver?.Invoke ( );
-
-        if ( index > 1 )
-        {
-            SwitchPlayState ( BattleStates.CHOICE );
-        }
-        else
-        {
-            yield return new WaitForSeconds ( 2.0f );
-
-            SwitchPlayState ( BattleStates.OUTCOME );
-        }
-    }
-    #endregion
-
     #region New Battle System
-    IEnumerator BattleMatch ( )
+    IEnumerator BattleMatch()
     {
         currentPlayerIndex = -1;
 
-        for ( int i = 0 ; i < validPlayers.Count ; i++ )
+        for (int i = 0; i < roundValidPlayers.Count; i++)
         {
-            CalculatePlayers ( );
-
+            currentPlayer = roundValidPlayers[i];
             isSelecting = true;
+            TurnStart?.Invoke(currentPlayer);
 
-            TurnStart?.Invoke ( ++currentPlayerIndex );
-
-            while ( isSelecting )
+            while (isSelecting)
             {
                 yield return null;
             }
 
-            TurnOver?.Invoke ( );
+            TurnOver?.Invoke();
         }
 
         yield return null;
 
-        RoundOver?.Invoke ( );
+        RoundOver?.Invoke();
     }
     #endregion
 
@@ -373,9 +269,9 @@ public class BattleManager : Singleton<BattleManager>
     {
         roundValidPlayers.Clear ( );
 
-        currentEnemies.Clear ( );
+        currentRed.Clear ( );
 
-        currentPlayers.Clear ( );
+        currentBlue.Clear ( );
 
         for ( int i = 0 ; i < validPlayers.Count ; i++ )
         {
