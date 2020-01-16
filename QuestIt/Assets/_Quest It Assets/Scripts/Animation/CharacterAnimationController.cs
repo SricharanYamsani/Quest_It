@@ -5,12 +5,9 @@ using UnityEngine;
 public class CharacterAnimationController : MonoBehaviour
 {
     public Animator animator;
-
-    private CharacterAnimationStateEnum currentStateEnum = CharacterAnimationStateEnum.None;
-
     private CharacterAnimationStateEnum lastStateEnum = CharacterAnimationStateEnum.None;
 
-    public CharacterAnimationStateEnum CurrentStateEnum { get { return currentStateEnum; } }
+    public CharacterAnimationStateEnum CurrentStateEnum { get; private set; } = CharacterAnimationStateEnum.None;
 
     private CharacterAnimationState currentState = null;
 
@@ -19,7 +16,6 @@ public class CharacterAnimationController : MonoBehaviour
         SetState(CharacterAnimationStateEnum.Idle);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(currentState != null)
@@ -35,8 +31,8 @@ public class CharacterAnimationController : MonoBehaviour
             return;
         }
 
-        lastStateEnum = currentStateEnum;
-        currentStateEnum = stateEnum;
+        lastStateEnum = CurrentStateEnum;
+        CurrentStateEnum = stateEnum;
 
         currentState.Exit();
 

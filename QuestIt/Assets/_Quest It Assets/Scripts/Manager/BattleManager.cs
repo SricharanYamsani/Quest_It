@@ -73,19 +73,28 @@ public class BattleManager : Singleton<BattleManager>
 
     private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over
     {
-        Debug.LogWarning("Round was Over");
+        //Debug.LogWarning("Round was Over");
 
-        int hasHealth = 0;
+        //int hasHealth = 0;
 
-        foreach (BattlePlayer player in roundValidPlayers)
-        {
-            if (player.attributes.curHealth > 0)
-            {
-                hasHealth++;
-            }
-        }
+        //foreach (BattlePlayer player in roundValidPlayers)
+        //{
+        //    if (player.attributes.curHealth > 0)
+        //    {
+        //        hasHealth++;
+        //    }
+        //}
 
-        if (hasHealth > 1)
+        //if (hasHealth > 1)
+        //{
+        //    SwitchPlayState(BattleStates.BATTLE);
+        //}
+        //else
+        //{
+        //    Debug.LogError("Game Over");
+        //}
+
+        if (IsTeamAlive(currentRed) && IsTeamAlive(currentBlue))
         {
             SwitchPlayState(BattleStates.BATTLE);
         }
@@ -93,6 +102,21 @@ public class BattleManager : Singleton<BattleManager>
         {
             Debug.LogError("Game Over");
         }
+    }
+
+    private bool IsTeamAlive(List<BattlePlayer> players)
+    {
+        bool isAlive = false;
+
+        for (int i = players.Count - 1; i >= 0; --i)
+        {
+            if (players[i].attributes.curHealth > 0)
+            {
+                isAlive = true;
+                break;
+            }
+        }
+        return isAlive;
     }
 
     private void TurnStartFunc(BattlePlayer player) // Turn Over Method
