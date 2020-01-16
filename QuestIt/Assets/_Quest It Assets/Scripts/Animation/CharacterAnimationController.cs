@@ -42,6 +42,8 @@ public class CharacterAnimationController : MonoBehaviour
 
         currentState = GetState(stateEnum);
 
+        animator.Play(stateEnum.ToString());
+
         currentState.Init();
     }
 
