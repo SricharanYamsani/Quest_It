@@ -5,42 +5,42 @@ using UnityEngine;
 
 public class Arrow : IWeapon
 {
-    public override void Trigger (List<BattlePlayer> targets = null)
+    public override void Trigger(List<BattlePlayer> targets = null)
     {
-        if ( targets != null )
+        if (targets != null)
         {
-            if ( targets.Count > 0 )
+            if (targets.Count > 0)
             {
-                Debug.Log ( targets.Count );
+                Debug.Log(targets.Count);
 
-                BattlePlayer target = targets [ 0 ];
+                BattlePlayer target = targets[0];
 
-                Debug.Log ( target.name );
+                Debug.Log(target.name);
 
-                Debug.Log ( this.name );
+                Debug.Log(this.name);
 
-                DOVirtual.DelayedCall ( 3.15f , ( ) =>
-                {
-                    transform.DOMove ( target.torsoTransform.position , 0.5f ).OnComplete ( ( ) =>
-                    {
-                        target.ShowReaction ( );
+                DOVirtual.DelayedCall(3.15f, () =>
+             {
+                 transform.DOMove(target.torsoTransform.position, 0.5f).OnUpdate(() => { transform.DOLookAt(target.transform.position,0,AxisConstraint.Y); }).OnComplete(() =>
+               {
+                     target.ShowReaction();
 
-                        RoundSystems ( );
-                    } );
-                } );
+                     RoundSystems();
+                 });
+             });
             }
             else
             {
-                Debug.LogWarning ( "Count Error" );
+                Debug.LogWarning("Count Error");
             }
         }
         else
         {
-            Debug.LogWarning ( "NULL ERROR" );
+            Debug.LogWarning("NULL ERROR");
         }
     }
-    public override void RoundSystems ( )
+    public override void RoundSystems()
     {
-        Destroy ( gameObject );
+        Destroy(gameObject);
     }
 }

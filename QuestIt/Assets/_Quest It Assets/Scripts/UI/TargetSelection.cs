@@ -8,7 +8,7 @@ using TMPro;
 public class TargetSelection : MonoBehaviour
 {
     #region UI REFERENCES
-    [Header ( "REFERENCES" )]
+    [Header("REFERENCES")]
     public Image characterSprite;
 
     public Image frame;
@@ -16,7 +16,7 @@ public class TargetSelection : MonoBehaviour
     public Button selectionButton;
     #endregion
 
-    [Header ( "VARIABLES" )]
+    [Header("VARIABLES")]
     public BattlePlayer mPlayer;
 
     public bool isSelected;
@@ -27,11 +27,13 @@ public class TargetSelection : MonoBehaviour
         {
             OnSelect(this);
         });
+
+        frame.gameObject.SetActive(false);
     }
 
-    public void OnSelect (TargetSelection selectionBox)
+    public void OnSelect(TargetSelection selectionBox)
     {
-        if ( selectionBox == this )
+        if (selectionBox == this)
         {
             isSelected = this;
 
@@ -44,29 +46,29 @@ public class TargetSelection : MonoBehaviour
             selectionButton.interactable = true;
         }
 
-        frame.gameObject.SetActive ( isSelected );
+        frame.gameObject.SetActive(isSelected);
     }
 
-    public void Setup (BattlePlayer player , bool isInteractable = true)
+    public void Setup(BattlePlayer player, bool isInteractable = true)
     {
-        if(player != null)
+        if (player != null)
         {
 
-        mPlayer = player;
+            mPlayer = player;
 
-        selectionButton.interactable = isInteractable;
+            selectionButton.interactable = isInteractable;
 
-        this.gameObject.SetActive(true);
+            this.gameObject.SetActive(true);
 
-        if(!isInteractable)
-        {
-            isSelected = true;
-        }
-        else
-        {
-            isSelected = false;
-        }
-        //characterSprite = ResourceManager.Instance.
+            if (!isInteractable)
+            {
+                isSelected = true;
+            }
+            else
+            {
+                isSelected = false;
+            }
+            //characterSprite = ResourceManager.Instance.
         }
         else
         {

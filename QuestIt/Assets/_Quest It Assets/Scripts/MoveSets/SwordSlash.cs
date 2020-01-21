@@ -23,21 +23,49 @@ public class SwordSlash : BattleChoice
 
             List<BattlePlayer> mPlayers = target;
 
-            tPlayer.mPlayerController.SetBool("Walking", true);
-
             Sequence mySequence = DOTween.Sequence();
 
-            mySequence.Append(tPlayer.transform.DOMove((mPlayers[0].meleeAttackSpawn.position), 1.25f)).Append(DOVirtual.DelayedCall(0, () =>
+            float calculatedTime = Vector3.Distance(tPlayer.transform.position, mPlayers[0].meleeAttackSpawn.transform.position) / 2;
+
+            Debug.Log(calculatedTime);
+
+            float finishingTime = endTime + calculatedTime;
+
+            mySequence.Append(DOVirtual.DelayedCall(0.25f, () =>
             {
-                tPlayer.mPlayerController.SetBool("Walking", false);
+
+                tPlayer.transform.DOLookAt(target[0].transform.position, 0.4f);
 
                 tPlayer.mPlayerController.SetTrigger(m_AnimationClip.ToString());
 
-            })).Append(DOVirtual.DelayedCall(endTime, () => { tPlayer.transform.DOMove(tPlayer.OriginalSpawn.position, 1.25f); }));
+            })).Append(DOVirtual.DelayedCall(endTime, () => {; }));
+//            mySequence.Append(DOVirtual.DelayedCall(0.25f, () =>
+//            {
+//                tPlayer.transform.DOMove((mPlayers[0].meleeAttackSpawn.position), calculatedTime).OnComplete(() =>
+//                {
+//                    tPlayer.mPlayerController.SetBool("Walking", false);
 
-            mySequence.OnUpdate(() => { tPlayer.transform.LookAt(mPlayers[0].transform.position); });
+//                    tPlayer.mPlayerController.SetTrigger(m_AnimationClip.ToString());
+//                })
 
-            mySequence.OnComplete(() => { base.MoveWork(null); });
+//.OnUpdate((() => { tPlayer.transform.LookAt(mPlayers[0].transform); }));
+//            }))
+
+//               .Append(DOVirtual.DelayedCall(finishingTime, () =>
+//               {
+
+//                   tPlayer.mPlayerController.SetBool("Walking", true); tPlayer.transform.DOMove(tPlayer.OriginalSpawn.position, calculatedTime).OnComplete(() =>
+//                   {
+
+//                       tPlayer.mPlayerController.SetBool("Walking", false);
+
+//                   });
+//               }));
+
+            mySequence.OnComplete(() =>
+            { 
+                base.MoveWork(null);
+            });
 
             foreach (BattlePlayer m_Player in mPlayers)
             {
@@ -46,4 +74,3 @@ public class SwordSlash : BattleChoice
         }
     }
 }
-

@@ -25,6 +25,8 @@ public class ArcherOneShot : BattleChoice
 
             mObject.Trigger ( );
 
+            tPlayer.transform.DOLookAt(target[0].transform.position, 0.1f);
+
             tPlayer.mPlayerController.SetTrigger ( m_AnimationClip.ToString ( ) );
 
             m_Arrow.Trigger ( target );

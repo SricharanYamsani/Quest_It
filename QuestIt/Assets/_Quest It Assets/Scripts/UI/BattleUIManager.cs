@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using System;
 
 public class BattleUIManager : Singleton<BattleUIManager>
 {
@@ -11,6 +12,10 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
     public RectTransform playerHUD;
     public RectTransform enemyHUD;
+
+
+    // Selection Panel
+    public RectTransform selectionPanel;
 
     public PlayerIcon playerIconRef;
     public PlayerIcon enemyIconRef;
@@ -20,8 +25,16 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
     public Button selectTrueButton;
 
+    // Grids of Items
+    public GameObject gridAttack;
+    public GameObject gridItem;
+    public GameObject gridDefend;
+    public GameObject gridRun;
+
     //Selection
     public RectTransform targetSelectionScreen;
+    public GameObject selectionBackground;
+
     public List<TargetSelection> selectors = new List<TargetSelection>();
     #endregion
     public TextMeshProUGUI mText;
@@ -31,6 +44,9 @@ public class BattleUIManager : Singleton<BattleUIManager>
     #endregion
     bool isSliderOn = false;
 
+
+    private float sizeXSlider = 0.0f;
+
     [SerializeField]
     List<BaseUIChoice> t_Choices = new List<BaseUIChoice>();
 
@@ -38,13 +54,54 @@ public class BattleUIManager : Singleton<BattleUIManager>
     {
         base.Awake();
 
+        CheckForSetup();
+
         gameOverScreen.SetActive(false);
 
         BattleManager.Instance.GameInit += LoadAllPlayerUI;
 
         BattleManager.Instance.GameOver += GameOverScreen;
 
+        BattleManager.Instance.TurnStart += TurnStart;
+
+        BattleManager.Instance.RoundOver += RoundOver;
+
         selectTrueButton.onClick.AddListener(() => { SelectPlayerGo(); });
+    }
+    private void CheckForSetup()
+    {
+        if(selectionPanel.gameObject.activeInHierarchy)
+        {
+            selectionPanel.gameObject.SetActive(false);
+        }
+
+        if(RadialButton.gameObject.activeInHierarchy)
+        {
+            RadialButton.gameObject.SetActive(false);
+        }
+    }
+
+    private void RoundOver()
+    {
+       // Do stuff here for round Over
+    }
+
+    private void TurnStart(BattlePlayer obj)
+    {
+        if (obj.IsPlayer)
+        {
+            ShowRadialButton(true);
+        }
+        else
+        {
+            if (RadialButton.gameObject.activeInHierarchy)
+            {
+                DOVirtual.DelayedCall(0.4f, () => { RadialButton.interactable = false; ShowRadialButton(false); });
+
+                MoveOptionsLayer(false);
+
+            }
+        }
     }
     private void LoadAllPlayerUI()
     {
@@ -54,7 +111,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
             PlayerIcon iconRef;
 
-            if (player.isTeamRed)
+            if (player.IsTeamRed)
             {
                 parentContent = playerHUD;
                 iconRef = Instantiate<PlayerIcon>(playerIconRef, parentContent);
@@ -69,7 +126,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
             player.playerIcon = iconRef;
 
-            if (player.isPlayer)
+            if (player.IsPlayer)
             {
                 for (int i = 0; i < t_Choices.Count; i++)
                 {
@@ -89,13 +146,20 @@ public class BattleUIManager : Singleton<BattleUIManager>
         }
     }
 
-    public void ShowRadial()
+    public void ShowChoices(bool isTrue, RadialButtonElements buttonElement = RadialButtonElements.NONE)
     {
-        RadialButton.DOFade(1, fadeTimeRadial).OnKill(() => { RadialButton.alpha = 1; });
-    }
-    public void ShowChoices()
-    {
+        if (isTrue)
+        {
+            switch (buttonElement)
+            {
+                case RadialButtonElements.ATTACK: SwitchGrids(0); break;
+                case RadialButtonElements.DEFEND: SwitchGrids(1); break;
+                case RadialButtonElements.ITEM: SwitchGrids(2); break;
+                case RadialButtonElements.RUN: SwitchGrids(3); break;
+            }
+        }
 
+        MoveOptionsLayer(isTrue);
     }
 
     #region TargetChoices
@@ -113,7 +177,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (!battlePlayer.isTeamRed)
+                    if (!battlePlayer.IsTeamRed)
                     {
                         myTargets.Add(battlePlayer);
                     }
@@ -134,7 +198,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (!battlePlayer.isTeamRed)
+                    if (!battlePlayer.IsTeamRed)
                     {
                         myTargets.Add(battlePlayer);
                     }
@@ -146,7 +210,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
             case AttackRange.ALLTEAM:
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (!battlePlayer.isTeamRed)
+                    if (!battlePlayer.IsTeamRed)
                     {
                         myTargets.Add(battlePlayer);
                     }
@@ -189,7 +253,33 @@ public class BattleUIManager : Singleton<BattleUIManager>
             }
         }
 
+        // Selection Screen
+        selectionBackground.SetActive(true);
+
+        targetSelectionScreen.anchoredPosition = Vector2.zero;
+
         targetSelectionScreen.gameObject.SetActive(true);
+
+        targetSelectionScreen.DOAnchorPosY(-250, 0.4f);
+        // Selection Screen End
+    }
+
+    private void CancelSelection()
+    {
+        targetSelectionScreen.DOAnchorPosY(0, 0.4f).OnComplete(() => {
+
+            targetSelectionScreen.gameObject.SetActive(false);
+
+            selectionBackground.SetActive(false);
+
+            targetSelectionScreen.anchoredPosition = Vector2.zero;
+
+        });
+    }
+
+    public void CancelSelectionButton()
+    {
+        CancelSelection();
     }
 
     public void SelectPlayerGo()
@@ -203,18 +293,87 @@ public class BattleUIManager : Singleton<BattleUIManager>
                 targets.Add(targetselector.mPlayer);
             }
         }
-        targetSelectionScreen.gameObject.SetActive(false);
+        if (targets.Count > 0)
+        {
+            targetSelectionScreen.gameObject.SetActive(false);
 
-        BattleManager.Instance.currentPlayer.currentChoice.MoveWork(targets);
-    }
+            targetSelectionScreen.anchoredPosition = Vector2.zero;
 
-    private void FixedUpdate()
-    {
-        mText.text = BattleManager.Instance.m_Timer.ToString("00");
+            selectionBackground.SetActive(false);
+
+            BattleManager.Instance.currentPlayer.currentChoice.MoveWork(targets);
+
+            MoveOptionsLayer(false);
+
+            DOVirtual.DelayedCall(0.4f, () => { ShowRadialButton(false); });
+        }
     }
 
     private void GameOverScreen()
     {
         gameOverScreen.SetActive(true);
+    }
+
+    private void MoveOptionsLayer(bool isTrue)
+    {
+        if (isTrue)
+        {
+            selectionPanel.gameObject.SetActive(true);
+
+            selectionPanel.sizeDelta = new Vector2(0, selectionPanel.sizeDelta.y);
+
+            selectionPanel.DOSizeDelta(new Vector2(1700, selectionPanel.sizeDelta.y), 0.4f).OnComplete(() => { selectionPanel.sizeDelta = new Vector2(1700, selectionPanel.sizeDelta.y); });
+        }
+        else
+        {
+            selectionPanel.sizeDelta = new Vector2(1700, selectionPanel.sizeDelta.y);
+
+            selectionPanel.DOSizeDelta(new Vector2(0, selectionPanel.sizeDelta.y), 0.4f).OnComplete(() => { selectionPanel.gameObject.SetActive(false); selectionPanel.sizeDelta = new Vector2(0, selectionPanel.sizeDelta.y); });
+        }
+    }
+
+    public void ShowRadialButton(bool isTrue)
+    {
+        if (isTrue)
+        {
+            RadialButton.interactable = false;
+
+            RadialButton.gameObject.SetActive(true);
+
+            RadialButton.DOFade(1, 0.4f).OnComplete(() => { RadialButton.interactable = true; });
+        }
+        else
+        {
+            RadialButton.interactable = false;
+
+            RadialButton.DOFade(0, 0.4f).OnComplete(() => { RadialButton.gameObject.SetActive(false); });
+        }
+    }
+
+    public void SwitchGrids(int index)
+    {
+        // Sricharan - To Fix
+        gridAttack.SetActive(false);
+        gridDefend.SetActive(false);
+        gridItem.SetActive(false);
+        gridRun.SetActive(false);
+
+        if (index == 0)
+        {
+            sizeXSlider = BattleManager.Instance.currentPlayer.validChoices.Count * 300f;
+            gridAttack.SetActive(true);
+        }
+        else if (index == 1)
+        {
+            gridDefend.SetActive(true);
+        }
+        else if (index == 2)
+        {
+            gridItem.SetActive(true);
+        }
+        else
+        {
+            gridRun.SetActive(true);
+        }
     }
 }
