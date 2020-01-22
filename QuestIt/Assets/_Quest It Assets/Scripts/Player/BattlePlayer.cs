@@ -69,11 +69,14 @@ public class BattlePlayer : MonoBehaviour
 
     public TextMeshProUGUI reactionText;
 
-    public bool IsPlayer { get; private set; }  = false; // if Player is our user
+    /// <summary>Returns true if Battle Player is the user </summary>
+    public bool IsPlayer { get; private set; }  = false;
 
-    public bool IsTeamRed { get; private set; } = false; // is player is Team Red
+    /// <summary>Returns true if Battle Player is Team Red </summary
+    public bool IsTeamRed { get; private set; } = false;
 
-    public bool isDefending = false; // is player chose the current choice as Defense or not. False Every Round Over.
+    /// <summary>If player is defending or not. If it is. Changes Every Round </summary
+    public bool isDefending = false;
 
     public Animator mPlayerController;
 
