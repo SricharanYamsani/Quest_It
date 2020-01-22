@@ -25,23 +25,13 @@ public class BattlePlayer : MonoBehaviour
 
     public PlayerIcon playerIcon;
 
-    private int uniqueID;
-
-    public int UNIQUE_ID
-    {
-        get
-        {
-            return uniqueID;
-        }
-    }
-
-    private int fakeCurrentHealth;
+    public int UNIQUE_ID { get; private set; }
 
     public int turnIndex = 0;
 
     public int additionalAgility = 0;
 
-    public int currentAgility
+    public int CurrentAgility
     {
         get
         {
@@ -49,15 +39,16 @@ public class BattlePlayer : MonoBehaviour
         }
     }
 
+    #region PositionReferences
     // Transforms for spawning Objects
 
-    public Transform rightHandSpawnInside;
+    public Transform rightHandSpawnInside; // right hand inside
 
-    public Transform rightHandSpawnOutside;
+    public Transform rightHandSpawnOutside; // right hand outside - eg shield holder
 
-    public Transform headSpawn;
+    public Transform headSpawn; // head spawn for hat/helmet
 
-    public Transform faceSpawn;
+    public Transform faceSpawn;// spawn for mask
 
     public Transform leftHandSpawnInside;
 
@@ -69,26 +60,24 @@ public class BattlePlayer : MonoBehaviour
 
     public RectTransform reactionLabel;
 
-    public Transform OriginalSpawn;
+    public Transform OriginalSpawn; // player spawn Position
+
+    #endregion
 
     [Header("UI OBJECTS")]
     public Image fillingHpBar;
 
     public TextMeshProUGUI reactionText;
 
-    public bool isPlayer = false;
+    public bool IsPlayer { get; private set; }  = false; // if Player is our user
 
-    public bool isTeamRed = false;
+    public bool IsTeamRed { get; private set; } = false; // is player is Team Red
+
+    public bool isDefending = false; // is player chose the current choice as Defense or not. False Every Round Over.
 
     public Animator mPlayerController;
 
-    private Coroutine mCoroutine;
-
     private Sequence m_Sequence;
-
-    private delegate void onComplete();
-
-    onComplete coroutineComplete = null;
 
     private Color objectcolor = new Color(168, 168, 168, 255);
 
@@ -98,21 +87,22 @@ public class BattlePlayer : MonoBehaviour
     {
         BattleManager.Instance.GameInit += SetArenaTargets;
 
-        uniqueID = BattleManager.uniqueID++;
-
-        fakeCurrentHealth = attributes.curHealth;
-
         if (validChoices.Count > 0)
         {
             currentChoice = validChoices[0];
         }
-
-        fakeCurrentHealth = attributes.curHealth;
     }
+
+    public void SetPlayer(bool isPlayer, bool isTeamRed)
+    {
+        this.IsPlayer = isPlayer;
+        this.IsTeamRed = isTeamRed;
+    }
+
 
     private void SetArenaTargets()
     {
-        if (isTeamRed)
+        if (IsTeamRed)
         {
             targetEnemies = BattleManager.Instance.currentRed;
 
@@ -189,36 +179,6 @@ public class BattlePlayer : MonoBehaviour
 });
     }
 
-    public void UpdateHealth()
-    {
-        if (playerIcon)
-        {
-
-            Debug.Log(this.name);
-
-            DOTween.To(() => fakeCurrentHealth, x => fakeCurrentHealth = x, attributes.curHealth, 1).OnUpdate(() =>
-   {
-       if (WorldUI)
-       {
-           playerIcon.healthBar.fillAmount = (float)fakeCurrentHealth / attributes.maxHealth;
-       }
-
-   }).OnComplete(() =>
-         {
-
-             if (WorldUI)
-             {
-                 playerIcon.healthBar.fillAmount = (float)fakeCurrentHealth / attributes.maxHealth;
-
-                 if (attributes.curHealth <= 0)
-                 {
-                     mPlayerController.SetTrigger(AnimationType.DEAD.ToString());
-                 }
-             }
-         });
-        }
-    }
-
     public void TakePartInBattle(bool isTrue)
     {
         if (isTrue)
@@ -252,23 +212,19 @@ public class BattlePlayer : MonoBehaviour
             {
                 BattleManager.Instance.currentPlayer = this;
 
-                if (this.isPlayer)
+                if (this.IsPlayer)
                 {
-                    BattleUIManager.Instance.ShowChoices();
-                    Debug.LogWarning("Player");
+                    BattleUIManager.Instance.ShowRadialButton(true);
                 }
                 else
                 {
                     // AI Shit to go here.
                     AIChoice();
-                    Debug.LogWarning("Enemy");
                 }
             }
             else
             {
                 BattleManager.Instance.isSelecting = false;
-
-                Debug.LogWarning("Cannot take part");
             }
         }
         else
@@ -293,16 +249,16 @@ public class BattlePlayer : MonoBehaviour
 
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (this.isTeamRed)
+                    if (this.IsTeamRed)
                     {
-                        if (!battlePlayer.isTeamRed)
+                        if (!battlePlayer.IsTeamRed)
                         {
                             myTargets.Add(battlePlayer);
                         }
                     }
                     else
                     {
-                        if (battlePlayer.isTeamRed)
+                        if (battlePlayer.IsTeamRed)
                         {
                             myTargets.Add(battlePlayer);
                         }
@@ -314,7 +270,7 @@ public class BattlePlayer : MonoBehaviour
 
             case AttackRange.ONETEAM:
 
-                if (this.isTeamRed)
+                if (this.IsTeamRed)
                 {
                     myTargets = BattleManager.Instance.currentBlue;
                 }
@@ -331,16 +287,16 @@ public class BattlePlayer : MonoBehaviour
 
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (this.isTeamRed)
+                    if (this.IsTeamRed)
                     {
-                        if (!battlePlayer.isTeamRed)
+                        if (!battlePlayer.IsTeamRed)
                         {
                             myTargets.Add(battlePlayer);
                         }
                     }
                     else
                     {
-                        if (battlePlayer.isTeamRed)
+                        if (battlePlayer.IsTeamRed)
                         {
                             myTargets.Add(battlePlayer);
                         }
@@ -355,17 +311,17 @@ public class BattlePlayer : MonoBehaviour
 
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (this.isTeamRed)
+                    if (this.IsTeamRed)
                     {
 
-                        if (!battlePlayer.isTeamRed)
+                        if (!battlePlayer.IsTeamRed)
                         {
                             myTargets.Add(battlePlayer);
                         }
                     }
                     else
                     {
-                        if (battlePlayer.isTeamRed)
+                        if (battlePlayer.IsTeamRed)
                         {
                             myTargets.Add(battlePlayer);
                         }

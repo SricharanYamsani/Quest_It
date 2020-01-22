@@ -33,14 +33,10 @@ public class BattleManager : Singleton<BattleManager>
 
     public List<BattlePlayer> currentBlue = new List<BattlePlayer>();
 
-    public List<BattlePlayer> targetPlayers = new List<BattlePlayer>();
-
     [Header("CurrentMove - BattlePlayer")]
     public BattlePlayer currentPlayer = null;
 
     public BattlePlayer playerPrefabRef;
-
-    public PlayerIcon playerIconRef;
 
     [Header("Transforms")]
     [Space(20)]
@@ -48,6 +44,8 @@ public class BattleManager : Singleton<BattleManager>
 
     public Transform[] enemySpawn;
 
+
+    // Events 
     public event Action GameInit;
 
     public event Action TurnOver;
@@ -58,6 +56,7 @@ public class BattleManager : Singleton<BattleManager>
 
     public event Action GameOver;
 
+    // Bool for selection
     public bool isSelecting { get; set; } = false;
 
     public static int uniqueID = 0;
@@ -65,34 +64,10 @@ public class BattleManager : Singleton<BattleManager>
     protected override void Awake()
     {
         base.Awake();
-
-        RoundOver += RoundOverFunc;
-
-        TurnStart += TurnStartFunc;
     }
 
     private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over
     {
-        //Debug.LogWarning("Round was Over");
-
-        //int hasHealth = 0;
-
-        //foreach (BattlePlayer player in roundValidPlayers)
-        //{
-        //    if (player.attributes.curHealth > 0)
-        //    {
-        //        hasHealth++;
-        //    }
-        //}
-
-        //if (hasHealth > 1)
-        //{
-        //    SwitchPlayState(BattleStates.BATTLE);
-        //}
-        //else
-        //{
-        //    Debug.LogError("Game Over");
-        //}
 
         if (IsTeamAlive(currentRed) && IsTeamAlive(currentBlue))
         {
@@ -100,7 +75,7 @@ public class BattleManager : Singleton<BattleManager>
         }
         else
         {
-            Debug.LogError("Game Over");
+            GameOver?.Invoke();
         }
     }
 
@@ -124,9 +99,22 @@ public class BattleManager : Singleton<BattleManager>
         Debug.LogWarning(player);
     }
 
-    private void Start ( )
+    private void Start()
     {
-        StartCoroutine ( LoadAllPlayers ( ) ); // Remove It from here need a better process or make the system completely on Ienumerator
+        StartBattle();
+    }
+    public void StartBattle()
+    {
+        Setup();
+    }
+
+    private void Setup()
+    {
+        RoundOver += RoundOverFunc;
+
+        TurnStart += TurnStartFunc;
+
+        StartCoroutine(LoadAllPlayers()); // Remove It from here need a better process or make the system completely on Ienumerator
     }
 
     #region Loading all Players On The Field (MAX - 3 OF EACH TEAM)
@@ -145,14 +133,12 @@ public class BattleManager : Singleton<BattleManager>
 
             if ( i == 0 )
             {
-                t_Player.isPlayer = true;
+                t_Player.SetPlayer(true, true);
             }
             else
             {
-                t_Player.isPlayer = false;
+                t_Player.SetPlayer(false, true);
             }
-
-            t_Player.isTeamRed = true;
 
             t_Player.tag = "Player";
 
@@ -165,13 +151,11 @@ public class BattleManager : Singleton<BattleManager>
         {
             t_Player = Instantiate ( playerPrefabRef , enemySpawn [ i ] );
 
-            t_Player.isPlayer = false;
+            t_Player.SetPlayer(false, false);
 
             Debug.Log ( i );
 
             t_Player.attributes = PlayerGenerator.Instance.AttributesGenerator ( );
-
-            t_Player.isTeamRed = false;
 
             t_Player.OriginalSpawn = enemySpawn[i];
 
@@ -188,7 +172,7 @@ public class BattleManager : Singleton<BattleManager>
 
         GameInit?.Invoke ( );
 
-        SwitchPlayState ( BattleStates.CHOICE );
+        SwitchPlayState ( BattleStates.BATTLE );
 
     }
     #endregion
@@ -196,7 +180,7 @@ public class BattleManager : Singleton<BattleManager>
     {
         foreach ( BattlePlayer t_Enemies in validPlayers )
         {
-            if ( !t_Enemies.isTeamRed )
+            if ( !t_Enemies.IsTeamRed )
             {
                 currentRed.Add ( t_Enemies );
             }
@@ -219,12 +203,6 @@ public class BattleManager : Singleton<BattleManager>
         {
             case BattleStates.NONE: break;
 
-            case BattleStates.CHOICE:
-
-            StartCoroutine ( StartProcess ( ) );
-
-            break;
-
             case BattleStates.BATTLE:
 
             StartCoroutine ( BattleMatch ( ) );
@@ -239,29 +217,6 @@ public class BattleManager : Singleton<BattleManager>
             break;
         }
     }
-    // In Process of Removing it
-    #region Start Battle Rounds 
-    private IEnumerator StartProcess ( )
-    {
-        m_Timer = MTime;
-
-        //BattleUIManager.Instance.choiceUI.SetActive ( true );
-
-        while ( m_Timer > 0 )
-        {
-            yield return new WaitForSeconds ( 1f );
-
-            m_Timer--;
-        }
-        m_Timer = 0;
-
-        yield return null;
-
-        //BattleUIManager.Instance.choiceUI.SetActive ( false );
-
-        SwitchPlayState ( BattleStates.BATTLE );
-    }
-    #endregion
 
     #region New Battle System
     IEnumerator BattleMatch()
@@ -271,7 +226,9 @@ public class BattleManager : Singleton<BattleManager>
         for (int i = 0; i < roundValidPlayers.Count; i++)
         {
             currentPlayer = roundValidPlayers[i];
+
             isSelecting = true;
+
             TurnStart?.Invoke(currentPlayer);
 
             while (isSelecting)
@@ -280,6 +237,8 @@ public class BattleManager : Singleton<BattleManager>
             }
 
             TurnOver?.Invoke();
+
+            yield return new WaitForSeconds(2);
         }
 
         yield return null;
@@ -299,7 +258,7 @@ public class BattleManager : Singleton<BattleManager>
 
         for ( int i = 0 ; i < validPlayers.Count ; i++ )
         {
-            if ( validPlayers [ i ].attributes.GetCurrentHealth ( ) > 0 )
+            if ( validPlayers [ i ].attributes.curHealth  > 0 )
             {
                 validPlayers [ i ].TakePartInBattle ( true );
 
@@ -329,7 +288,7 @@ public class BattleManager : Singleton<BattleManager>
             {
                 if ( isDescending )
                 {
-                    if ( roundValidPlayers [ j ].currentAgility > roundValidPlayers [ j + 1 ].currentAgility )
+                    if ( roundValidPlayers [ j ].CurrentAgility > roundValidPlayers [ j + 1 ].CurrentAgility )
                     {
                         BattlePlayer temp = roundValidPlayers [ j ];
 
@@ -340,7 +299,7 @@ public class BattleManager : Singleton<BattleManager>
                 }
                 else
                 {
-                    if ( roundValidPlayers [ j ].currentAgility < roundValidPlayers [ j + 1 ].currentAgility )
+                    if ( roundValidPlayers [ j ].CurrentAgility < roundValidPlayers [ j + 1 ].CurrentAgility )
                     {
                         BattlePlayer temp = roundValidPlayers [ j ];
 

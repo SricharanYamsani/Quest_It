@@ -21,9 +21,4 @@ public class PlayerAttributes
     public int maxLuck;
 
     public int curLuck;
-
-    public int GetCurrentHealth ( ) {
-
-        return curHealth;
-    }
 }
