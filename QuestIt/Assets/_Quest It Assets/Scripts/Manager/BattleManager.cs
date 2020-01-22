@@ -85,7 +85,7 @@ public class BattleManager : Singleton<BattleManager>
 
         for (int i = players.Count - 1; i >= 0; --i)
         {
-            if (players[i].attributes.curHealth > 0)
+            if (players[i].attributes.health.current > 0)
             {
                 isAlive = true;
                 break;
@@ -258,7 +258,7 @@ public class BattleManager : Singleton<BattleManager>
 
         for ( int i = 0 ; i < validPlayers.Count ; i++ )
         {
-            if ( validPlayers [ i ].attributes.curHealth  > 0 )
+            if ( validPlayers [ i ].attributes.health.current  > 0 )
             {
                 validPlayers [ i ].TakePartInBattle ( true );
 
@@ -267,8 +267,6 @@ public class BattleManager : Singleton<BattleManager>
             else
             {
                 validPlayers [ i ].TakePartInBattle ( false );
-
-                validPlayers [ i ].turnIndex = -99;
             }
         }
 
@@ -310,18 +308,13 @@ public class BattleManager : Singleton<BattleManager>
                 }
             }
         }
-
-        for ( int i = 0 ; i < roundValidPlayers.Count ; i++ )
-        {
-            roundValidPlayers [ i ].turnIndex = i;
-        }
     }
     #endregion
 }
 public enum BattleStates
 {
     NONE,
-    CHOICE,
+    INIT,
     BATTLE,
     OUTCOME
 }

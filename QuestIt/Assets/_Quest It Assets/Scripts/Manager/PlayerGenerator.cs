@@ -8,21 +8,25 @@ public class PlayerGenerator : Singleton<PlayerGenerator>
     {
         PlayerAttributes m_attributes = new PlayerAttributes();
 
-        m_attributes.maxHealth = 100;
+        m_attributes.health.maximum = 100;
 
-        m_attributes.maxAgility = 90;
+        m_attributes.agility.maximum = 90;
 
-        m_attributes.maxDefense = 75;
+        m_attributes.defense.maximum = 75;
 
-        m_attributes.maxLuck = 30;
+        m_attributes.luck.maximum = 30;
 
-        m_attributes.curHealth = m_attributes.maxHealth;
+        m_attributes.attack.maximum = 100;
 
-        m_attributes.curAgility = Random.Range ( 5 , m_attributes.maxAgility );
+        m_attributes.health.current = m_attributes.health.maximum;
 
-        m_attributes.curDefense = Random.Range ( 5 , m_attributes.maxDefense );
+        m_attributes.agility.current = Random.Range ( 5 , m_attributes.agility.maximum );
 
-        m_attributes.curLuck = Random.Range ( 0 , m_attributes.maxLuck );
+        m_attributes.defense.current = Random.Range ( 5 , m_attributes.defense.maximum );
+
+        m_attributes.luck.current = Random.Range ( 0 , m_attributes.luck.maximum );
+
+        m_attributes.attack.current = Random.Range(5, m_attributes.attack.maximum);
 
         return m_attributes;
     }

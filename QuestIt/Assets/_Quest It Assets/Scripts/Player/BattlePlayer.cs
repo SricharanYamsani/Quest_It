@@ -27,18 +27,15 @@ public class BattlePlayer : MonoBehaviour
 
     public int UNIQUE_ID { get; private set; }
 
-    public int turnIndex = 0;
-
-    public int additionalAgility = 0;
-
     public int CurrentAgility
     {
         get
         {
-            return additionalAgility + attributes.curAgility;
+            return attributes.agility.current;
         }
     }
 
+    [Space(20)]
     #region PositionReferences
     // Transforms for spawning Objects
 
@@ -64,13 +61,14 @@ public class BattlePlayer : MonoBehaviour
 
     #endregion
 
+    [Space(20)]
     [Header("UI OBJECTS")]
     public Image fillingHpBar;
 
     public TextMeshProUGUI reactionText;
 
     /// <summary>Returns true if Battle Player is the user </summary>
-    public bool IsPlayer { get; private set; }  = false;
+    public bool IsPlayer { get; private set; } = false;
 
     /// <summary>Returns true if Battle Player is Team Red </summary
     public bool IsTeamRed { get; private set; } = false;
@@ -211,7 +209,7 @@ public class BattlePlayer : MonoBehaviour
     {
         if (this == player)
         {
-            if (attributes.curHealth > 0)
+            if (attributes.health.current > 0)
             {
                 BattleManager.Instance.currentPlayer = this;
 
@@ -354,7 +352,7 @@ public class BattlePlayer : MonoBehaviour
         {
             temp_Target = myTargets;
         }
-        currentChoice.MoveWork(temp_Target);
+        currentChoice.MoveWork(this, temp_Target);
     }
 
     public void RoundOver()

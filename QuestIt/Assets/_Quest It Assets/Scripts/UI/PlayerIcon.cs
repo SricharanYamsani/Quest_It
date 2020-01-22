@@ -5,10 +5,13 @@ using UnityEngine.UI;
 
 public class PlayerIcon : MonoBehaviour
 {
+    //<summary>Health Bar UI Reference</summary>
     public Image healthBar;
 
+    //<summary>Mana Bar UI Reference</summary>
     public Image manaBar;
 
+    //<summary>Player Sprite UI Reference</summary>
     public Image playerSprite;
 
     public BattlePlayer m_Player = null;
@@ -19,9 +22,9 @@ public class PlayerIcon : MonoBehaviour
 
     public void Setup(BattlePlayer m_Player)
     {
-        t_CurrentHealth = m_Player.attributes.curHealth;
+        t_CurrentHealth = m_Player.attributes.health.current;
 
-        healthBar.fillAmount = ((float)m_Player.attributes.curHealth) / (m_Player.attributes.maxHealth);
+        healthBar.fillAmount = ((float)m_Player.attributes.health.current) / (m_Player.attributes.health.maximum);
 
         this.m_Player = m_Player;
 
@@ -30,12 +33,12 @@ public class PlayerIcon : MonoBehaviour
 
     public void UpdateUI()
     {
-        StartCoroutine(UIUpdater());
+        StartCoroutine(UIUpdaterHealth());
     }
 
-    private IEnumerator UIUpdater()
+    private IEnumerator UIUpdaterHealth()
     {
-        float difference = t_CurrentHealth - m_Player.attributes.curHealth;
+        float difference = t_CurrentHealth - m_Player.attributes.health.current;
 
         int s_Frames = 60;
 
@@ -49,9 +52,9 @@ public class PlayerIcon : MonoBehaviour
 
                 t_CurrentHealth -= s_PerFrameDifference;
 
-                t_CurrentHealth = Mathf.Clamp(t_CurrentHealth, 0, m_Player.attributes.maxHealth);
+                t_CurrentHealth = Mathf.Clamp(t_CurrentHealth, 0, m_Player.attributes.health.maximum);
 
-                healthBar.fillAmount = t_CurrentHealth / m_Player.attributes.maxHealth;
+                healthBar.fillAmount = t_CurrentHealth / m_Player.attributes.health.maximum;
             }
         }
         else if (difference < 0)
@@ -62,9 +65,9 @@ public class PlayerIcon : MonoBehaviour
 
                 t_CurrentHealth += s_PerFrameDifference;
 
-                t_CurrentHealth = Mathf.Clamp(t_CurrentHealth, 0, m_Player.attributes.maxHealth);
+                t_CurrentHealth = Mathf.Clamp(t_CurrentHealth, 0, m_Player.attributes.health.maximum);
 
-                healthBar.fillAmount = t_CurrentHealth / m_Player.attributes.maxHealth;
+                healthBar.fillAmount = t_CurrentHealth / m_Player.attributes.health.maximum;
             }
         }
         else
@@ -72,7 +75,7 @@ public class PlayerIcon : MonoBehaviour
 
         }
 
-        t_CurrentHealth = m_Player.attributes.curHealth;
+        t_CurrentHealth = m_Player.attributes.health.current;
 
         if (t_CurrentHealth <= 0)
         {

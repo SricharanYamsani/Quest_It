@@ -11,22 +11,17 @@ public class Arrow : IWeapon
         {
             if (targets.Count > 0)
             {
-                Debug.Log(targets.Count);
-
                 BattlePlayer target = targets[0];
-
-                Debug.Log(target.name);
-
-                Debug.Log(this.name);
 
                 DOVirtual.DelayedCall(3.15f, () =>
              {
-                 transform.DOMove(target.torsoTransform.position, 0.5f).OnUpdate(() => { transform.DOLookAt(target.transform.position,0,AxisConstraint.Y); }).OnComplete(() =>
-               {
-                     target.ShowReaction();
 
-                     RoundSystems();
-                 });
+                 transform.DOMove(target.torsoTransform.position, 0.5f).OnComplete(() =>
+               {
+                   target.ShowReaction();
+
+                   RoundSystems();
+               });
              });
             }
             else

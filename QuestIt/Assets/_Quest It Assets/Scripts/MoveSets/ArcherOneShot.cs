@@ -2,50 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-[CreateAssetMenu ( fileName = "Objects" , menuName = "ScriptableObjects/BATTLE CHOICES - ArcherOneShot" )]
+[CreateAssetMenu(fileName = "Objects", menuName = "ScriptableObjects/BATTLE CHOICES - ArcherOneShot")]
 public class ArcherOneShot : BattleChoice
 {
     public IWeapon Bow;
 
     public IWeapon arrow;
 
-    public override void MoveWork (List<BattlePlayer> target )
+    public override void MoveWork(BattlePlayer player, List<BattlePlayer> target)
     {
-        BattlePlayer tPlayer = BattleManager.Instance.currentPlayer;
-
-        if ( tPlayer != null )
+        if (player != null)
         {
-            IWeapon m_Arrow = Instantiate<IWeapon> ( arrow , tPlayer.rightHandSpawnInside );
+            IWeapon m_Arrow = Instantiate<IWeapon>(arrow, player.rightHandSpawnInside);
 
-            IWeapon mObject = Instantiate<IWeapon> ( Bow , tPlayer.leftHandSpawnInside );
+            IWeapon mObject = Instantiate<IWeapon>(Bow, player.leftHandSpawnInside);
 
             mObject.amount = moveAffectDuration;
 
             mObject.moveDuration = MoveTurnsType;
 
-            mObject.Trigger ( );
+            mObject.Trigger();
 
-            tPlayer.transform.DOLookAt(target[0].transform.position, 0.1f);
+            player.transform.DOLookAt(target[0].transform.position, 0.1f);
 
-            tPlayer.mPlayerController.SetTrigger ( m_AnimationClip.ToString ( ) );
+            player.mPlayerController.SetTrigger(m_AnimationClip.ToString());
 
-            m_Arrow.Trigger ( target );
+            m_Arrow.Trigger(target);
 
-            foreach ( BattlePlayer m_Player in tPlayer.target )
+            foreach (BattlePlayer m_Player in target)
             {
-                MoveManager.Instance.CalculateDamage ( this , m_Player );
+                MoveManager.Instance.CalculateDamage(player, this, m_Player);
             }
 
-            DOVirtual.DelayedCall(endTime, () => { base.MoveWork(null); });
-
-
-            foreach (BattlePlayer player in target)
-            {
-                MoveManager.Instance.CalculateDamage(this, player);
-            }
+            DOVirtual.DelayedCall(endTime, () => { base.MoveWork(null, null); });
         }
-
-
     }
 }
-

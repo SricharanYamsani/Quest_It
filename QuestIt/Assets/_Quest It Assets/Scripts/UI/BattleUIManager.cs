@@ -301,7 +301,9 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
             selectionBackground.SetActive(false);
 
-            BattleManager.Instance.currentPlayer.currentChoice.MoveWork(targets);
+            BattlePlayer myPlayer = BattleManager.Instance.currentPlayer;
+
+            myPlayer.currentChoice.MoveWork(myPlayer, targets);
 
             MoveOptionsLayer(false);
 

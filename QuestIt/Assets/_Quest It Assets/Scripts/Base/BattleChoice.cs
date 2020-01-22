@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class  BattleChoice : ScriptableObject
+public abstract class BattleChoice : ScriptableObject
 {
     public ChoiceStyle AttackStyle = ChoiceStyle.NONE;
 
@@ -30,9 +30,8 @@ public abstract class  BattleChoice : ScriptableObject
 
     public Sprite ICON;
 
-    public virtual void MoveWork(List<BattlePlayer> targets)
+    public virtual void MoveWork(BattlePlayer player, List<BattlePlayer> targets)
     {
         BattleManager.Instance.isSelecting = false;
     }
 }
-
