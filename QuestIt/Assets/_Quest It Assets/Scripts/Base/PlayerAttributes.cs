@@ -17,6 +17,10 @@ public class PlayerAttributes
     public Attributes luck = new Attributes();
 
     public Attributes agility = new Attributes();
+
+    public Attributes regenerationMana = new Attributes();
+
+    public Attributes regenerationHealth = new Attributes();
 }
 
 [Serializable]

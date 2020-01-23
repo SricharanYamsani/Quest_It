@@ -50,7 +50,9 @@ public class BattleManager : Singleton<BattleManager>
 
     public event Action TurnOver;
 
-    public event Action<BattlePlayer> TurnStart; // send the player 
+    public event Action<BattlePlayer> TurnStart;
+
+    public event Action RoundStart;
 
     public event Action RoundOver;
 
@@ -96,10 +98,15 @@ public class BattleManager : Singleton<BattleManager>
 
     private void TurnStartFunc(BattlePlayer player) // Turn Over Method
     {
-        Debug.LogWarning(player);
+        
     }
 
-    private void Start()
+    private void RoundStartFunc()
+    {
+        
+    }
+
+    private void Start() // this will have to go.
     {
         StartBattle();
     }
@@ -114,8 +121,11 @@ public class BattleManager : Singleton<BattleManager>
 
         TurnStart += TurnStartFunc;
 
+        RoundStart += RoundStartFunc;
+
         StartCoroutine(LoadAllPlayers()); // Remove It from here need a better process or make the system completely on Ienumerator
     }
+
 
     #region Loading all Players On The Field (MAX - 3 OF EACH TEAM)
     IEnumerator LoadAllPlayers()
@@ -221,6 +231,8 @@ public class BattleManager : Singleton<BattleManager>
     #region New Battle System
     IEnumerator BattleMatch()
     {
+        RoundStart?.Invoke();
+
         currentPlayerIndex = -1;
 
         for (int i = 0; i < roundValidPlayers.Count; i++)

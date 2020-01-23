@@ -31,9 +31,28 @@ public class PlayerIcon : MonoBehaviour
         //playerSprite.sprite = 
     }
 
-    public void UpdateUI()
+    public void UpdateUI(PlayerUIUpdater updater)
     {
-        StartCoroutine(UIUpdaterHealth());
+        switch (updater)
+        {
+            case PlayerUIUpdater.Health:
+
+                StartCoroutine(UIUpdaterHealth());
+                break;
+
+            case PlayerUIUpdater.Mana:
+
+                StartCoroutine(UIUpadaterMana());
+
+                break;
+            case PlayerUIUpdater.Both:
+
+                StartCoroutine(UIUpdaterHealth());
+
+                StartCoroutine(UIUpadaterMana());
+
+                break;
+        }
     }
 
     private IEnumerator UIUpdaterHealth()
@@ -84,4 +103,55 @@ public class PlayerIcon : MonoBehaviour
 
         yield return null;
     }
+    private IEnumerator UIUpadaterMana()
+    {
+        float difference = t_ManaBar - m_Player.attributes.mana.current;
+
+        int s_Frames = 60;
+
+        float s_PerFrameDifference = difference / s_Frames;
+
+        if (difference > 0)
+        {
+            for (int i = 0; i < 60; i++)
+            {
+                yield return null;
+
+                t_ManaBar -= s_PerFrameDifference;
+
+                t_ManaBar = Mathf.Clamp(t_ManaBar, 0, m_Player.attributes.mana.maximum);
+
+                manaBar.fillAmount = t_ManaBar / m_Player.attributes.mana.maximum;
+            }
+        }
+        else if (difference < 0)
+        {
+            for (int i = 0; i < 60; i++)
+            {
+                yield return null;
+
+                t_ManaBar += s_PerFrameDifference;
+
+                t_ManaBar = Mathf.Clamp(t_ManaBar, 0, m_Player.attributes.mana.maximum);
+
+                manaBar.fillAmount = t_ManaBar / m_Player.attributes.mana.maximum;
+            }
+        }
+        else
+        {
+
+        }
+
+        t_ManaBar = m_Player.attributes.mana.current;
+
+        yield return null;
+    }
+}
+
+public enum PlayerUIUpdater
+{
+    None,
+    Mana,
+    Health,
+    Both
 }

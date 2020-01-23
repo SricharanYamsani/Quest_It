@@ -186,6 +186,8 @@ public class BattlePlayer : MonoBehaviour
         {
             BattleManager.Instance.TurnStart += TurnStart;
 
+            BattleManager.Instance.RoundStart += RoundStart;
+
             BattleManager.Instance.RoundOver += RoundOver;
 
             BattleManager.Instance.TurnOver += TurnOver;
@@ -194,15 +196,26 @@ public class BattlePlayer : MonoBehaviour
         {
             BattleManager.Instance.TurnStart -= TurnStart;
 
+            BattleManager.Instance.RoundStart -= RoundStart;
+
             BattleManager.Instance.RoundOver -= RoundOver;
 
             BattleManager.Instance.TurnOver -= TurnOver;
         }
     }
 
+    private void RoundStart()
+    {
+        this.attributes.mana.current += this.attributes.regenerationMana.current;
+
+        this.attributes.health.current += this.attributes.regenerationHealth.current;
+
+        playerIcon.UpdateUI(PlayerUIUpdater.Both);
+    }
+
     private void TurnOver()
     {
-        playerIcon.UpdateUI();
+        playerIcon.UpdateUI(PlayerUIUpdater.Both);
     }
 
     public void TurnStart(BattlePlayer player)
