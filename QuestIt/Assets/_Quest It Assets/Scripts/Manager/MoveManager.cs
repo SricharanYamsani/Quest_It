@@ -28,22 +28,32 @@ public class MoveManager : Singleton<MoveManager>
         }
     }
 
+    /// <summary> Calculate Damages for Every Move</summary>
+    /// <param name="player"></param>
+    /// <param name="m_Choice"></param>
+    /// <param name="m_Player"></param>
     public void CalculateDamage(BattlePlayer player, BattleChoice m_Choice, BattlePlayer m_Player)
     {
-        int x = UnityEngine.Random.Range(0, 100);
-
-        if (x <= m_Player.attributes.luck.current)
+        if (m_Choice.AttackStyle == ChoiceStyle.ATTACK)
         {
-            m_Player.m_PlayerState = PlayerState.BLOCK;
-        }
-        else
-        {
-            if (m_Choice.AttackStyle == ChoiceStyle.ATTACK)
+            int x = UnityEngine.Random.Range(0, 100);
+            if (x <= m_Player.attributes.luck.current)
+            {
+                m_Player.m_PlayerState = PlayerState.BLOCK;
+            }
+            else
             {
                 int damage = Mathf.CeilToInt(((player.attributes.attack.current * 0.25f) + m_Choice.healthChange) - (m_Player.isDefending ? m_Player.attributes.defense.current * 0.65f : m_Player.attributes.defense.current * 0.3f));
-                m_Player.attributes.health.current -= damage;
+                m_Player.attributes.health.current -= Mathf.Clamp(damage, 0, m_Choice.healthChange);
                 m_Player.m_PlayerState = PlayerState.NONE;
             }
+        }
+        else if (m_Choice.AttackStyle == ChoiceStyle.HEAL)
+        {
+            int heal = m_Choice.healthChange;
+            m_Player.attributes.health.current = Mathf.Clamp(m_Player.attributes.health.current + heal, 0, m_Player.attributes.health.maximum);
+            Debug.LogError(m_Player.attributes.health.current);
+            m_Player.m_PlayerState = PlayerState.NONE;
         }
     }
 }

@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 3277194485032851033}
   - component: {fileID: 3277194485032851032}
   m_Layer: 5
-  m_Name: fill
+  m_Name: manabar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -373,7 +373,7 @@ GameObject:
   - component: {fileID: 3277194485294730719}
   - component: {fileID: 3277194485294730718}
   m_Layer: 5
-  m_Name: fill
+  m_Name: healthbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -24,6 +24,8 @@ public class PlayerIcon : MonoBehaviour
     {
         t_CurrentHealth = m_Player.attributes.health.current;
 
+        t_ManaBar = m_Player.attributes.mana.current;
+
         healthBar.fillAmount = ((float)m_Player.attributes.health.current) / (m_Player.attributes.health.maximum);
 
         this.m_Player = m_Player;
@@ -36,7 +38,6 @@ public class PlayerIcon : MonoBehaviour
         switch (updater)
         {
             case PlayerUIUpdater.Health:
-
                 StartCoroutine(UIUpdaterHealth());
                 break;
 
@@ -61,7 +62,7 @@ public class PlayerIcon : MonoBehaviour
 
         int s_Frames = 60;
 
-        float s_PerFrameDifference = difference / s_Frames;
+        float s_PerFrameDifference = Mathf.Abs(difference / s_Frames);
 
         if (difference > 0)
         {
@@ -91,7 +92,8 @@ public class PlayerIcon : MonoBehaviour
         }
         else
         {
-
+            t_CurrentHealth = m_Player.attributes.health.current;
+            yield return null;
         }
 
         t_CurrentHealth = m_Player.attributes.health.current;
@@ -109,7 +111,7 @@ public class PlayerIcon : MonoBehaviour
 
         int s_Frames = 60;
 
-        float s_PerFrameDifference = difference / s_Frames;
+        float s_PerFrameDifference = Mathf.Abs(difference / s_Frames);
 
         if (difference > 0)
         {

@@ -206,9 +206,9 @@ public class BattlePlayer : MonoBehaviour
 
     private void RoundStart()
     {
-        this.attributes.mana.current += this.attributes.regenerationMana.current;
+        //this.attributes.mana.current += this.attributes.regenerationMana.current;
 
-        this.attributes.health.current += this.attributes.regenerationHealth.current;
+        //this.attributes.health.current += this.attributes.regenerationHealth.current;
 
         playerIcon.UpdateUI(PlayerUIUpdater.Both);
     }

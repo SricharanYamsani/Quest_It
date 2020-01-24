@@ -653,26 +653,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attributes:
-    maxHealth: 100
-    curHealth: 100
-    maxAgility: 10
-    curAgility: 9999
-    maxDefense: 10
-    curDefense: 10
-    maxLuck: 15
-    curLuck: 10
+    health:
+      maximum: 0
+      current: 0
+    mana:
+      maximum: 0
+      current: 0
+    attack:
+      maximum: 0
+      current: 0
+    defense:
+      maximum: 0
+      current: 0
+    luck:
+      maximum: 0
+      current: 0
+    agility:
+      maximum: 0
+      current: 0
+    regenerationMana:
+      maximum: 0
+      current: 0
+    regenerationHealth:
+      maximum: 0
+      current: 0
   validChoices:
   - {fileID: 11400000, guid: 2c71a54bb4de84339852d518dc2346d6, type: 2}
   - {fileID: 11400000, guid: 0473db63fc52f4d258c57b7eaab91a63, type: 2}
   - {fileID: 11400000, guid: 0cc763efd3d334b9baa40b45f661fc44, type: 2}
+  - {fileID: 11400000, guid: d04ee6290973843d885eb3676454676a, type: 2}
   currentChoice: {fileID: 11400000, guid: 0473db63fc52f4d258c57b7eaab91a63, type: 2}
   targetEnemies: []
   teamPlayers: []
   target: []
   WorldUI: {fileID: 1389349539}
   playerIcon: {fileID: 0}
-  turnIndex: 0
-  additionalAgility: 0
   rightHandSpawnInside: {fileID: 1413614633342860573}
   rightHandSpawnOutside: {fileID: 1413614632918570050}
   headSpawn: {fileID: 0}
@@ -682,10 +697,10 @@ MonoBehaviour:
   meleeAttackSpawn: {fileID: 5992405659939033010}
   torsoTransform: {fileID: 4012601233278015373}
   reactionLabel: {fileID: 8551509441060017214}
+  OriginalSpawn: {fileID: 0}
   fillingHpBar: {fileID: 49211248}
   reactionText: {fileID: 5934813037460052489}
-  isPlayer: 1
-  isTeam: 0
+  isDefending: 0
   mPlayerController: {fileID: 4853397142694897806}
   m_PlayerState: 0
 --- !u!1 &1413614632647375838
