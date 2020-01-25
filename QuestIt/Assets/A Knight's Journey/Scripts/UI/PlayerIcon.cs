@@ -26,6 +26,8 @@ public class PlayerIcon : MonoBehaviour
 
         t_ManaBar = m_Player.attributes.mana.current;
 
+        manaBar.fillAmount = ((float)m_Player.attributes.mana.current) / (m_Player.attributes.mana.maximum);
+
         healthBar.fillAmount = ((float)m_Player.attributes.health.current) / (m_Player.attributes.health.maximum);
 
         this.m_Player = m_Player;
