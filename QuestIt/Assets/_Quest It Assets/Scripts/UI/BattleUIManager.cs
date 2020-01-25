@@ -90,7 +90,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
     {
         if (obj.IsPlayer)
         {
-            ShowRadialButton(true);
+                ShowRadialButton(true);
         }
         else
         {
@@ -152,7 +152,10 @@ public class BattleUIManager : Singleton<BattleUIManager>
         {
             switch (buttonElement)
             {
-                case RadialButtonElements.ATTACK: SwitchGrids(0); break;
+                case RadialButtonElements.ATTACK:
+                    LoadValidMovesUI();
+                    SwitchGrids(0);
+                    break;
                 case RadialButtonElements.DEFEND: SwitchGrids(1); break;
                 case RadialButtonElements.ITEM: SwitchGrids(2); break;
                 case RadialButtonElements.RUN: SwitchGrids(3); break;
@@ -352,7 +355,44 @@ public class BattleUIManager : Singleton<BattleUIManager>
         }
     }
 
+    private void LoadValidMovesUI()
+    {
+        BattlePlayer currentPlayer = BattleManager.Instance.currentPlayer;
+
+        if (currentPlayer.IsPlayer)
+        {
+            for (int i = 0; i < t_Choices.Count; i++)
+            {
+                bool open = false;
+
+                if (t_Choices[i].m_Choice != null)
+                {
+                    if (t_Choices[i].m_Choice.m_Currency == Currency.BRUTE)
+                    {
+                        if (currentPlayer.attributes.health.current - t_Choices[i].m_Choice.m_CurrencyAmount > 1)
+                        {
+                            open = true;
+                        }
+                    }
+                    else if (t_Choices[i].m_Choice.m_Currency == Currency.MANA)
+                    {
+                        if (currentPlayer.attributes.mana.current - t_Choices[i].m_Choice.m_CurrencyAmount > 1)
+                        {
+                            open = true;
+                        }
+                    }
+                }
+                else
+                {
+
+                }
+
+                t_Choices[i].gameObject.SetActive(open);
+            }
+        }
+    }
     public void SwitchGrids(int index)
+
     {
         // Sricharan - To Fix
         gridAttack.SetActive(false);

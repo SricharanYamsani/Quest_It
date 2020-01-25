@@ -22,7 +22,7 @@ MonoBehaviour:
   healthChange: 55
   endTime: 7
   moveName: ARROW HIT
-  description: 
+  description: Godly Arrow which greatly inflict damage to your opponnent.
   target: []
   ICON: {fileID: 0}
   Bow: {fileID: 4042279297866727367, guid: c330e66a0481a4e9c8151c787830bcc0, type: 3}

@@ -18,6 +18,8 @@ public class PlayerGenerator : Singleton<PlayerGenerator>
 
         m_attributes.attack.maximum = 100;
 
+        m_attributes.mana.maximum = 200;
+
         m_attributes.regenerationHealth.maximum = 50;
 
         m_attributes.regenerationMana.maximum = 20;
@@ -31,6 +33,8 @@ public class PlayerGenerator : Singleton<PlayerGenerator>
         m_attributes.luck.current = Random.Range ( 0 , m_attributes.luck.maximum );
 
         m_attributes.attack.current = Random.Range(5, m_attributes.attack.maximum);
+
+        m_attributes.mana.current = Random.Range(80, m_attributes.mana.maximum);
 
         m_attributes.regenerationMana.current = Random.Range(5, m_attributes.regenerationMana.maximum);
 

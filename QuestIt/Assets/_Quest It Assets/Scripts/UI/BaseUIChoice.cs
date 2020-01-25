@@ -24,10 +24,14 @@ public class BaseUIChoice : MonoBehaviour
 
     private Button m_Button;
 
-    private void Awake ( )
+    private void Awake()
     {
-        m_Button = GetComponent<Button> ( );   
+        if (m_Button == null)
+        {
+            m_Button = GetComponent<Button>();
+        }
     }
+
     public void SetupChoice ( )
     {
         if ( m_Choice )

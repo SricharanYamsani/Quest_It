@@ -932,7 +932,7 @@ MonoBehaviour:
   choiceStyleIcon: {fileID: 631539132176751847}
   currencyIcon: {fileID: 5873984455677373801}
   m_MoveName: {fileID: 1382286254910772756}
-  m_Description: {fileID: 0}
+  m_Description: {fileID: 150631118206967673}
   m_CurrencyText: {fileID: 6984040301312831228}
   m_ChoiceStyle: {fileID: 7293581996026370833}
 --- !u!114 &5593624587990127623

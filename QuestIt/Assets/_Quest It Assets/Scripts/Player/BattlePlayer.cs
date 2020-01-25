@@ -27,14 +27,6 @@ public class BattlePlayer : MonoBehaviour
 
     public int UNIQUE_ID { get; private set; }
 
-    public int CurrentAgility
-    {
-        get
-        {
-            return attributes.agility.current;
-        }
-    }
-
     [Space(20)]
     #region PositionReferences
     // Transforms for spawning Objects
@@ -74,7 +66,11 @@ public class BattlePlayer : MonoBehaviour
     public bool IsTeamRed { get; private set; } = false;
 
     /// <summary>If player is defending or not. If it is. Changes Every Round </summary
-    public bool isDefending = false;
+    public bool IsDefending { get; set; } = false;
+
+    public int CurrentAgility { get { return 0; } }
+
+    public int CurrentDefence { get { return 0; } }
 
     public Animator mPlayerController;
 

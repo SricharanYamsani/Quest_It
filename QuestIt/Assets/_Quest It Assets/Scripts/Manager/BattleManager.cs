@@ -163,8 +163,6 @@ public class BattleManager : Singleton<BattleManager>
 
             t_Player.SetPlayer(false, false);
 
-            Debug.Log ( i );
-
             t_Player.attributes = PlayerGenerator.Instance.AttributesGenerator ( );
 
             t_Player.OriginalSpawn = enemySpawn[i];
