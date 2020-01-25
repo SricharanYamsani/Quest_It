@@ -5,10 +5,12 @@ using UnityEngine;
 public enum AnimationType
 {
     NONE,
-    SWORDATTACK,
+    SWORDSLASH,
     HARDSWORDATTACK,
     BLOCK,
-    HIT,
+    MIDHIT,
+    SMALLHIT,
     ARROWSHOTONE,
-    DEAD
+    DEAD,
+
 }

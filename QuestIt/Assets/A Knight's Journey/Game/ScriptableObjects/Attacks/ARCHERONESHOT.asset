@@ -15,7 +15,7 @@ MonoBehaviour:
   AttackStyle: 1
   AttackValue: 1
   MoveTurnsType: 2
-  m_AnimationClip: 5
+  m_AnimationClip: 6
   m_Currency: 2
   m_CurrencyAmount: 0
   moveAffectDuration: 0

@@ -137,7 +137,8 @@ public class BattlePlayer : MonoBehaviour
             }
             else
             {
-                mPlayerController.SetTrigger(AnimationType.HIT.ToString());
+                // change it to different Hits.
+                mPlayerController.SetTrigger(AnimationType.MIDHIT.ToString());
 
                 reactionText.text = "HIT";
             }
