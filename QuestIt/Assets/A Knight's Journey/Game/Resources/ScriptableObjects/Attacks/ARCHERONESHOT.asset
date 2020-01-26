@@ -21,7 +21,7 @@ MonoBehaviour:
   moveAffectDuration: 0
   healthChange: 55
   endTime: 7
-  moveName: ARROW HIT
+  moveName: Pierce Through
   description: Godly Arrow which greatly inflict damage to your opponnent.
   target: []
   ICON: {fileID: 0}

@@ -15,13 +15,13 @@ MonoBehaviour:
   AttackStyle: 3
   AttackValue: 3
   MoveTurnsType: 2
-  m_AnimationClip: 3
+  m_AnimationClip: 7
   m_Currency: 1
   m_CurrencyAmount: 15
   moveAffectDuration: 0
   healthChange: 25
-  endTime: 5
-  moveName: Health
+  endTime: 3
+  moveName: Magic Heal
   description: 
   target: []
   ICON: {fileID: 21300000, guid: 0e700985539a64d4ba023f4167826456, type: 3}

@@ -235,7 +235,7 @@ public class BattlePlayer : MonoBehaviour
             }
             else
             {
-                BattleManager.Instance.isSelecting = false;
+                BattleManager.Instance.IsSelecting = false;
             }
         }
         else

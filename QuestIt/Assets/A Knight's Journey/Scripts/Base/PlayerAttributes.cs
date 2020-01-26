@@ -41,4 +41,14 @@ public class Attributes
         current = cur;
     }
 }
+[Serializable]
+public struct MaxAttributes
+{
+    public int Health { get; set; }
+    public int Mana { get; set; }
+    public int Attack { get; set; }
+    public int Defense { get; set; }
+    public int Agility { get; set; }
+    public int Luck { get; set; }
+}
 

@@ -11,6 +11,7 @@ public enum AnimationType
     MIDHIT,
     SMALLHIT,
     ARROWSHOTONE,
+    MAGICHEAL,
     DEAD,
 
 }

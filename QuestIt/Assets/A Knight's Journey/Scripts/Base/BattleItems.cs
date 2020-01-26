@@ -24,6 +24,6 @@ public abstract class BattleItems : ScriptableObject
     /// <param name="targets"> Affected Targets </param>
     public virtual void MoveWork(List<BattlePlayer> targets)
     {
-        BattleManager.Instance.isSelecting = false;
+        BattleManager.Instance.IsSelecting = false;
     }
 }

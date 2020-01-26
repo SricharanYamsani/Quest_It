@@ -32,6 +32,6 @@ public abstract class BattleChoice : ScriptableObject
 
     public virtual void MoveWork(BattlePlayer player, List<BattlePlayer> targets)
     {
-        BattleManager.Instance.isSelecting = false;
+        BattleManager.Instance.IsSelecting = false;
     }
 }

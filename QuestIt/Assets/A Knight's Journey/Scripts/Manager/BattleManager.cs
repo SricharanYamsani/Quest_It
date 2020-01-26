@@ -59,7 +59,7 @@ public class BattleManager : Singleton<BattleManager>
     public event Action GameOver;
 
     // Bool for selection
-    public bool isSelecting { get; set; } = false;
+    public bool IsSelecting { get; set; } = false;
 
     public static int uniqueID = 0;
 
@@ -70,7 +70,6 @@ public class BattleManager : Singleton<BattleManager>
 
     private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over
     {
-
         if (IsTeamAlive(currentRed) && IsTeamAlive(currentBlue))
         {
             SwitchPlayState(BattleStates.BATTLE);
@@ -104,6 +103,11 @@ public class BattleManager : Singleton<BattleManager>
     private void RoundStartFunc()
     {
         
+    }
+
+    public void InitializeBattle(List<BattlePlayer> allPlayers)
+    {
+
     }
 
     private void Start() // this will have to go.
@@ -237,11 +241,11 @@ public class BattleManager : Singleton<BattleManager>
         {
             currentPlayer = roundValidPlayers[i];
 
-            isSelecting = true;
+            IsSelecting = true;
 
             TurnStart?.Invoke(currentPlayer);
 
-            while (isSelecting)
+            while (IsSelecting)
             {
                 yield return null;
             }
