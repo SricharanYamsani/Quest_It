@@ -272,7 +272,7 @@ public class BattleManager : Singleton<BattleManager>
 
         for ( int i = 0 ; i < validPlayers.Count ; i++ )
         {
-            if ( validPlayers [ i ].attributes.health.current  > 0 )
+            if ( validPlayers [ i ].IsAlive )
             {
                 validPlayers [ i ].TakePartInBattle ( true );
 

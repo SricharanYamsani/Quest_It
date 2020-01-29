@@ -72,6 +72,26 @@ public class BattlePlayer : MonoBehaviour
 
     public int CurrentDefence { get { return 0; } }
 
+    public bool IsAlive { get { return attributes.health.current > 0; } }
+
+    public int CurrentHealth {
+
+        get {
+
+            return attributes.health.current;
+        }
+
+        set {
+
+            if(attributes.health.current <= 0)
+            {
+                mPlayerController.SetTrigger(AnimationType.BACKTOLIFE.ToString()); // Resurrection
+            }
+
+            attributes.health.current = value;
+
+        } }
+
     public Animator mPlayerController;
 
     private Sequence m_Sequence;
@@ -219,10 +239,8 @@ public class BattlePlayer : MonoBehaviour
     {
         if (this == player)
         {
-            if (attributes.health.current > 0)
+            if (this.IsAlive)
             {
-                BattleManager.Instance.currentPlayer = this;
-
                 if (this.IsPlayer)
                 {
                     BattleUIManager.Instance.ShowRadialButton(true);
@@ -262,14 +280,14 @@ public class BattlePlayer : MonoBehaviour
                 {
                     if (this.IsTeamRed)
                     {
-                        if (!battlePlayer.IsTeamRed)
+                        if (!battlePlayer.IsTeamRed && battlePlayer.IsAlive)
                         {
                             myTargets.Add(battlePlayer);
                         }
                     }
                     else
                     {
-                        if (battlePlayer.IsTeamRed)
+                        if (battlePlayer.IsTeamRed && battlePlayer.IsAlive)
                         {
                             myTargets.Add(battlePlayer);
                         }
@@ -300,14 +318,14 @@ public class BattlePlayer : MonoBehaviour
                 {
                     if (this.IsTeamRed)
                     {
-                        if (!battlePlayer.IsTeamRed)
+                        if (!battlePlayer.IsTeamRed && battlePlayer.IsAlive)
                         {
                             myTargets.Add(battlePlayer);
                         }
                     }
                     else
                     {
-                        if (battlePlayer.IsTeamRed)
+                        if (battlePlayer.IsTeamRed && battlePlayer.IsAlive)
                         {
                             myTargets.Add(battlePlayer);
                         }
@@ -345,7 +363,13 @@ public class BattlePlayer : MonoBehaviour
 
             case AttackRange.EVERYONE:
 
-                myTargets = validPlayers;
+                foreach (BattlePlayer battlePlayer in validPlayers)
+                {
+                    if (battlePlayer.IsAlive)
+                    {
+                        myTargets.Add(battlePlayer);
+                    }
+                }
 
                 canSelect = false;
 
@@ -354,15 +378,24 @@ public class BattlePlayer : MonoBehaviour
 
         List<BattlePlayer> temp_Target = new List<BattlePlayer>();
 
-        if (canSelect)
+        if (myTargets.Count > 0)
         {
-            temp_Target.Add(myTargets[0]);
+            if (canSelect)
+            {
+                int x = UnityEngine.Random.Range(0, myTargets.Count);
+
+                temp_Target.Add(myTargets[x]);
+            }
+            else
+            {
+                temp_Target = myTargets;
+            }
+            currentChoice.MoveWork(this, temp_Target);
         }
         else
         {
-            temp_Target = myTargets;
+            BattleManager.Instance.IsSelecting = false;
         }
-        currentChoice.MoveWork(this, temp_Target);
     }
 
     public void RoundOver()

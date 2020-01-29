@@ -37,7 +37,7 @@ public class MoveManager : Singleton<MoveManager>
         // Deduction Cost from Player For the Move Made
         if(m_Choice.m_Currency == Currency.BRUTE)
         {
-            player.attributes.health.current -= m_Choice.m_CurrencyAmount;
+            player.CurrentHealth-= m_Choice.m_CurrencyAmount;
         }
         else if(m_Choice.m_Currency == Currency.MANA)
         {
@@ -60,14 +60,14 @@ public class MoveManager : Singleton<MoveManager>
             else
             {
                 int damage = Mathf.CeilToInt(((player.attributes.attack.current * 0.25f) + m_Choice.healthChange) - (m_Player.IsDefending ? m_Player.attributes.defense.current * 0.65f : m_Player.attributes.defense.current * 0.3f));
-                m_Player.attributes.health.current -= Mathf.Clamp(damage, 0, m_Choice.healthChange);
+                m_Player.CurrentHealth -= Mathf.Clamp(damage, 0, m_Choice.healthChange);
                 m_Player.m_PlayerState = PlayerState.NONE;
             }
         }
         else if (m_Choice.AttackStyle == ChoiceStyle.HEAL)
         {
             int heal = m_Choice.healthChange;
-            m_Player.attributes.health.current = Mathf.Clamp(m_Player.attributes.health.current + heal, 0, m_Player.attributes.health.maximum);
+            m_Player.CurrentHealth= Mathf.Clamp(m_Player.CurrentHealth+ heal, 0, m_Player.attributes.health.maximum);
             m_Player.m_PlayerState = PlayerState.NONE;
         }
     }

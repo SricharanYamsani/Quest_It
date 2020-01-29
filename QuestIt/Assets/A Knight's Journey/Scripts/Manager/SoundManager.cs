@@ -10,23 +10,25 @@ public class SoundManager : Singleton<SoundManager>
 
     public void PlaySound(string sound)
     {
-        if(soundClips.Count>0)
-        {
-
-        if (soundClips.ContainsKey(sound))
-        {
-            GameObject soundObject = new GameObject();
-
-            AudioSource mySource = soundObject.AddComponent<AudioSource>();
-
-            mySource.volume = settings.volume;
-
-            mySource.PlayOneShot(soundClips[sound]);
-        }
-        }
-        else
+        if (!(soundClips.Count > 0))
         {
             soundClips = ResourceManager.Instance.soundClips;
+        }
+
+        if (soundClips != null)
+        {
+            if (soundClips.ContainsKey(sound))
+            {
+                GameObject soundObject = new GameObject();
+
+                AudioSource mySource = soundObject.AddComponent<AudioSource>();
+
+                mySource.volume = settings.volume;
+
+                mySource.PlayOneShot(soundClips[sound]);
+
+                Destroy(mySource, soundClips[sound].length);
+            }
         }
     }
 }

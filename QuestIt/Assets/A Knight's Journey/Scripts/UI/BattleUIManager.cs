@@ -180,7 +180,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (!battlePlayer.IsTeamRed)
+                    if (!battlePlayer.IsTeamRed && battlePlayer.IsAlive)
                     {
                         myTargets.Add(battlePlayer);
                     }
@@ -201,7 +201,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (!battlePlayer.IsTeamRed)
+                    if (!battlePlayer.IsTeamRed && battlePlayer.IsAlive)
                     {
                         myTargets.Add(battlePlayer);
                     }
@@ -369,7 +369,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
                 {
                     if (t_Choices[i].m_Choice.m_Currency == Currency.BRUTE)
                     {
-                        if (currentPlayer.attributes.health.current - t_Choices[i].m_Choice.m_CurrencyAmount > 1)
+                        if (currentPlayer.CurrentHealth - t_Choices[i].m_Choice.m_CurrencyAmount > 1)
                         {
                             open = true;
                         }

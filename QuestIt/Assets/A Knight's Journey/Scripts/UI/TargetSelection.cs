@@ -53,7 +53,6 @@ public class TargetSelection : MonoBehaviour
     {
         if (player != null)
         {
-
             mPlayer = player;
 
             selectionButton.interactable = isInteractable;
@@ -68,6 +67,8 @@ public class TargetSelection : MonoBehaviour
             {
                 isSelected = false;
             }
+
+            frame.gameObject.SetActive(isSelected);
             //characterSprite = ResourceManager.Instance.
         }
         else

@@ -28,7 +28,7 @@ public class PlayerIcon : MonoBehaviour
 
         manaBar.fillAmount = ((float)m_Player.attributes.mana.current) / (m_Player.attributes.mana.maximum);
 
-        healthBar.fillAmount = ((float)m_Player.attributes.health.current) / (m_Player.attributes.health.maximum);
+        healthBar.fillAmount = ((float)m_Player.CurrentHealth) / (m_Player.attributes.health.maximum);
 
         this.m_Player = m_Player;
 
@@ -60,7 +60,7 @@ public class PlayerIcon : MonoBehaviour
 
     private IEnumerator UIUpdaterHealth()
     {
-        float difference = t_CurrentHealth - m_Player.attributes.health.current;
+        float difference = t_CurrentHealth - m_Player.CurrentHealth;
 
         int s_Frames = 60;
 
@@ -98,7 +98,7 @@ public class PlayerIcon : MonoBehaviour
             yield return null;
         }
 
-        t_CurrentHealth = m_Player.attributes.health.current;
+        t_CurrentHealth = m_Player.CurrentHealth;
 
         if (t_CurrentHealth <= 0)
         {
