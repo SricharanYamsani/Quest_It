@@ -70,13 +70,13 @@ public class PlayerIcon : MonoBehaviour
                 m_Player.mPlayerController.SetTrigger(AnimationType.BACKTOLIFE.ToString()); // Resurrection
             }
 
-            int s_Frames = 60;
+            int s_Frames = 30;
 
             float s_PerFrameDifference = Mathf.Abs(difference / s_Frames);
 
             if (difference > 0)
             {
-                for (int i = 0; i < 60; i++)
+                for (int i = 0; i < s_Frames; i++)
                 {
                     yield return null;
 
@@ -89,7 +89,7 @@ public class PlayerIcon : MonoBehaviour
             }
             else if (difference < 0)
             {
-                for (int i = 0; i < 60; i++)
+                for (int i = 0; i < s_Frames; i++)
                 {
                     yield return null;
 
@@ -125,13 +125,13 @@ public class PlayerIcon : MonoBehaviour
         if (difference != 0)
         {
 
-            int s_Frames = 60;
+            int s_Frames = 30;
 
             float s_PerFrameDifference = Mathf.Abs(difference / s_Frames);
 
             if (difference > 0)
             {
-                for (int i = 0; i < 60; i++)
+                for (int i = 0; i < s_Frames; i++)
                 {
                     yield return null;
 
@@ -144,7 +144,7 @@ public class PlayerIcon : MonoBehaviour
             }
             else if (difference < 0)
             {
-                for (int i = 0; i < 60; i++)
+                for (int i = 0; i < s_Frames; i++)
                 {
                     yield return null;
 

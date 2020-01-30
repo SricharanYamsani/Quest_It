@@ -20,10 +20,9 @@ MonoBehaviour:
   m_CurrencyAmount: 0
   moveAffectDuration: 0
   healthChange: 20
-  endTime: 3.5
+  endTime: 5
   moveName: Sword Slash
   description: 
-  target:
-  - {fileID: 0}
+  target: []
   ICON: {fileID: 0}
   sword: {fileID: 5288576339935000147, guid: f4e0cbed4315640519c7d071a57e42aa, type: 3}
