@@ -6067,11 +6067,9 @@ MonoBehaviour:
   playerSpawn:
   - {fileID: 2093346765}
   - {fileID: 1935749853}
-  - {fileID: 908935935}
   enemySpawn:
   - {fileID: 80839841}
   - {fileID: 361095628}
-  - {fileID: 1879356896}
 --- !u!4 &1095181390
 Transform:
   m_ObjectHideFlags: 0
