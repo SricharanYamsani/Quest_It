@@ -19,8 +19,6 @@ public class BattlePlayer : MonoBehaviour
 
     public List<BattlePlayer> teamPlayers = new List<BattlePlayer>();
 
-    public List<BattlePlayer> target = new List<BattlePlayer>();
-
     public Transform WorldUI = null;
 
     public PlayerIcon playerIcon;
@@ -74,28 +72,21 @@ public class BattlePlayer : MonoBehaviour
 
     public bool IsAlive { get { return attributes.health.current > 0; } }
 
-    public int CurrentHealth {
+    public int CurrentHealth
+    {
 
         get
         {
-
             return attributes.health.current;
         }
 
-        set {
-
-            if(attributes.health.current <= 0)
-            {
-                mPlayerController.SetTrigger(AnimationType.BACKTOLIFE.ToString()); // Resurrection
-            }
-
+        set
+        {
             attributes.health.current = value;
-
-        } }
+        }
+    }
 
     public Animator mPlayerController;
-
-    private Sequence m_Sequence;
 
     private Color objectcolor = new Color(168, 168, 168, 255);
 
@@ -134,14 +125,6 @@ public class BattlePlayer : MonoBehaviour
         }
     }
 
-    public void SetTargets(BattlePlayer mPlayer)
-    {
-        if (!target.Contains(mPlayer))
-        {
-            target.Add(mPlayer);
-        }
-    }
-
     public void ShowReaction()
     {
         if (currentChoice.AttackStyle == ChoiceStyle.DEFEND)
@@ -168,34 +151,6 @@ public class BattlePlayer : MonoBehaviour
         {
             // Heal animation
         }
-
-        if (m_Sequence != null)
-        {
-            DOTween.Kill(m_Sequence);
-        }
-
-        m_Sequence = DOTween.Sequence();
-
-        reactionLabel.gameObject.SetActive(true);
-
-        m_Sequence.Append(reactionLabel.DOAnchorPos(new Vector2(0, 0.8f), 0.4f).SetEase(Ease.InQuad)).Join(DOVirtual.DelayedCall(0.1f, () => { reactionText.DOFade(0.1f, 0.3f); })).OnKill(() =>
-{
-    reactionLabel.anchoredPosition = Vector2.zero;
-
-    reactionText.color = objectcolor;
-
-    reactionLabel.gameObject.SetActive(false);
-
-}).OnComplete(() =>
-{
-
-    reactionLabel.anchoredPosition = Vector2.zero;
-
-    reactionText.color = objectcolor;
-
-    reactionLabel.gameObject.SetActive(false);
-
-});
     }
 
     public void TakePartInBattle(bool isTrue)
@@ -224,10 +179,6 @@ public class BattlePlayer : MonoBehaviour
 
     private void RoundStart()
     {
-        //this.attributes.mana.current += this.attributes.regenerationMana.current;
-
-        //this.attributes.health.current += this.attributes.regenerationHealth.current;
-
         playerIcon.UpdateUI(PlayerUIUpdater.Both);
     }
 

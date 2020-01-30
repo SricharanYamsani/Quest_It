@@ -114,6 +114,8 @@ public class BattleManager : Singleton<BattleManager>
     {
         Application.targetFrameRate = 60;
 
+        QualitySettings.vSyncCount = 0;
+
         StartBattle();
     }
     public void StartBattle()
@@ -253,8 +255,6 @@ public class BattleManager : Singleton<BattleManager>
             }
 
             TurnOver?.Invoke();
-
-            yield return new WaitForSeconds(2);
         }
 
         yield return null;

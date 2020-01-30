@@ -62,49 +62,58 @@ public class PlayerIcon : MonoBehaviour
     {
         float difference = t_CurrentHealth - m_Player.CurrentHealth;
 
-        int s_Frames = 60;
-
-        float s_PerFrameDifference = Mathf.Abs(difference / s_Frames);
-
-        if (difference > 0)
+        if (difference != 0)
         {
-            for (int i = 0; i < 60; i++)
+
+            if (t_CurrentHealth == 0 && m_Player.CurrentHealth > 0)
             {
-                yield return null;
-
-                t_CurrentHealth -= s_PerFrameDifference;
-
-                t_CurrentHealth = Mathf.Clamp(t_CurrentHealth, 0, m_Player.attributes.health.maximum);
-
-                healthBar.fillAmount = t_CurrentHealth / m_Player.attributes.health.maximum;
+                m_Player.mPlayerController.SetTrigger(AnimationType.BACKTOLIFE.ToString()); // Resurrection
             }
-        }
-        else if (difference < 0)
-        {
-            for (int i = 0; i < 60; i++)
+
+            int s_Frames = 60;
+
+            float s_PerFrameDifference = Mathf.Abs(difference / s_Frames);
+
+            if (difference > 0)
             {
-                yield return null;
+                for (int i = 0; i < 60; i++)
+                {
+                    yield return null;
 
-                t_CurrentHealth += s_PerFrameDifference;
+                    t_CurrentHealth -= s_PerFrameDifference;
 
-                t_CurrentHealth = Mathf.Clamp(t_CurrentHealth, 0, m_Player.attributes.health.maximum);
+                    t_CurrentHealth = Mathf.Clamp(t_CurrentHealth, 0, m_Player.attributes.health.maximum);
 
-                healthBar.fillAmount = t_CurrentHealth / m_Player.attributes.health.maximum;
+                    healthBar.fillAmount = t_CurrentHealth / m_Player.attributes.health.maximum;
+                }
             }
-        }
-        else
-        {
-            t_CurrentHealth = m_Player.attributes.health.current;
-            yield return null;
-        }
+            else if (difference < 0)
+            {
+                for (int i = 0; i < 60; i++)
+                {
+                    yield return null;
 
-        t_CurrentHealth = m_Player.CurrentHealth;
+                    t_CurrentHealth += s_PerFrameDifference;
 
-        if (t_CurrentHealth <= 0)
-        {
-            m_Player.mPlayerController.SetTrigger(AnimationType.DEAD.ToString());
+                    t_CurrentHealth = Mathf.Clamp(t_CurrentHealth, 0, m_Player.attributes.health.maximum);
 
-            SoundManager.Instance.PlaySound("Death");
+                    healthBar.fillAmount = t_CurrentHealth / m_Player.attributes.health.maximum;
+                }
+            }
+            else
+            {
+                t_CurrentHealth = m_Player.attributes.health.current;
+                yield return null;
+            }
+
+            t_CurrentHealth = m_Player.CurrentHealth;
+
+            if (t_CurrentHealth <= 0)
+            {
+                m_Player.mPlayerController.SetTrigger(AnimationType.DEAD.ToString());
+
+                SoundManager.Instance.PlaySound("Death");
+            }
         }
 
         yield return null;
@@ -113,43 +122,46 @@ public class PlayerIcon : MonoBehaviour
     {
         float difference = t_ManaBar - m_Player.attributes.mana.current;
 
-        int s_Frames = 60;
-
-        float s_PerFrameDifference = Mathf.Abs(difference / s_Frames);
-
-        if (difference > 0)
+        if (difference != 0)
         {
-            for (int i = 0; i < 60; i++)
+
+            int s_Frames = 60;
+
+            float s_PerFrameDifference = Mathf.Abs(difference / s_Frames);
+
+            if (difference > 0)
             {
-                yield return null;
+                for (int i = 0; i < 60; i++)
+                {
+                    yield return null;
 
-                t_ManaBar -= s_PerFrameDifference;
+                    t_ManaBar -= s_PerFrameDifference;
 
-                t_ManaBar = Mathf.Clamp(t_ManaBar, 0, m_Player.attributes.mana.maximum);
+                    t_ManaBar = Mathf.Clamp(t_ManaBar, 0, m_Player.attributes.mana.maximum);
 
-                manaBar.fillAmount = t_ManaBar / m_Player.attributes.mana.maximum;
+                    manaBar.fillAmount = t_ManaBar / m_Player.attributes.mana.maximum;
+                }
             }
-        }
-        else if (difference < 0)
-        {
-            for (int i = 0; i < 60; i++)
+            else if (difference < 0)
             {
-                yield return null;
+                for (int i = 0; i < 60; i++)
+                {
+                    yield return null;
 
-                t_ManaBar += s_PerFrameDifference;
+                    t_ManaBar += s_PerFrameDifference;
 
-                t_ManaBar = Mathf.Clamp(t_ManaBar, 0, m_Player.attributes.mana.maximum);
+                    t_ManaBar = Mathf.Clamp(t_ManaBar, 0, m_Player.attributes.mana.maximum);
 
-                manaBar.fillAmount = t_ManaBar / m_Player.attributes.mana.maximum;
+                    manaBar.fillAmount = t_ManaBar / m_Player.attributes.mana.maximum;
+                }
             }
+            else
+            {
+
+            }
+
+            t_ManaBar = m_Player.attributes.mana.current;
         }
-        else
-        {
-
-        }
-
-        t_ManaBar = m_Player.attributes.mana.current;
-
         yield return null;
     }
 }
