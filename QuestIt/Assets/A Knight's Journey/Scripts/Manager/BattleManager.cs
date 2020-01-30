@@ -112,6 +112,8 @@ public class BattleManager : Singleton<BattleManager>
 
     private void Start() // this will have to go.
     {
+        Application.targetFrameRate = 60;
+
         StartBattle();
     }
     public void StartBattle()

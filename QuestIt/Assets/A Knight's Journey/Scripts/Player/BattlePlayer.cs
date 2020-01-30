@@ -76,7 +76,8 @@ public class BattlePlayer : MonoBehaviour
 
     public int CurrentHealth {
 
-        get {
+        get
+        {
 
             return attributes.health.current;
         }

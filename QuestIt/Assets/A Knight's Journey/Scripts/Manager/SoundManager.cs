@@ -23,11 +23,16 @@ public class SoundManager : Singleton<SoundManager>
 
                 AudioSource mySource = soundObject.AddComponent<AudioSource>();
 
-                mySource.volume = settings.volume;
+                if (settings)
+                {
+                    mySource.volume = settings.volume;
+                }
+
+                mySource.name = sound + " SFX";
 
                 mySource.PlayOneShot(soundClips[sound]);
 
-                Destroy(mySource, soundClips[sound].length);
+                Destroy(soundObject, soundClips[sound].length);
             }
         }
     }

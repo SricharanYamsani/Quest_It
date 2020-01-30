@@ -103,6 +103,8 @@ public class PlayerIcon : MonoBehaviour
         if (t_CurrentHealth <= 0)
         {
             m_Player.mPlayerController.SetTrigger(AnimationType.DEAD.ToString());
+
+            SoundManager.Instance.PlaySound("Death");
         }
 
         yield return null;
