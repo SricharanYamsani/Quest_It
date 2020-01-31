@@ -21,6 +21,8 @@ public class TargetSelection : MonoBehaviour
 
     public bool isSelected;
 
+    private static TargetSelection currentSelection;
+
     private void Awake()
     {
         selectionButton.onClick.AddListener(() =>

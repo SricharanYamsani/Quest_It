@@ -49,6 +49,10 @@ public class BattlePlayer : MonoBehaviour
 
     public Transform OriginalSpawn; // player spawn Position
 
+    public Transform LookAt;
+
+    public Transform glowRing;
+
     #endregion
 
     [Space(20)]
@@ -202,6 +206,8 @@ public class BattlePlayer : MonoBehaviour
                     // AI Shit to go here.
                     AIChoice();
                 }
+
+                glowRing.gameObject.SetActive(true);
             }
             else
             {
@@ -210,7 +216,10 @@ public class BattlePlayer : MonoBehaviour
         }
         else
         {
-
+            if(glowRing.gameObject.activeInHierarchy)
+            {
+                glowRing.gameObject.SetActive(false);
+            }
         }
     }
 
