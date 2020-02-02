@@ -23,13 +23,13 @@ public class PlayerIcon : MonoBehaviour
 
     public void Setup(BattlePlayer m_Player)
     {
-        t_CurrentHealth = m_Player.attributes.health.current;
+        t_CurrentHealth = m_Player.CurrentHealth;
 
-        t_ManaBar = m_Player.attributes.mana.current;
+        t_ManaBar = m_Player.CurrentMana;
 
-        manaBar.fillAmount = ((float)m_Player.attributes.mana.current) / (m_Player.attributes.mana.maximum);
+        manaBar.fillAmount = ((float)m_Player.CurrentMana) / (m_Player.MaxMana);
 
-        healthBar.fillAmount = ((float)m_Player.CurrentHealth) / (m_Player.attributes.health.maximum);
+        healthBar.fillAmount = ((float)m_Player.CurrentHealth) / (m_Player.MaxHealth);
 
         this.m_Player = m_Player;
 
@@ -41,29 +41,29 @@ public class PlayerIcon : MonoBehaviour
         switch (updater)
         {
             case PlayerUIUpdater.Health:
-                if (t_CurrentHealth != m_Player.attributes.health.current)
+                if (t_CurrentHealth != m_Player.CurrentHealth)
                 {
-                    UpdateHealth(m_Player.attributes.health.current);
+                    UpdateHealth(m_Player.CurrentHealth);
                 }
                 break;
 
             case PlayerUIUpdater.Mana:
-                if (t_ManaBar != m_Player.attributes.mana.current)
+                if (t_ManaBar != m_Player.CurrentMana)
                 {
-                    UpdateMana(m_Player.attributes.mana.current);
+                    UpdateMana(m_Player.CurrentMana);
                 }
 
                 break;
             case PlayerUIUpdater.Both:
 
-                if (t_CurrentHealth != m_Player.attributes.health.current)
+                if (t_CurrentHealth != m_Player.CurrentHealth)
                 {
-                    UpdateHealth(m_Player.attributes.health.current);
+                    UpdateHealth(m_Player.CurrentHealth);
                 }
 
-                if (t_ManaBar != m_Player.attributes.mana.current)
+                if (t_ManaBar != m_Player.CurrentMana)
                 {
-                    UpdateMana(m_Player.attributes.mana.current);
+                    UpdateMana(m_Player.CurrentMana);
                 }
 
                 break;
@@ -79,7 +79,7 @@ public class PlayerIcon : MonoBehaviour
 
         DOTween.To(() => t_CurrentHealth, x => t_CurrentHealth = x, changeInValue, 0.4f).OnUpdate(() =>
         {
-            healthBar.fillAmount = ((float)t_CurrentHealth / ((float)(m_Player.attributes.health.maximum)));
+            healthBar.fillAmount = ((float)t_CurrentHealth / ((float)(m_Player.MaxHealth)));
 
         }).OnComplete(
             () =>
@@ -99,7 +99,7 @@ public class PlayerIcon : MonoBehaviour
         DOTween.To(() => t_ManaBar, x => t_ManaBar = x, changeInValue, 0.4f).OnUpdate(() =>
         {
 
-            manaBar.fillAmount = ((float)t_ManaBar / ((float)(m_Player.attributes.mana.maximum)));
+            manaBar.fillAmount = ((float)t_ManaBar / ((float)(m_Player.MaxMana)));
 
         }).OnComplete(
             () =>

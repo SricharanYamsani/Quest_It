@@ -10,7 +10,7 @@ public class CameraFocus : MonoBehaviour
 
     private Vector3 lastDirection = Vector3.zero;
 
-    private Transform lookAtObject, prevLookAtObject = null;
+    private Transform lookAtObject = null;
 
     private bool isMoving = false;
 
@@ -27,13 +27,13 @@ public class CameraFocus : MonoBehaviour
     {
         lookAtObject = player.LookAt;
 
-        prevLookAtObject = transform;
+        lastDirection = transform.position;
 
-        if (prevLookAtObject != lookAtObject)
+        if (lastDirection != lookAtObject.position)
         {
             startTime = Time.time;
 
-            journeyLength = Vector3.Distance(prevLookAtObject.position, lookAtObject.position);
+            journeyLength = Vector3.Distance(lastDirection, lookAtObject.position);
 
             isMoving = true;
         }
@@ -49,11 +49,13 @@ public class CameraFocus : MonoBehaviour
 
             float singleStep = speed * Time.deltaTime;
 
-            transform.position = Vector3.Lerp(prevLookAtObject.position, offset.magnitude * lookAtObject.position, fracJourney);
+            transform.position = Vector3.Lerp(lastDirection, offset.magnitude * lookAtObject.position, fracJourney);
 
-            Vector3 newDirection = Vector3.RotateTowards(prevLookAtObject.position, lookAtObject.position, singleStep, 0.0f);
-
-            transform.rotation = Quaternion.LookRotation(-1 * newDirection);
+            Vector3 newDirection = Vector3.RotateTowards(lastDirection, lookAtObject.position, singleStep, 0.0f);
+            if (newDirection != Vector3.zero)
+            {
+                transform.rotation = Quaternion.LookRotation(-1 * newDirection);
+            }
         }
     }
 

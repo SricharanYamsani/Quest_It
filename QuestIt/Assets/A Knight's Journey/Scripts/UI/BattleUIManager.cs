@@ -105,7 +105,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
     }
     private void LoadAllPlayerUI()
     {
-        foreach (BattlePlayer player in BattleManager.Instance.validPlayers)
+        foreach (BattlePlayer player in BattleManager.Instance.GetAllPlayers())
         {
             RectTransform parentContent = null;
 
@@ -170,7 +170,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
     {
         List<BattlePlayer> myTargets = new List<BattlePlayer>();
 
-        List<BattlePlayer> validPlayers = BattleManager.Instance.validPlayers;
+        List<BattlePlayer> validPlayers = BattleManager.Instance.GetAllPlayers();
 
         bool canSelect = false;
 
@@ -191,7 +191,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
             case AttackRange.ONETEAM:
 
-                myTargets = BattleManager.Instance.currentBlue;
+                myTargets = BattleManager.Instance.GetTeamBluePlayers();
 
                 canSelect = true;
 
@@ -376,7 +376,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
                     }
                     else if (t_Choices[i].m_Choice.m_Currency == Currency.MANA)
                     {
-                        if (currentPlayer.attributes.mana.current - t_Choices[i].m_Choice.m_CurrencyAmount > 1)
+                        if (currentPlayer.CurrentMana - t_Choices[i].m_Choice.m_CurrencyAmount > 1)
                         {
                             open = true;
                         }

@@ -1,35 +1,55 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Linq;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
-    public Dictionary<string , BattleChoice> GetChoiceForString = new Dictionary<string , BattleChoice> ( );
+    public Dictionary<MOVES, BattleChoice> GetChoiceFromMove = new Dictionary<MOVES, BattleChoice>();
 
-    public List<Sprite> choiceSprites = new List<Sprite> ( ); // Currently Assigned.
+    public List<Sprite> choiceSprites = new List<Sprite>();
 
-    public List<Sprite> currencySprites = new List<Sprite> ( );// Currently Assigned.
+    public List<Sprite> currencySprites = new List<Sprite>();
 
     /// <summary>Currency Sprites -> Gold. Mana. Health. </summary>
-    public Dictionary<string , Sprite> currencySpritesRef = new Dictionary<string , Sprite> ( );
+    public Dictionary<string, Sprite> currencySpritesRef = new Dictionary<string, Sprite>();
 
-    public Dictionary<string , Sprite> choiceSpritesRef = new Dictionary<string , Sprite> ( );
+    public Dictionary<string, Sprite> choiceSpritesRef = new Dictionary<string, Sprite>();
 
     public Dictionary<string, AudioClip> soundClips = new Dictionary<string, AudioClip>();
 
-    protected override void Awake ( )
-    {
-        base.Awake ( );
+    public Dictionary<BattleCharacters, BattlePlayer> allModels = new Dictionary<BattleCharacters, BattlePlayer>();
 
-        BattleChoice [ ] choices = Resources.LoadAll<BattleChoice> ( "ScriptableObjects" );
+    protected override void Awake()
+    {
+        isDontDestroyOnLoad = true;
+
+        base.Awake();
+
+        BattleChoice[] choices = Resources.LoadAll<BattleChoice>("ScriptableObjects");
 
         AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds");
 
-        for ( int i = 0 ; i < choices.Length ; i++ )
+        BattlePlayer[] models = Resources.LoadAll<BattlePlayer>("Models");
+
+        choiceSprites = Resources.LoadAll<Sprite>("Sprites/Choices").ToList();
+
+        currencySprites = Resources.LoadAll<Sprite>("Sprites/Currency").ToList();
+
+        for (int i = 0; i < choices.Length; i++)
         {
-            if ( !GetChoiceForString.ContainsKey ( choices [ i ].name ) )
+            MOVES move;
+
+            Enum.TryParse<MOVES>(choices[i].name, out move);
+
+            if (move != MOVES.NONE)
             {
-                GetChoiceForString.Add ( choices [ i ].name , choices [ i ] );
+
+                if (!GetChoiceFromMove.ContainsKey(move))
+                {
+                    GetChoiceFromMove.Add(move, choices[i]);
+                }
             }
         }
 
@@ -41,18 +61,33 @@ public class ResourceManager : Singleton<ResourceManager>
             }
         }
 
-        for ( int i = 0 ; i < choiceSprites.Count ; i++ )
+        for (int i = 0; i < choiceSprites.Count; i++)
         {
-            if ( !choiceSpritesRef.ContainsKey ( choiceSprites [ i ].name ) )
+            if (!choiceSpritesRef.ContainsKey(choiceSprites[i].name))
             {
-                choiceSpritesRef.Add ( choiceSprites [ i ].name , choiceSprites [ i ] );
+                choiceSpritesRef.Add(choiceSprites[i].name, choiceSprites[i]);
             }
         }
-        for ( int i = 0 ; i < currencySprites.Count ; i++ )
+        for (int i = 0; i < currencySprites.Count; i++)
         {
-            if ( !currencySpritesRef.ContainsKey ( currencySprites [ i ].name ) )
+            if (!currencySpritesRef.ContainsKey(currencySprites[i].name))
             {
-                currencySpritesRef.Add ( currencySprites [ i ].name , currencySprites [ i ] );
+                currencySpritesRef.Add(currencySprites[i].name, currencySprites[i]);
+            }
+        }
+
+        for (int i = 0; i < models.Length; i++)
+        {
+            BattleCharacters character;
+
+            Enum.TryParse<BattleCharacters>(models[i].name, out character);
+
+            if (character != BattleCharacters.NONE)
+            {
+                if (!allModels.ContainsKey(character))
+                {
+                    allModels.Add(character, models[i]);
+                }
             }
         }
     }

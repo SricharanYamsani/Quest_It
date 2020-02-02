@@ -10,40 +10,21 @@ public class BattleManager : Singleton<BattleManager>
 {
     // VARIABLE SECTION
 
-    [Header("-BATTLE STATE-")]
     public BattleStates battleState = BattleStates.NONE;
-
-    [Header("CONSTANTS")]
-    private const int MTime = 0;
-
-    [Header("INTEGERS")]
-    public int m_Timer = 0;
 
     public int validPlayersCount = 0;
 
-    private int currentPlayerIndex = -1;
+    private List<BattlePlayer> validPlayers = new List<BattlePlayer>();
 
-    [Header("BATTLE PLAYER CURRENT LIST")]
-    public List<BattlePlayer> validPlayers = new List<BattlePlayer>();
+    private List<BattlePlayer> CurrentRedTeam { get; set; } = new List<BattlePlayer>();
 
-    private List<BattlePlayer> roundValidPlayers = new List<BattlePlayer>();
+    private List<BattlePlayer> CurrentBlueTeam { get; set; } = new List<BattlePlayer>();
 
-    [Header("ENEMIES")]
-    public List<BattlePlayer> currentRed = new List<BattlePlayer>();
-
-    public List<BattlePlayer> currentBlue = new List<BattlePlayer>();
-
-    [Header("CurrentMove - BattlePlayer")]
     public BattlePlayer currentPlayer = null;
 
     public BattlePlayer playerPrefabRef;
 
-    [Header("Transforms")]
-    [Space(20)]
-    public Transform[] playerSpawn;
-
-    public Transform[] enemySpawn;
-
+    public List<SpawnPoint> spawns = new List<SpawnPoint>();
 
     // Events 
     public event Action GameInit;
@@ -61,6 +42,10 @@ public class BattleManager : Singleton<BattleManager>
     // Bool for selection
     public bool IsSelecting { get; set; } = false;
 
+    public bool IsLoaded { get; private set; } = false;
+
+    public bool LoadFromScene;
+
     public static int uniqueID = 0;
 
     protected override void Awake()
@@ -70,7 +55,7 @@ public class BattleManager : Singleton<BattleManager>
 
     private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over
     {
-        if (IsTeamAlive(currentRed) && IsTeamAlive(currentBlue))
+        if (IsTeamAlive(CurrentRedTeam) && IsTeamAlive(CurrentBlueTeam))
         {
             SwitchPlayState(BattleStates.BATTLE);
         }
@@ -86,7 +71,7 @@ public class BattleManager : Singleton<BattleManager>
 
         for (int i = players.Count - 1; i >= 0; --i)
         {
-            if (players[i].attributes.health.current > 0)
+            if (players[i].IsAlive)
             {
                 isAlive = true;
                 break;
@@ -97,18 +82,22 @@ public class BattleManager : Singleton<BattleManager>
 
     private void TurnStartFunc(BattlePlayer player) // Turn Over Method
     {
-        
+
     }
 
     private void RoundStartFunc()
     {
-        
+
     }
 
-    public void InitializeBattle(List<BattlePlayer> allPlayers)
+    public void InitializeBattle(List<PlayerQualities> allPlayers)
     {
+        ResetSystem();
 
+        SetupPlayersOnField(allPlayers);
     }
+
+
 
     private void Start() // this will have to go.
     {
@@ -116,11 +105,42 @@ public class BattleManager : Singleton<BattleManager>
 
         QualitySettings.vSyncCount = 0;
 
-        StartBattle();
+        if (InformationHandler.Instance.lobbyPlayers.Count <= 0)
+        {
+            GeneratePlayers();
+        }
+
+        InitializeBattle(InformationHandler.Instance.lobbyPlayers);
     }
-    public void StartBattle()
+
+    private void GeneratePlayers()
     {
-        Setup();
+        if (LoadFromScene)
+        {
+            List<PlayerQualities> playerQ = new List<PlayerQualities>();
+
+            for (int i = 0; i < 6; i++)
+            {
+                PlayerQualities player = new PlayerQualities();
+
+                player.myAttributes = PlayerGenerator.AttributesGenerator();
+
+                player.character = BattleCharacters.BESTOFWORLDS;
+
+                for (int j = 1; j <= 4; j++)
+                {
+                    player.chosenMoves.Add((MOVES)j);
+                }
+
+                player.IsTeamRed = (i < 3);
+
+                player.IsPlayer = (i == 0 ? true : false);
+
+                playerQ.Add(player);
+            }
+
+            InformationHandler.Instance.SetLobby(playerQ);
+        }
     }
 
     private void Setup()
@@ -140,97 +160,58 @@ public class BattleManager : Singleton<BattleManager>
     {
         yield return null;
 
-        BattlePlayer t_Player = null;
+        CalculateTeamPlayers();
 
-        for (int i =0 ;i<playerSpawn.Length ;i++ )
-        {
-            t_Player = Instantiate ( playerPrefabRef , playerSpawn [ i] );
+        Sortplayers();
 
-            //mPlayer.playerIcon = Instantiate<PlayerIcon>(playerIconRef,)
-            t_Player.attributes = PlayerGenerator.Instance.AttributesGenerator ( );
+        GameInit?.Invoke();
 
-            if ( i == 0 )
-            {
-                t_Player.SetPlayer(true, true);
-            }
-            else
-            {
-                t_Player.SetPlayer(false, true);
-            }
-
-            t_Player.tag = "Player";
-
-            t_Player.OriginalSpawn = playerSpawn[i];
-
-            validPlayers.Add ( t_Player );
-        }
-
-        for ( int i = 0 ; i < enemySpawn.Length ; i++ )
-        {
-            t_Player = Instantiate ( playerPrefabRef , enemySpawn [ i ] );
-
-            t_Player.SetPlayer(false, false);
-
-            t_Player.attributes = PlayerGenerator.Instance.AttributesGenerator ( );
-
-            t_Player.OriginalSpawn = enemySpawn[i];
-
-            t_Player.tag = "Enemy";
-
-            t_Player.transform.rotation = new Quaternion ( 0 , 180 , 0 , 0 );
-
-            validPlayers.Add ( t_Player );
-        }
-
-        CalculatePlayers ( true );
-
-        Sortplayers ( true );
-
-        GameInit?.Invoke ( );
-
-        SwitchPlayState ( BattleStates.BATTLE );
-
+        SwitchPlayState(BattleStates.BATTLE);
     }
     #endregion
-    public void CalculatePlayersOnField ( ) // Calculate if it is Team Red or Team Blue
+    public void CalculateTeamPlayers() // Calculate if it is Team Red or Team Blue
     {
-        foreach ( BattlePlayer t_Enemies in validPlayers )
+        foreach (BattlePlayer player in validPlayers)
         {
-            if ( !t_Enemies.IsTeamRed )
+            player.TakePartInBattle(true);
+
+            player.SetPlayer();
+
+            if (!player.IsTeamRed)
             {
-                currentRed.Add ( t_Enemies );
+                CurrentRedTeam.Add(player);
             }
             else
             {
-                currentBlue.Add ( t_Enemies );
+                CurrentBlueTeam.Add(player);
             }
         }
     }
-    public void SwitchPlayState (BattleStates mState)
+    public void SwitchPlayState(BattleStates mState)
     {
         battleState = mState;
 
-        PlayState ( );
+        PlayState();
     }
 
-    public void PlayState ( )
+    public void PlayState()
     {
-        switch ( battleState )
+        switch (battleState)
         {
             case BattleStates.NONE: break;
 
             case BattleStates.BATTLE:
 
-            StartCoroutine ( BattleMatch ( ) );
+                StartCoroutine(BattleMatch());
 
-            break;
+                break;
 
             case BattleStates.OUTCOME:
 
-            // Show the Outcome
-            GameOver?.Invoke ( );
-            // End the Lobby
-            break;
+                // Show the Outcome
+                GameOver?.Invoke();
+                // End the Lobby
+                break;
         }
     }
 
@@ -239,11 +220,9 @@ public class BattleManager : Singleton<BattleManager>
     {
         RoundStart?.Invoke();
 
-        currentPlayerIndex = -1;
-
-        for (int i = 0; i < roundValidPlayers.Count; i++)
+        for (int i = 0; i < validPlayers.Count; i++)
         {
-            currentPlayer = roundValidPlayers[i];
+            currentPlayer = validPlayers[i];
 
             IsSelecting = true;
 
@@ -263,69 +242,119 @@ public class BattleManager : Singleton<BattleManager>
     }
     #endregion
 
-    #region Calculate Alive Players
-    private void CalculatePlayers ( bool CalculateEnemies = false)
+    #region Player Sorting
+    private void Sortplayers() //  Sorting Players To get 
     {
-        roundValidPlayers.Clear ( );
-
-        currentRed.Clear ( );
-
-        currentBlue.Clear ( );
-
-        for ( int i = 0 ; i < validPlayers.Count ; i++ )
+        validPlayers.Sort((player1, player2) =>
         {
-            if ( validPlayers [ i ].IsAlive )
-            {
-                validPlayers [ i ].TakePartInBattle ( true );
-
-                roundValidPlayers.Add ( validPlayers [ i ] );
-            }
-            else
-            {
-                validPlayers [ i ].TakePartInBattle ( false );
-            }
-        }
-
-        if(CalculateEnemies)
-        {
-            CalculatePlayersOnField ( );
-        }
+            return (player2.CurrentAgility.CompareTo(player1.CurrentAgility));
+        });
     }
     #endregion
 
-    #region Player Sorting
-    private void Sortplayers (bool isDescending = true) //  Sorting Players To get 
+    private void SetupPlayersOnField(List<PlayerQualities> qualities)
     {
-        for ( int i = 0 ; i < roundValidPlayers.Count - 1 ; i++ )
+        foreach (PlayerQualities quality in qualities)
         {
-            for ( int j = 0 ; j < roundValidPlayers.Count - 1 - i ; j++ )
+            Transform myTransform = GetSpawn(quality.IsTeamRed, quality.IsPlayer);
+
+            if (myTransform != null)
             {
-                if ( isDescending )
+                BattlePlayer player = Instantiate<BattlePlayer>(ResourceManager.Instance.allModels[quality.character], myTransform);
+
+                player.playerQualities = quality;
+
+                validPlayers.Add(player);
+            }
+            else
+            {
+                Debug.Log(quality.IsPlayer + " : " + "Cannot find appropriate spawn. Passing players > 6?");
+            }
+        }
+        Setup();
+    }
+
+    private void ResetSystem()
+    {
+        validPlayers.Clear();
+
+        CurrentRedTeam.Clear();
+
+        CurrentBlueTeam.Clear();
+
+        foreach (SpawnPoint spawn in spawns)
+        {
+            spawn.IsOccupied = false;
+        }
+    }
+
+    public List<BattlePlayer> GetTeamRedPlayers()
+    {
+        return CurrentRedTeam;
+    }
+
+    public List<BattlePlayer> GetTeamBluePlayers()
+    {
+        return CurrentBlueTeam;
+    }
+
+    public List<BattlePlayer> GetAllPlayers()
+    {
+        return validPlayers;
+    }
+
+    /// <summary>
+    /// Get available spawns from the spawn list.
+    /// </summary>
+    /// <param name="isTeamRed"> Look for spawns in team "Red" or "Blue".</param>
+    /// <param name="isPlayer"> Look for player spawn - can be only one.</param>
+    /// <returns></returns>
+    private Transform GetSpawn(bool isTeamRed, bool isPlayer = false)
+    {
+        for (int i = 0; i < spawns.Count; i++)
+        {
+            if (isTeamRed)
+            {
+                if (isPlayer)
                 {
-                    if ( roundValidPlayers [ j ].CurrentAgility > roundValidPlayers [ j + 1 ].CurrentAgility )
+                    if (spawns[i].isPlayerSpot)
                     {
-                        BattlePlayer temp = roundValidPlayers [ j ];
-
-                        roundValidPlayers [ j ] = roundValidPlayers [ j + 1 ];
-
-                        roundValidPlayers [ j ] = temp;
+                        return spawns[i].spawn;
                     }
                 }
                 else
                 {
-                    if ( roundValidPlayers [ j ].CurrentAgility < roundValidPlayers [ j + 1 ].CurrentAgility )
+                    if (!spawns[i].IsOccupied && spawns[i].isTeamRed && !spawns[i].isPlayerSpot)
                     {
-                        BattlePlayer temp = roundValidPlayers [ j ];
+                        spawns[i].IsOccupied = true;
 
-                        roundValidPlayers [ j ] = roundValidPlayers [ j + 1 ];
+                        return spawns[i].spawn;
+                    }
+                }
+            }
+            else
+            {
+                if (isPlayer)
+                {
+                    if (spawns[i].isPlayerSpot)
+                    {
+                        return spawns[i].spawn;
+                    }
+                }
+                else
+                {
+                    if (!spawns[i].IsOccupied && !spawns[i].isTeamRed && !spawns[i].isPlayerSpot)
+                    {
+                        spawns[i].IsOccupied = true;
 
-                        roundValidPlayers [ j ] = temp;
+                        return spawns[i].spawn;
                     }
                 }
             }
         }
+
+        return null;
     }
-    #endregion
 }
 public enum BattleStates
 {

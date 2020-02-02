@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerGenerator : Singleton<PlayerGenerator>
+public static class PlayerGenerator
 {
-    public PlayerAttributes AttributesGenerator()
+    public static PlayerAttributes AttributesGenerator()
     {
         PlayerAttributes m_attributes = new PlayerAttributes();
 
@@ -26,11 +26,11 @@ public class PlayerGenerator : Singleton<PlayerGenerator>
 
         m_attributes.health.current = m_attributes.health.maximum;
 
-        m_attributes.agility.current = Random.Range ( 5 , m_attributes.agility.maximum );
+        m_attributes.agility.current = Random.Range(5, m_attributes.agility.maximum);
 
-        m_attributes.defense.current = Random.Range ( 5 , m_attributes.defense.maximum );
+        m_attributes.defense.current = Random.Range(5, m_attributes.defense.maximum);
 
-        m_attributes.luck.current = Random.Range ( 0 , m_attributes.luck.maximum );
+        m_attributes.luck.current = Random.Range(0, m_attributes.luck.maximum);
 
         m_attributes.attack.current = Random.Range(5, m_attributes.attack.maximum);
 

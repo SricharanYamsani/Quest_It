@@ -9,20 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 747f570aefda144efb49fd0700aebe62, type: 3}
-  m_Name: SwordSlash
+  m_Script: {fileID: 11500000, guid: 868e5de027caf4dc28638616f0a673d6, type: 3}
+  m_Name: ARCHER_ONE_SHOT
   m_EditorClassIdentifier: 
   AttackStyle: 1
   AttackValue: 1
   MoveTurnsType: 2
-  m_AnimationClip: 1
+  m_AnimationClip: 6
   m_Currency: 2
   m_CurrencyAmount: 0
   moveAffectDuration: 0
-  healthChange: 20
-  endTime: 5
-  moveName: Sword Slash
-  description: 
+  healthChange: 55
+  endTime: 7
+  moveName: Pierce Through
+  description: Godly Arrow which greatly inflict damage to your opponnent.
   target: []
   ICON: {fileID: 0}
-  sword: {fileID: 5288576339935000147, guid: f4e0cbed4315640519c7d071a57e42aa, type: 3}
+  Bow: {fileID: 4042279297866727367, guid: c330e66a0481a4e9c8151c787830bcc0, type: 3}
+  arrow: {fileID: 2886713559955451662, guid: 11bed329b649d4978ba8e6d2348e1d10, type: 3}

@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 747f570aefda144efb49fd0700aebe62, type: 3}
-  m_Name: HardSwordAttack
+  m_Name: SWORD_SLASH
   m_EditorClassIdentifier: 
   AttackStyle: 1
   AttackValue: 1
   MoveTurnsType: 2
-  m_AnimationClip: 2
+  m_AnimationClip: 1
   m_Currency: 2
-  m_CurrencyAmount: 5
+  m_CurrencyAmount: 0
   moveAffectDuration: 0
-  healthChange: 45
-  endTime: 5.5
-  moveName: Hunt
+  healthChange: 20
+  endTime: 5
+  moveName: Sword Slash
   description: 
   target: []
   ICON: {fileID: 0}

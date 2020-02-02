@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 747f570aefda144efb49fd0700aebe62, type: 3}
+  m_Name: SWIPE_SLASH
+  m_EditorClassIdentifier: 
+  AttackStyle: 1
+  AttackValue: 1
+  MoveTurnsType: 2
+  m_AnimationClip: 2
+  m_Currency: 2
+  m_CurrencyAmount: 5
+  moveAffectDuration: 0
+  healthChange: 45
+  endTime: 5.5
+  moveName: Hunt
+  description: 
+  target: []
+  ICON: {fileID: 0}
+  sword: {fileID: 5288576339935000147, guid: f4e0cbed4315640519c7d071a57e42aa, type: 3}
