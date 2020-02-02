@@ -1,18 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-public class BattleBuffs : MonoBehaviour
+[Serializable]
+public class BattleBuffs
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Attributes attackBuff;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

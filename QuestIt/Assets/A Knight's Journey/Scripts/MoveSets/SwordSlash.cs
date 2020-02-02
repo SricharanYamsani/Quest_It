@@ -19,19 +19,10 @@ public class SwordSlash : BattleChoice
 
             mObject.Trigger();
 
-            List<BattlePlayer> mPlayers = target;
-
             Sequence mySequence = DOTween.Sequence();
-
-            float calculatedTime = Vector3.Distance(player.transform.position, mPlayers[0].meleeAttackSpawn.transform.position) / 2;
-
-            Debug.Log(calculatedTime);
-
-            float finishingTime = endTime + calculatedTime;
 
             mySequence.Append(DOVirtual.DelayedCall(0.25f, () =>
             {
-
                 player.transform.DOLookAt(target[0].transform.position, 0.4f);
 
                 player.mPlayerController.SetTrigger(m_AnimationClip.ToString());
@@ -43,7 +34,7 @@ public class SwordSlash : BattleChoice
                 base.MoveWork(player, null);
             });
 
-            foreach (BattlePlayer m_Player in mPlayers)
+            foreach (BattlePlayer m_Player in target)
             {
                 MoveManager.Instance.CalculateDamage(player, this, m_Player);
             }

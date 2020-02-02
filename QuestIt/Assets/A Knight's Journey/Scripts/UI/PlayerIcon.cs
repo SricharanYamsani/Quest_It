@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PlayerIcon : MonoBehaviour
 {
@@ -22,13 +23,13 @@ public class PlayerIcon : MonoBehaviour
 
     public void Setup(BattlePlayer m_Player)
     {
-        t_CurrentHealth = m_Player.attributes.health.current;
+        t_CurrentHealth = m_Player.CurrentHealth;
 
-        t_ManaBar = m_Player.attributes.mana.current;
+        t_ManaBar = m_Player.CurrentMana;
 
-        manaBar.fillAmount = ((float)m_Player.attributes.mana.current) / (m_Player.attributes.mana.maximum);
+        manaBar.fillAmount = ((float)m_Player.CurrentMana) / (m_Player.MaxMana);
 
-        healthBar.fillAmount = ((float)m_Player.attributes.health.current) / (m_Player.attributes.health.maximum);
+        healthBar.fillAmount = ((float)m_Player.CurrentHealth) / (m_Player.MaxHealth);
 
         this.m_Player = m_Player;
 
@@ -40,115 +41,72 @@ public class PlayerIcon : MonoBehaviour
         switch (updater)
         {
             case PlayerUIUpdater.Health:
-                StartCoroutine(UIUpdaterHealth());
+                if (t_CurrentHealth != m_Player.CurrentHealth)
+                {
+                    UpdateHealth(m_Player.CurrentHealth);
+                }
                 break;
 
             case PlayerUIUpdater.Mana:
-
-                StartCoroutine(UIUpadaterMana());
+                if (t_ManaBar != m_Player.CurrentMana)
+                {
+                    UpdateMana(m_Player.CurrentMana);
+                }
 
                 break;
             case PlayerUIUpdater.Both:
 
-                StartCoroutine(UIUpdaterHealth());
+                if (t_CurrentHealth != m_Player.CurrentHealth)
+                {
+                    UpdateHealth(m_Player.CurrentHealth);
+                }
 
-                StartCoroutine(UIUpadaterMana());
+                if (t_ManaBar != m_Player.CurrentMana)
+                {
+                    UpdateMana(m_Player.CurrentMana);
+                }
 
                 break;
         }
     }
 
-    private IEnumerator UIUpdaterHealth()
+    private void UpdateHealth(int changeInValue)
     {
-        float difference = t_CurrentHealth - m_Player.attributes.health.current;
-
-        int s_Frames = 60;
-
-        float s_PerFrameDifference = Mathf.Abs(difference / s_Frames);
-
-        if (difference > 0)
+        if (t_CurrentHealth <= 0 && changeInValue > 0)
         {
-            for (int i = 0; i < 60; i++)
+            m_Player.mPlayerController.SetTrigger(AnimationType.BACKTOLIFE.ToString());
+        }
+
+        DOTween.To(() => t_CurrentHealth, x => t_CurrentHealth = x, changeInValue, 0.4f).OnUpdate(() =>
+        {
+            healthBar.fillAmount = ((float)t_CurrentHealth / ((float)(m_Player.MaxHealth)));
+
+        }).OnComplete(
+            () =>
             {
-                yield return null;
+                t_CurrentHealth = changeInValue;
 
-                t_CurrentHealth -= s_PerFrameDifference;
-
-                t_CurrentHealth = Mathf.Clamp(t_CurrentHealth, 0, m_Player.attributes.health.maximum);
-
-                healthBar.fillAmount = t_CurrentHealth / m_Player.attributes.health.maximum;
+                if(t_CurrentHealth<= 0)
+                {
+                    m_Player.mPlayerController.SetTrigger(AnimationType.DEAD.ToString());
+                }
             }
-        }
-        else if (difference < 0)
-        {
-            for (int i = 0; i < 60; i++)
-            {
-                yield return null;
-
-                t_CurrentHealth += s_PerFrameDifference;
-
-                t_CurrentHealth = Mathf.Clamp(t_CurrentHealth, 0, m_Player.attributes.health.maximum);
-
-                healthBar.fillAmount = t_CurrentHealth / m_Player.attributes.health.maximum;
-            }
-        }
-        else
-        {
-            t_CurrentHealth = m_Player.attributes.health.current;
-            yield return null;
-        }
-
-        t_CurrentHealth = m_Player.attributes.health.current;
-
-        if (t_CurrentHealth <= 0)
-        {
-            m_Player.mPlayerController.SetTrigger(AnimationType.DEAD.ToString());
-        }
-
-        yield return null;
+            );
     }
-    private IEnumerator UIUpadaterMana()
+
+    private void UpdateMana(int changeInValue)
     {
-        float difference = t_ManaBar - m_Player.attributes.mana.current;
-
-        int s_Frames = 60;
-
-        float s_PerFrameDifference = Mathf.Abs(difference / s_Frames);
-
-        if (difference > 0)
+        DOTween.To(() => t_ManaBar, x => t_ManaBar = x, changeInValue, 0.4f).OnUpdate(() =>
         {
-            for (int i = 0; i < 60; i++)
+
+            manaBar.fillAmount = ((float)t_ManaBar / ((float)(m_Player.MaxMana)));
+
+        }).OnComplete(
+            () =>
             {
-                yield return null;
-
-                t_ManaBar -= s_PerFrameDifference;
-
-                t_ManaBar = Mathf.Clamp(t_ManaBar, 0, m_Player.attributes.mana.maximum);
-
-                manaBar.fillAmount = t_ManaBar / m_Player.attributes.mana.maximum;
+                t_ManaBar = changeInValue;
             }
-        }
-        else if (difference < 0)
-        {
-            for (int i = 0; i < 60; i++)
-            {
-                yield return null;
-
-                t_ManaBar += s_PerFrameDifference;
-
-                t_ManaBar = Mathf.Clamp(t_ManaBar, 0, m_Player.attributes.mana.maximum);
-
-                manaBar.fillAmount = t_ManaBar / m_Player.attributes.mana.maximum;
-            }
-        }
-        else
-        {
-
-        }
-
-        t_ManaBar = m_Player.attributes.mana.current;
-
-        yield return null;
+            );
     }
 }
 

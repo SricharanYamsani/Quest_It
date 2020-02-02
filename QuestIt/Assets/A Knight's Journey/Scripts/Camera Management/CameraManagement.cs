@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraManagement : MonoBehaviour
 {
     [SerializeField]
-    Vector2 positionOffset = new Vector2(5, 10);
+    Vector3 positionOffset = new Vector2(5, 10);
     
     public GameObject lookat;
 
@@ -23,7 +23,7 @@ public class CameraManagement : MonoBehaviour
     {
         if ( moveCamera )
         {
-            transform.localPosition = new Vector3 ( lookat.transform.position.x , lookat.transform.position.y + positionOffset.y , lookat.transform.position.z - positionOffset.x );
+            transform.localPosition = new Vector3 ( lookat.transform.position.x + positionOffset.x , lookat.transform.position.y + positionOffset.y , lookat.transform.position.z + positionOffset.z );
         }
     }
 

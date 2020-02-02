@@ -13,5 +13,6 @@ public enum AnimationType
     ARROWSHOTONE,
     MAGICHEAL,
     DEAD,
+    BACKTOLIFE,
 
 }

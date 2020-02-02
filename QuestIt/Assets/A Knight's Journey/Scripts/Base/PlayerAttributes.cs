@@ -5,7 +5,7 @@ using System;
 
 [Serializable]
 public class PlayerAttributes
-{
+{ 
     public Attributes health = new Attributes();
 
     public Attributes mana = new Attributes();
