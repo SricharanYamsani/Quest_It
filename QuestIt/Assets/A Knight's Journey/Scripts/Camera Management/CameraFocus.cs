@@ -38,7 +38,6 @@ public class CameraFocus : MonoBehaviour
             isMoving = true;
         }
     }
-
     private void LateUpdate()
     {
         if (isMoving)
@@ -52,6 +51,7 @@ public class CameraFocus : MonoBehaviour
             transform.position = Vector3.Lerp(lastDirection, offset.magnitude * lookAtObject.position, fracJourney);
 
             Vector3 newDirection = Vector3.RotateTowards(lastDirection, lookAtObject.position, singleStep, 0.0f);
+
             if (newDirection != Vector3.zero)
             {
                 transform.rotation = Quaternion.LookRotation(-1 * newDirection);

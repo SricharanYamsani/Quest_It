@@ -88,14 +88,37 @@ namespace SAR.LEVELGENERATOR
 
             GUILayout.BeginHorizontal();
 
-            if (GUILayout.Button("LoadMap"))
+            if (GUILayout.Button("Load Buildings"))
             {
-                LevelGenerator.Instance.LoadLevelFromTexture();
+                LevelGenerator.Instance.LoadBuildingLevelFromTexture();
             }
-
-            if(GUILayout.Button("Delete Level Data"))
+            if (GUILayout.Button("Load Trees"))
             {
-                DumpLevel();
+                LevelGenerator.Instance.LoadTreeLevelFromTexture();
+            }
+            if (GUILayout.Button("Load Roads"))
+            {
+                LevelGenerator.Instance.LoadRoadLevelFromTexture();
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("Delete Level Data"))
+            {
+                DumpLevel(PrefabType.ALL);
+            }
+            if (GUILayout.Button("Delete Building Data"))
+            {
+                DumpLevel(PrefabType.BUILDING);
+            }
+            if (GUILayout.Button("Delete Tree Data"))
+            {
+                DumpLevel(PrefabType.TREES);
+            }
+            if (GUILayout.Button("Delete Road Data"))
+            {
+                DumpLevel(PrefabType.ROAD);
             }
 
             GUILayout.EndHorizontal();
@@ -120,14 +143,34 @@ namespace SAR.LEVELGENERATOR
             LevelGenerator.Instance.grassObjects.Clear();
         }
 
-        private void DumpLevel()
+        private void DumpLevel(PrefabType type)
         {
-            LevelGenerator.Instance.DeleteData();
+            if (type == PrefabType.BUILDING)
+            {
+                LevelGenerator.Instance.DeleteBuildingData();
+            }
+            else if (type == PrefabType.ROAD)
+            {
+                LevelGenerator.Instance.DeleteRoadData();
+            }
+            else if (type == PrefabType.TREES)
+            {
+                LevelGenerator.Instance.DeleteTreeData();
+            }
+            else if (type == PrefabType.ALL)
+            {
+                LevelGenerator.Instance.DeleteData();
+            }
         }
     }
+
     public enum PrefabType
     {
         GROUND,
+        BUILDING,
+        ROAD,
+        TREES,
+        ALL,
         ETC
     }
 }
