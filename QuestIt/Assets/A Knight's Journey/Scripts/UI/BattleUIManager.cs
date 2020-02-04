@@ -31,6 +31,8 @@ public class BattleUIManager : Singleton<BattleUIManager>
     public GameObject gridDefend;
     public GameObject gridRun;
 
+    private GameObject currentGameObject;
+
     //Selection
     public RectTransform targetSelectionScreen;
     public GameObject selectionBackground;
@@ -168,6 +170,8 @@ public class BattleUIManager : Singleton<BattleUIManager>
     #region TargetChoices
     public void ShowTargetChoices(AttackRange range)
     {
+        currentGameObject.SetActive(false);
+
         List<BattlePlayer> myTargets = new List<BattlePlayer>();
 
         List<BattlePlayer> validPlayers = BattleManager.Instance.GetAllPlayers();
@@ -259,11 +263,11 @@ public class BattleUIManager : Singleton<BattleUIManager>
         // Selection Screen
         selectionBackground.SetActive(true);
 
-        targetSelectionScreen.anchoredPosition = Vector2.zero;
+        //targetSelectionScreen.anchoredPosition = Vector2.zero;
 
         targetSelectionScreen.gameObject.SetActive(true);
 
-        targetSelectionScreen.DOAnchorPosY(-250, 0.4f);
+        //targetSelectionScreen.DOAnchorPosY(-250, 0.4f);
         // Selection Screen End
     }
 
@@ -300,7 +304,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
         {
             targetSelectionScreen.gameObject.SetActive(false);
 
-            targetSelectionScreen.anchoredPosition = Vector2.zero;
+            //targetSelectionScreen.anchoredPosition = Vector2.zero;
 
             selectionBackground.SetActive(false);
 
@@ -403,19 +407,21 @@ public class BattleUIManager : Singleton<BattleUIManager>
         if (index == 0)
         {
             sizeXSlider = BattleManager.Instance.currentPlayer.validChoices.Count * 300f;
-            gridAttack.SetActive(true);
+            currentGameObject = gridAttack;
         }
         else if (index == 1)
         {
-            gridDefend.SetActive(true);
+            currentGameObject = gridDefend;
         }
         else if (index == 2)
         {
-            gridItem.SetActive(true);
+            currentGameObject = gridItem;
         }
         else
         {
-            gridRun.SetActive(true);
+            currentGameObject = gridRun;
         }
+
+        currentGameObject.SetActive(true);
     }
 }
