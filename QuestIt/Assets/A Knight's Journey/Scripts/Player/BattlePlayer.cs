@@ -17,6 +17,13 @@ public class BattlePlayer : MonoBehaviour
 
     public PlayerIcon playerIcon;
 
+    //[EnumNamedArray(typeof(EPlayerCamera))]
+    //public List<RPG.CameraControl.VirtualCameraComponent> playerCameras;
+
+    public Transform virtualCameraParent;
+    public Transform playerVirtualCameraTransform;
+    public float virtualCameraParentRotationY;
+
     public int UNIQUE_ID { get; private set; }
 
     [Space(20)]

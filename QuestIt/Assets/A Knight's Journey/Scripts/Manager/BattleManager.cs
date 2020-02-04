@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using UnityEngine.Events;
 using DG.Tweening;
+using RPG.CameraControl;
 
 public class BattleManager : Singleton<BattleManager>
 {
@@ -47,6 +48,12 @@ public class BattleManager : Singleton<BattleManager>
     public bool LoadFromScene;
 
     public static int uniqueID = 0;
+
+    #region Camera Related
+
+    public CameraController cameraController;
+
+    #endregion
 
     protected override void Awake()
     {
