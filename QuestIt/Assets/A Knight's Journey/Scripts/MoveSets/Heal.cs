@@ -16,9 +16,14 @@ public class Heal : BattleChoice
 
             Sequence mySequence = DOTween.Sequence();
 
-            if (targets[0].CurrentHealth <= 0)
+            foreach (BattlePlayer target in targets)
             {
-                playTime += 8;
+                if (target.CurrentHealth <= 0)
+                {
+                    endTime += 8;
+
+                    break;
+                }
             }
 
             Quaternion tempRotation = player.transform.rotation;
@@ -34,13 +39,16 @@ public class Heal : BattleChoice
 
             })).Append(DOVirtual.DelayedCall(1f,()=> {
 
-                IWeapon mObject = Instantiate<IWeapon>(healWeapon, targets[0].bottomTransform);
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    IWeapon mObject = Instantiate<IWeapon>(healWeapon, targets[i].bottomTransform);
 
-                mObject.amount = moveAffectDuration;
+                    mObject.amount = moveAffectDuration;
 
-                mObject.moveDuration = MoveTurnsType;
+                    mObject.moveDuration = MoveTurnsType;
 
-                mObject.Trigger();
+                    mObject.Trigger();
+                }
 
             })).Append(DOVirtual.DelayedCall(playTime, () => {
                 player.transform.DORotateQuaternion(tempRotation, 0.3f);

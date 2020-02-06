@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MAGICHEAL
   m_EditorClassIdentifier: 
   AttackStyle: 3
-  AttackValue: 3
+  AttackValue: 4
   MoveTurnsType: 2
   m_AnimationClip: 7
   m_Currency: 1

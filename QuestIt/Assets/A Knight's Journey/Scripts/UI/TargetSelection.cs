@@ -15,14 +15,14 @@ public class TargetSelection : MonoBehaviour
     public Image frame;
 
     public Button selectionButton;
+
+    public RectTransform currentTransform;
     #endregion
 
     [Header("VARIABLES")]
     public BattlePlayer mPlayer;
 
     public bool isSelected;
-
-    private static TargetSelection currentSelection;
 
     private void Awake()
     {

@@ -179,6 +179,8 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
         List<BattlePlayer> validPlayers = BattleManager.Instance.GetAllPlayers();
 
+        BattlePlayer currentPlayer = BattleManager.Instance.currentPlayer;
+
         bool canSelect = false;
 
         switch (range)
@@ -187,7 +189,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (!battlePlayer.IsTeamRed && battlePlayer.IsAlive)
+                    if ((battlePlayer.IsTeamRed != currentPlayer.IsTeamRed) && battlePlayer.IsAlive)
                     {
                         myTargets.Add(battlePlayer);
                     }
@@ -198,7 +200,14 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
             case AttackRange.ONETEAM:
 
-                myTargets = BattleManager.Instance.GetTeamBluePlayers();
+                if(currentPlayer.IsTeamRed)
+                {
+                    myTargets = BattleManager.Instance.GetTeamRedPlayers();
+                }
+                else
+                {
+                    myTargets = BattleManager.Instance.GetTeamBluePlayers();
+                }
 
                 canSelect = true;
 
@@ -208,7 +217,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (!battlePlayer.IsTeamRed && battlePlayer.IsAlive)
+                    if ((battlePlayer.IsTeamRed != currentPlayer.IsTeamRed) && battlePlayer.IsAlive)
                     {
                         myTargets.Add(battlePlayer);
                     }
@@ -220,7 +229,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
             case AttackRange.ALLTEAM:
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (!battlePlayer.IsTeamRed)
+                    if (battlePlayer.IsTeamRed == currentPlayer.IsTeamRed)
                     {
                         myTargets.Add(battlePlayer);
                     }
@@ -231,7 +240,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
             case AttackRange.EVERYONE:
 
-                myTargets = validPlayers;
+                myTargets.AddRange(validPlayers);
 
                 canSelect = false;
 

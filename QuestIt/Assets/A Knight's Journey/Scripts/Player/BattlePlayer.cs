@@ -258,13 +258,13 @@ public class BattlePlayer : MonoBehaviour
 
     private void AIChoice()
     {
-
-        // Take it into a static class later.
         currentChoice = validChoices[UnityEngine.Random.Range(0, validChoices.Count)];
 
         List<BattlePlayer> myTargets = new List<BattlePlayer>();
 
         List<BattlePlayer> validPlayers = BattleManager.Instance.GetAllPlayers();
+
+        BattlePlayer currentPlayer = BattleManager.Instance.currentPlayer;
 
         bool canSelect = false;
 
@@ -274,19 +274,9 @@ public class BattlePlayer : MonoBehaviour
 
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (this.IsTeamRed)
+                    if ((battlePlayer.IsTeamRed != currentPlayer.IsTeamRed) && battlePlayer.IsAlive)
                     {
-                        if (!battlePlayer.IsTeamRed && battlePlayer.IsAlive)
-                        {
-                            myTargets.Add(battlePlayer);
-                        }
-                    }
-                    else
-                    {
-                        if (battlePlayer.IsTeamRed && battlePlayer.IsAlive)
-                        {
-                            myTargets.Add(battlePlayer);
-                        }
+                        myTargets.Add(battlePlayer);
                     }
                 }
                 canSelect = true;
@@ -295,13 +285,13 @@ public class BattlePlayer : MonoBehaviour
 
             case AttackRange.ONETEAM:
 
-                if (this.IsTeamRed)
+                if (currentPlayer.IsTeamRed)
                 {
-                    myTargets = BattleManager.Instance.GetTeamBluePlayers();
+                    myTargets = BattleManager.Instance.GetTeamRedPlayers();
                 }
                 else
                 {
-                    myTargets = BattleManager.Instance.GetTeamRedPlayers();
+                    myTargets = BattleManager.Instance.GetTeamBluePlayers();
                 }
 
                 canSelect = true;
@@ -312,60 +302,30 @@ public class BattlePlayer : MonoBehaviour
 
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (this.IsTeamRed)
+                    if ((battlePlayer.IsTeamRed != currentPlayer.IsTeamRed) && battlePlayer.IsAlive)
                     {
-                        if (!battlePlayer.IsTeamRed && battlePlayer.IsAlive)
-                        {
-                            myTargets.Add(battlePlayer);
-                        }
-                    }
-                    else
-                    {
-                        if (battlePlayer.IsTeamRed && battlePlayer.IsAlive)
-                        {
-                            myTargets.Add(battlePlayer);
-                        }
+                        myTargets.Add(battlePlayer);
                     }
                 }
-
                 canSelect = false;
 
                 break;
 
             case AttackRange.ALLTEAM:
-
                 foreach (BattlePlayer battlePlayer in validPlayers)
                 {
-                    if (this.IsTeamRed)
+                    if (battlePlayer.IsTeamRed == currentPlayer.IsTeamRed)
                     {
-
-                        if (!battlePlayer.IsTeamRed)
-                        {
-                            myTargets.Add(battlePlayer);
-                        }
-                    }
-                    else
-                    {
-                        if (battlePlayer.IsTeamRed)
-                        {
-                            myTargets.Add(battlePlayer);
-                        }
+                        myTargets.Add(battlePlayer);
                     }
                 }
-
                 canSelect = false;
 
                 break;
 
             case AttackRange.EVERYONE:
 
-                foreach (BattlePlayer battlePlayer in validPlayers)
-                {
-                    if (battlePlayer.IsAlive)
-                    {
-                        myTargets.Add(battlePlayer);
-                    }
-                }
+                myTargets.AddRange(validPlayers);
 
                 canSelect = false;
 

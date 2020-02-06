@@ -21,13 +21,18 @@ public class ChoiceManager : Singleton<ChoiceManager>
         targets.Clear();
     }
 
-    public void AddPlayer(BattlePlayer player)
+    public void AddPlayer(BattlePlayer player, bool raiseEvent = true)
     {
         if (player != null)
         {
             targets.Add(player);
 
-            OnAddingSelection?.Invoke(player);
+            if (raiseEvent)
+            {
+
+                OnAddingSelection?.Invoke(player);
+            }
+
         }
         else
         {

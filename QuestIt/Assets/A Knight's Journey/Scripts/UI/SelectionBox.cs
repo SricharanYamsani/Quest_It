@@ -25,6 +25,8 @@ public class SelectionBox : MonoBehaviour
 
     public Button backButton;
 
+    private bool allowSelection;
+
     private delegate void Callback();
 
     public void LoadOptions(List<BattlePlayer> battlePlayers, bool canSelect)
@@ -40,6 +42,8 @@ public class SelectionBox : MonoBehaviour
                 selection.Setup(battlePlayers[i], canSelect);
             }
         }
+
+        allowSelection = canSelect;
 
         OpenBox();
     }
@@ -148,11 +152,19 @@ public class SelectionBox : MonoBehaviour
         {
             CloseBox(() =>
             {
+                if (!allowSelection)
+                {
+                    foreach (TargetSelection selection in selectionBoxes)
+                    {
+                        if (selection.isSelected)
+                        {
+                            ChoiceManager.Instance.AddPlayer(selection.mPlayer, false);
+                        }
+                    }
+                }
                 ChoiceManager.Instance.OnSelectionCompleted();
 
             });
-            
-            
         }
     }
 
