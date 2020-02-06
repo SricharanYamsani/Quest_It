@@ -50,7 +50,7 @@ public class MoveManager : Singleton<MoveManager>
 
 
         // Calculation if player took damage or not.
-        if (m_Choice.AttackStyle == ChoiceStyle.ATTACK)
+        if (m_Choice.AttackStyle == BattleTasks.ATTACK)
         {
             int x = UnityEngine.Random.Range(0, 100);
             if (x <= m_Player.CurrentLuck)
@@ -64,7 +64,7 @@ public class MoveManager : Singleton<MoveManager>
                 m_Player.m_PlayerState = PlayerState.NONE;
             }
         }
-        else if (m_Choice.AttackStyle == ChoiceStyle.HEAL)
+        else if (m_Choice.AttackStyle == BattleTasks.HEAL)
         {
             int heal = m_Choice.healthChange;
             m_Player.CurrentHealth = Mathf.Clamp(m_Player.CurrentHealth + heal, 0, m_Player.MaxHealth);

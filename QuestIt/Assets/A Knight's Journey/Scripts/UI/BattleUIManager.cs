@@ -31,11 +31,12 @@ public class BattleUIManager : Singleton<BattleUIManager>
     public GameObject gridDefend;
     public GameObject gridRun;
 
-    private GameObject currentGameObject;
+    private GameObject currentGrid;
 
     //Selection
     public RectTransform targetSelectionScreen;
     public GameObject selectionBackground;
+    public SelectionBox selectionBox;
 
     public List<TargetSelection> selectors = new List<TargetSelection>();
     #endregion
@@ -68,7 +69,9 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
         BattleManager.Instance.RoundOver += RoundOver;
 
-        selectTrueButton.onClick.AddListener(() => { SelectPlayerGo(); });
+        ChoiceManager.Instance.OnChoiceSelectionCompleted += SelectPlayerGo;
+
+        //selectTrueButton.onClick.AddListener(() => { SelectPlayerGo(); });
     }
     private void CheckForSetup()
     {
@@ -170,7 +173,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
     #region TargetChoices
     public void ShowTargetChoices(AttackRange range)
     {
-        currentGameObject.SetActive(false);
+        currentGrid.SetActive(false);
 
         List<BattlePlayer> myTargets = new List<BattlePlayer>();
 
@@ -237,81 +240,15 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
         if (myTargets.Count > 0)
         {
-            LoadTargets(myTargets, canSelect);
+            selectionBox.LoadOptions(myTargets, canSelect);
         }
     }
     #endregion
-    private void LoadTargets(List<BattlePlayer> targets, bool isSelection = false)
+
+    public void SelectPlayerGo(List<BattlePlayer> targets)
     {
-        for (int i = 0; i < selectors.Count; i++)
+        if (BattleManager.Instance.currentPlayer.IsPlayer)
         {
-            if (i < targets.Count)
-            {
-                selectors[i].Setup(targets[i], isSelection);
-
-                if (!isSelection)
-                {
-                    selectors[i].frame.gameObject.SetActive(true);
-                }
-            }
-            else
-            {
-                selectors[i].Setup(null);
-            }
-        }
-
-        // Selection Screen
-        selectionBackground.SetActive(true);
-
-        //targetSelectionScreen.anchoredPosition = Vector2.zero;
-
-        targetSelectionScreen.gameObject.SetActive(true);
-
-        //targetSelectionScreen.DOAnchorPosY(-250, 0.4f);
-        // Selection Screen End
-    }
-
-    private void CancelSelection()
-    {
-        targetSelectionScreen.DOAnchorPosY(0, 0.4f).OnComplete(() => {
-
-            targetSelectionScreen.gameObject.SetActive(false);
-
-            selectionBackground.SetActive(false);
-
-            targetSelectionScreen.anchoredPosition = Vector2.zero;
-
-        });
-    }
-
-    public void CancelSelectionButton()
-    {
-        CancelSelection();
-    }
-
-    public void SelectPlayerGo()
-    {
-        List<BattlePlayer> targets = new List<BattlePlayer>();
-
-        foreach (TargetSelection targetselector in selectors)
-        {
-            if (targetselector.isSelected)
-            {
-                targets.Add(targetselector.mPlayer);
-            }
-        }
-        if (targets.Count > 0)
-        {
-            targetSelectionScreen.gameObject.SetActive(false);
-
-            //targetSelectionScreen.anchoredPosition = Vector2.zero;
-
-            selectionBackground.SetActive(false);
-
-            BattlePlayer myPlayer = BattleManager.Instance.currentPlayer;
-
-            myPlayer.currentChoice.MoveWork(myPlayer, targets);
-
             MoveOptionsLayer(false);
 
             DOVirtual.DelayedCall(0.4f, () => { ShowRadialButton(false); });
@@ -331,13 +268,21 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
             selectionPanel.sizeDelta = new Vector2(0, selectionPanel.sizeDelta.y);
 
-            selectionPanel.DOSizeDelta(new Vector2(1700, selectionPanel.sizeDelta.y), 0.4f).OnComplete(() => { selectionPanel.sizeDelta = new Vector2(1700, selectionPanel.sizeDelta.y); });
+            selectionPanel.DOSizeDelta(new Vector2(1600, selectionPanel.sizeDelta.y), 0.4f).OnComplete(() =>
+            {
+                selectionPanel.sizeDelta = new Vector2(1600, selectionPanel.sizeDelta.y);
+
+            });
         }
         else
         {
-            selectionPanel.sizeDelta = new Vector2(1700, selectionPanel.sizeDelta.y);
+            selectionPanel.sizeDelta = new Vector2(1600, selectionPanel.sizeDelta.y);
 
-            selectionPanel.DOSizeDelta(new Vector2(0, selectionPanel.sizeDelta.y), 0.4f).OnComplete(() => { selectionPanel.gameObject.SetActive(false); selectionPanel.sizeDelta = new Vector2(0, selectionPanel.sizeDelta.y); });
+            selectionPanel.DOSizeDelta(new Vector2(0, selectionPanel.sizeDelta.y), 0.4f).OnComplete(() =>
+            {
+                selectionPanel.gameObject.SetActive(false);
+                selectionPanel.sizeDelta = new Vector2(0, selectionPanel.sizeDelta.y);
+            });
         }
     }
 
@@ -396,7 +341,6 @@ public class BattleUIManager : Singleton<BattleUIManager>
         }
     }
     public void SwitchGrids(int index)
-
     {
         // Sricharan - To Fix
         gridAttack.SetActive(false);
@@ -406,22 +350,27 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
         if (index == 0)
         {
-            sizeXSlider = BattleManager.Instance.currentPlayer.validChoices.Count * 300f;
-            currentGameObject = gridAttack;
+            sizeXSlider = BattleManager.Instance.currentPlayer.validChoices.Count * 200f;
+            currentGrid = gridAttack;
         }
         else if (index == 1)
         {
-            currentGameObject = gridDefend;
+            currentGrid = gridDefend;
         }
         else if (index == 2)
         {
-            currentGameObject = gridItem;
+            currentGrid = gridItem;
         }
         else
         {
-            currentGameObject = gridRun;
+            currentGrid = gridRun;
         }
 
-        currentGameObject.SetActive(true);
+        currentGrid.SetActive(true);
+    }
+
+    public void CurrentGridActive(bool isTrue)
+    {
+        currentGrid.SetActive(isTrue);
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class BattleChoice : ScriptableObject
 {
-    public ChoiceStyle AttackStyle = ChoiceStyle.NONE;
+    public BattleTasks AttackStyle = BattleTasks.NONE;
 
     public AttackRange AttackValue = AttackRange.ONEENEMY;
 

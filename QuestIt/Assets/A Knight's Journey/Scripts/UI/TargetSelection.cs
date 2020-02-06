@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 // For Choosing a Single Player in Team
 public class TargetSelection : MonoBehaviour
@@ -27,28 +28,47 @@ public class TargetSelection : MonoBehaviour
     {
         selectionButton.onClick.AddListener(() =>
         {
-            OnSelect(this);
+            OnSelect();
         });
 
         frame.gameObject.SetActive(false);
     }
 
-    public void OnSelect(TargetSelection selectionBox)
+    private void OnEnable()
     {
-        if (selectionBox == this)
+        ChoiceManager.Instance.OnAddingSelection += Listen;
+    }
+    private void OnDisable()
+    {
+        ChoiceManager.Instance.OnAddingSelection -= Listen;
+    }
+
+    private void Listen(BattlePlayer player)
+    {
+        if(player == mPlayer)
         {
-            isSelected = this;
+            isSelected = true;
 
             selectionButton.interactable = false;
+
+            frame.gameObject.SetActive(true);
         }
         else
         {
+            ChoiceManager.Instance.InvokeRemoveMyPlayer(mPlayer);
+
             isSelected = false;
 
             selectionButton.interactable = true;
-        }
 
-        frame.gameObject.SetActive(isSelected);
+            frame.gameObject.SetActive(false);
+            // this is not me. I should de select if I am selected.
+        }
+    }
+
+    public void OnSelect()
+    {
+        ChoiceManager.Instance.AddPlayer(mPlayer);
     }
 
     public void Setup(BattlePlayer player, bool isInteractable = true)

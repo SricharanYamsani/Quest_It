@@ -50,6 +50,8 @@ public class BattlePlayer : MonoBehaviour
 
     public Transform OriginalSpawn; // player spawn Position
 
+    public Transform bottomTransform;
+
     public Transform LookAt;
 
     public Transform glowRing;
@@ -60,7 +62,7 @@ public class BattlePlayer : MonoBehaviour
 
     #region Properties
     /// <summary>Returns true if Battle Player is the user </summary>
-    public bool IsPlayer { get { return playerQualities.IsPlayer; } } 
+    public bool IsPlayer { get { return playerQualities.IsPlayer; } }
 
     /// <summary>Returns true if Battle Player is Team Red </summary
     public bool IsTeamRed { get { return playerQualities.IsTeamRed; } }
@@ -162,11 +164,11 @@ public class BattlePlayer : MonoBehaviour
 
     public void ShowReaction(string animation = "")
     {
-        if (currentChoice.AttackStyle == ChoiceStyle.DEFEND)
+        if (currentChoice.AttackStyle == BattleTasks.DEFEND)
         {
             mPlayerController.SetTrigger(AnimationType.BLOCK.ToString());
         }
-        else if (currentChoice.AttackStyle == ChoiceStyle.ATTACK)
+        else if (currentChoice.AttackStyle == BattleTasks.ATTACK)
         {
             if (m_PlayerState == PlayerState.BLOCK)
             {
@@ -247,7 +249,7 @@ public class BattlePlayer : MonoBehaviour
         }
         else
         {
-            if(glowRing.gameObject.activeInHierarchy)
+            if (glowRing.gameObject.activeInHierarchy)
             {
                 glowRing.gameObject.SetActive(false);
             }
@@ -256,6 +258,8 @@ public class BattlePlayer : MonoBehaviour
 
     private void AIChoice()
     {
+
+        // Take it into a static class later.
         currentChoice = validChoices[UnityEngine.Random.Range(0, validChoices.Count)];
 
         List<BattlePlayer> myTargets = new List<BattlePlayer>();
@@ -393,5 +397,22 @@ public class BattlePlayer : MonoBehaviour
     public void RoundOver()
     {
 
+    }
+
+    public void ListenToChoiceManager(bool focus)
+    {
+        if (focus)
+        {
+            ChoiceManager.Instance.OnChoiceSelectionCompleted += PerformMove;
+        }
+        else
+        {
+            ChoiceManager.Instance.OnChoiceSelectionCompleted -= PerformMove;
+        }
+    }
+
+    private void PerformMove(List<BattlePlayer> targets)
+    {
+        currentChoice.MoveWork(this, targets);
     }
 }

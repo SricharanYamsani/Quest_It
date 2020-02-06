@@ -94,7 +94,7 @@ public class BattleManager : Singleton<BattleManager>
 
     private void RoundStartFunc()
     {
-
+        Sortplayers();
     }
 
     public void InitializeBattle(List<PlayerQualities> allPlayers)
@@ -229,18 +229,24 @@ public class BattleManager : Singleton<BattleManager>
 
         for (int i = 0; i < validPlayers.Count; i++)
         {
-            currentPlayer = validPlayers[i];
-
-            IsSelecting = true;
-
-            TurnStart?.Invoke(currentPlayer);
-
-            while (IsSelecting)
+            if (IsTeamAlive(CurrentBlueTeam) && IsTeamAlive(CurrentRedTeam))
             {
-                yield return null;
-            }
+                currentPlayer = validPlayers[i];
 
-            TurnOver?.Invoke();
+                IsSelecting = true;
+
+                currentPlayer.ListenToChoiceManager(true);
+
+                TurnStart?.Invoke(currentPlayer);
+
+                while (IsSelecting)
+                {
+                    yield return null;
+                }
+                currentPlayer.ListenToChoiceManager(false);
+
+                TurnOver?.Invoke();
+            }
         }
 
         yield return null;
@@ -308,6 +314,18 @@ public class BattleManager : Singleton<BattleManager>
     public List<BattlePlayer> GetAllPlayers()
     {
         return validPlayers;
+    }
+
+    public List<Transform>GetAllPlayersTransform()
+    {
+        List<Transform> playerTransforms = new List<Transform>();
+
+        foreach(BattlePlayer player in validPlayers)
+        {
+            playerTransforms.Add(player.transform);
+        }
+
+        return playerTransforms;
     }
 
     /// <summary>
