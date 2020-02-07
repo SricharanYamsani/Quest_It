@@ -20,7 +20,9 @@ public class Heal : BattleChoice
             {
                 if (target.CurrentHealth <= 0)
                 {
-                    endTime += 8;
+                    Debug.Log(target.CurrentHealth);
+
+                    playTime += 8;
 
                     break;
                 }
@@ -59,8 +61,6 @@ public class Heal : BattleChoice
             {
                 base.MoveWork(player, null);
             });
-
-            ChoiceManager.Instance.ExecutePlayerMove(player, this);
         }
     }
 }

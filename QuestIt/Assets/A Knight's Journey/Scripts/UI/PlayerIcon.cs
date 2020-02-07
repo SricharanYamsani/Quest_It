@@ -72,26 +72,21 @@ public class PlayerIcon : MonoBehaviour
 
     private void UpdateHealth(int changeInValue)
     {
-        if (t_CurrentHealth <= 0 && changeInValue > 0)
-        {
-            m_Player.mPlayerController.SetTrigger(AnimationType.BACKTOLIFE.ToString());
-        }
-
         DOTween.To(() => t_CurrentHealth, x => t_CurrentHealth = x, changeInValue, 0.4f).OnUpdate(() =>
-        {
-            healthBar.fillAmount = ((float)t_CurrentHealth / ((float)(m_Player.MaxHealth)));
+         {
+             healthBar.fillAmount = ((float)t_CurrentHealth / ((float)(m_Player.MaxHealth)));
 
-        }).OnComplete(
-            () =>
-            {
-                t_CurrentHealth = changeInValue;
+         }).OnComplete(
+             () =>
+             {
+                 t_CurrentHealth = changeInValue;
 
-                if(t_CurrentHealth<= 0)
-                {
-                    m_Player.mPlayerController.SetTrigger(AnimationType.DEAD.ToString());
-                }
-            }
-            );
+                 if (t_CurrentHealth <= 0)
+                 {
+                     //m_Player.mPlayerController.SetTrigger(AnimationType.DEAD.ToString());
+                 }
+             }
+             );
     }
 
     private void UpdateMana(int changeInValue)

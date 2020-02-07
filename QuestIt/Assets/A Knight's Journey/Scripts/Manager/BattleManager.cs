@@ -235,7 +235,7 @@ public class BattleManager : Singleton<BattleManager>
 
                 IsSelecting = true;
 
-                currentPlayer.ListenToChoiceManager(true);
+                currentPlayer.PerformMoveFocus(true);
 
                 TurnStart?.Invoke(currentPlayer);
 
@@ -243,7 +243,7 @@ public class BattleManager : Singleton<BattleManager>
                 {
                     yield return null;
                 }
-                currentPlayer.ListenToChoiceManager(false);
+                currentPlayer.PerformMoveFocus(false);
 
                 TurnOver?.Invoke();
             }

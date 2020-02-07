@@ -33,11 +33,6 @@ public class SwordSlash : BattleChoice
             {
                 base.MoveWork(player, null);
             });
-
-            foreach (BattlePlayer m_Player in target)
-            {
-                MoveManager.Instance.CalculateDamage(player, this, m_Player);
-            }
         }
     }
 }

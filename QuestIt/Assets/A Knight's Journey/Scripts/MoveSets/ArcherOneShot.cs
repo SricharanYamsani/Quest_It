@@ -29,11 +29,6 @@ public class ArcherOneShot : BattleChoice
 
             m_Arrow.Trigger(target);
 
-            foreach (BattlePlayer m_Player in target)
-            {
-                MoveManager.Instance.CalculateDamage(player, this, m_Player);
-            }
-
             DOVirtual.DelayedCall(endTime, () => { base.MoveWork(null, null); });
         }
     }

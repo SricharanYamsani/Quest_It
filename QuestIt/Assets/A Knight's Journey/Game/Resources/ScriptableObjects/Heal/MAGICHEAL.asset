@@ -20,10 +20,10 @@ MonoBehaviour:
   m_CurrencyAmount: 15
   moveAffectDuration: 0
   healthChange: 25
-  endTime: 3
+  endTime: 3.5
   moveName: Magic Heal
   description: 
   target: []
   ICON: {fileID: 21300000, guid: 0e700985539a64d4ba023f4167826456, type: 3}
-  healWeapon: {fileID: 1087826026608234851, guid: 8f3db2ef4b3fd674eafb97a117b99408,
+  healWeapon: {fileID: -6779147246751792646, guid: ff672eaca96d32c419d7a1f1b0346e8d,
     type: 3}

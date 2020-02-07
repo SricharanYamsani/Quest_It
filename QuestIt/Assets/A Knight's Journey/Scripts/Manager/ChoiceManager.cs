@@ -57,16 +57,20 @@ public class ChoiceManager : Singleton<ChoiceManager>
     {
         if (move.AttackStyle == BattleTasks.ATTACK)
         {
-            foreach (BattlePlayer targets in targets)
+            foreach (BattlePlayer target in targets)
             {
-                if (DamageCalculator.IsDodge(targets.CurrentLuck))
+                if (DamageCalculator.IsDodge(target.CurrentLuck))
                 {
                     // Set Dodge Animation
+                    target.SetReaction(PlayerState.BLOCK);
                 }
                 else
                 {
-                    targets.CurrentHealth -= DamageCalculator.GetDamage(currentAttacker.playerQualities.myAttributes, targets.playerQualities.myAttributes, move.healthChange);
+                    target.SetReaction(PlayerState.HURT);
 
+                    target.CurrentHealth -= DamageCalculator.GetDamage(currentAttacker.playerQualities.myAttributes, target.playerQualities.myAttributes, move.healthChange);
+
+                    target.CurrentHealth = Mathf.Clamp(target.CurrentHealth, 0, target.MaxHealth);
                 }
             }
         }
@@ -75,6 +79,8 @@ public class ChoiceManager : Singleton<ChoiceManager>
             foreach(BattlePlayer target in targets)
             {
                 target.CurrentHealth += move.healthChange;
+
+                target.CurrentHealth = Mathf.Clamp(target.CurrentHealth, 0, target.MaxHealth);
             }
         }
 

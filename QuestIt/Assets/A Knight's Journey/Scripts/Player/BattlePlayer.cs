@@ -74,7 +74,7 @@ public class BattlePlayer : MonoBehaviour
 
     public int CurrentDefence { get { return 0; } }
 
-    public bool IsAlive { get { return playerQualities.myAttributes.health.current > 0; } }
+    public bool IsAlive { get { return CurrentHealth > 0; } }
 
     public int CurrentHealth
     {
@@ -85,7 +85,17 @@ public class BattlePlayer : MonoBehaviour
 
         set
         {
+            if (!IsAlive && value > 0)
+            {
+                mPlayerController.SetTrigger(AnimationType.BACKTOLIFE.ToString());
+            }
+
             playerQualities.myAttributes.health.current = value;
+
+            if (!IsAlive)
+            {
+                mPlayerController.SetTrigger(AnimationType.DEAD.ToString());
+            }
         }
     }
 
@@ -146,7 +156,7 @@ public class BattlePlayer : MonoBehaviour
 
     public Color playerColor = new Color(168, 168, 168, 255);
 
-    public PlayerState m_PlayerState = PlayerState.NONE;
+    public PlayerState m_PlayerState { get; private set; } = PlayerState.NONE;
 
     public void SetPlayer()
     {
@@ -159,34 +169,6 @@ public class BattlePlayer : MonoBehaviour
         if (validChoices.Count > 0)
         {
             currentChoice = validChoices[0];
-        }
-    }
-
-    public void ShowReaction(string animation = "")
-    {
-        if (currentChoice.AttackStyle == BattleTasks.DEFEND)
-        {
-            mPlayerController.SetTrigger(AnimationType.BLOCK.ToString());
-        }
-        else if (currentChoice.AttackStyle == BattleTasks.ATTACK)
-        {
-            if (m_PlayerState == PlayerState.BLOCK)
-            {
-                mPlayerController.SetTrigger(AnimationType.BLOCK.ToString());
-
-                reactionText.text = "MISS!";
-            }
-            else
-            {
-                // change it to different Hits.
-                mPlayerController.SetTrigger(AnimationType.MIDHIT.ToString());
-
-                reactionText.text = "HIT";
-            }
-        }
-        else
-        {
-            // Heal animation
         }
     }
 
@@ -221,6 +203,7 @@ public class BattlePlayer : MonoBehaviour
 
     private void TurnOver()
     {
+        m_PlayerState = PlayerState.NONE;
         playerIcon.UpdateUI(PlayerUIUpdater.Both);
     }
 
@@ -346,7 +329,12 @@ public class BattlePlayer : MonoBehaviour
             {
                 temp_Target = myTargets;
             }
-            currentChoice.MoveWork(this, temp_Target);
+            foreach (BattlePlayer target in temp_Target)
+            {
+                ChoiceManager.Instance.AddPlayer(target, false);
+            }
+
+            ChoiceManager.Instance.OnSelectionCompleted();
         }
         else
         {
@@ -359,7 +347,7 @@ public class BattlePlayer : MonoBehaviour
 
     }
 
-    public void ListenToChoiceManager(bool focus)
+    public void PerformMoveFocus(bool focus)
     {
         if (focus)
         {
@@ -371,8 +359,35 @@ public class BattlePlayer : MonoBehaviour
         }
     }
 
+    public void SetReaction(PlayerState state)
+    {
+        m_PlayerState = state;
+    }
+
+    public void PlayReaction(string animation = "")
+    {
+        if (currentChoice.AttackStyle == BattleTasks.ATTACK)
+        {
+            if (m_PlayerState == PlayerState.BLOCK)
+            {
+                mPlayerController.SetTrigger(AnimationType.BLOCK.ToString());
+
+                reactionText.text = "MISS!";
+            }
+            else if (m_PlayerState == PlayerState.HURT)
+            {
+                // change it to different Hits.
+                mPlayerController.SetTrigger(AnimationType.MIDHIT.ToString());
+
+                reactionText.text = "HIT";
+            }
+        }
+    }
+
     private void PerformMove(List<BattlePlayer> targets)
     {
         currentChoice.MoveWork(this, targets);
+
+        ChoiceManager.Instance.ExecutePlayerMove(this, currentChoice);
     }
 }

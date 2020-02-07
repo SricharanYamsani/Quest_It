@@ -81,14 +81,7 @@ public class TargetSelection : MonoBehaviour
 
             this.gameObject.SetActive(true);
 
-            if (!isInteractable)
-            {
-                isSelected = true;
-            }
-            else
-            {
-                isSelected = false;
-            }
+            isSelected = !isInteractable;
 
             frame.gameObject.SetActive(isSelected);
             //characterSprite = ResourceManager.Instance.

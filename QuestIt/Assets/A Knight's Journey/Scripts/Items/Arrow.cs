@@ -14,15 +14,17 @@ public class Arrow : IWeapon
                 BattlePlayer target = targets[0];
 
                 DOVirtual.DelayedCall(3.15f, () =>
-             {
+                {
+                    transform.DOMove(target.torsoTransform.position, 0.5f);
+                });
 
-                 transform.DOMove(target.torsoTransform.position, 0.5f).OnComplete(() =>
-               {
-                   target.ShowReaction();
+                DOVirtual.DelayedCall(3.66f, () => {
 
-                   RoundSystems();
-               });
-             });
+                    target.PlayReaction();
+
+                    DOVirtual.DelayedCall(0.1f, () => { RoundSystems(); });
+
+                });
             }
             else
             {
