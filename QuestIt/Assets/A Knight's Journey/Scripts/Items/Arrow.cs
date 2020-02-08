@@ -18,24 +18,17 @@ public class Arrow : IWeapon
                     transform.DOMove(target.torsoTransform.position, 0.5f);
                 });
 
-                DOVirtual.DelayedCall(3.66f, () => {
-
+                DOVirtual.DelayedCall(3.66f, () =>
+                {
                     target.PlayReaction();
 
                     DOVirtual.DelayedCall(0.1f, () => { RoundSystems(); });
 
                 });
             }
-            else
-            {
-                Debug.LogWarning("Count Error");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("NULL ERROR");
         }
     }
+
     public override void RoundSystems()
     {
         Destroy(gameObject);

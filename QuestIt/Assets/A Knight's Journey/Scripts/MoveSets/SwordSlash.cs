@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 [CreateAssetMenu(fileName = "Objects", menuName = "ScriptableObjects/BATTLE CHOICES - SWORD SLASH")]
-public class SwordSlash : BattleChoice
+public class SwordSlash : MoveChoice
 {
     public IWeapon sword;
 

@@ -132,11 +132,11 @@ public class BattleManager : Singleton<BattleManager>
 
                 player.myAttributes = PlayerGenerator.AttributesGenerator();
 
-                player.character = BattleCharacters.BESTOFWORLDS;
+                player.character = BattleCharacters.WIZARD;
 
                 for (int j = 1; j <= 4; j++)
                 {
-                    player.chosenMoves.Add((MOVES)j);
+                    player.chosenMoves.Add((Moves)j);
                 }
 
                 player.IsTeamRed = (i < 3);
@@ -316,11 +316,11 @@ public class BattleManager : Singleton<BattleManager>
         return validPlayers;
     }
 
-    public List<Transform>GetAllPlayersTransform()
+    public List<Transform> GetAllPlayersTransform()
     {
         List<Transform> playerTransforms = new List<Transform>();
 
-        foreach(BattlePlayer player in validPlayers)
+        foreach (BattlePlayer player in validPlayers)
         {
             playerTransforms.Add(player.transform);
         }

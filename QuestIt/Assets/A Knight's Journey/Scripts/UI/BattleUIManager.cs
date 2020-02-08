@@ -151,19 +151,19 @@ public class BattleUIManager : Singleton<BattleUIManager>
         }
     }
 
-    public void ShowChoices(bool isTrue, RadialButtonElements buttonElement = RadialButtonElements.NONE)
+    public void ShowChoices(bool isTrue, TypesOfChoices buttonElement = TypesOfChoices.NONE)
     {
         if (isTrue)
         {
             switch (buttonElement)
             {
-                case RadialButtonElements.ATTACK:
+                case TypesOfChoices.ATTACK:
                     LoadValidMovesUI();
                     SwitchGrids(0);
                     break;
-                case RadialButtonElements.DEFEND: SwitchGrids(1); break;
-                case RadialButtonElements.ITEM: SwitchGrids(2); break;
-                case RadialButtonElements.RUN: SwitchGrids(3); break;
+                case TypesOfChoices.DEFEND: SwitchGrids(1); break;
+                case TypesOfChoices.ITEM: SwitchGrids(2); break;
+                case TypesOfChoices.RUN: SwitchGrids(3); break;
             }
         }
 

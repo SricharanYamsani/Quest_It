@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseRadialButton : MonoBehaviour
 {
-    public RadialButtonElements element;
+    public TypesOfChoices element;
 
     public void Toggle()
     {

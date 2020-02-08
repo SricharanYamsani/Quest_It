@@ -1,4 +1,4 @@
-﻿public enum MOVES 
+﻿public enum Moves 
 {
    NONE = 0,
    SWIPE_SLASH,

@@ -14,15 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackStyle: 1
   AttackValue: 1
+  choiceType: 1
   MoveTurnsType: 2
   m_AnimationClip: 1
   m_Currency: 2
+  ICON: {fileID: 0}
   m_CurrencyAmount: 0
   moveAffectDuration: 0
   healthChange: 20
   endTime: 5
-  moveName: Sword Slash
   description: 
-  target: []
-  ICON: {fileID: 0}
+  moveName: Sword Slash
+  move: 0
   sword: {fileID: 5288576339935000147, guid: f4e0cbed4315640519c7d071a57e42aa, type: 3}

@@ -7,7 +7,7 @@ public class PlayerQualities
 {
     public PlayerAttributes myAttributes = new PlayerAttributes();
 
-    public List<MOVES> chosenMoves = new List<MOVES>();
+    public List<Moves> chosenMoves = new List<Moves>();
 
     public BattleCharacters character = BattleCharacters.NONE;
 
