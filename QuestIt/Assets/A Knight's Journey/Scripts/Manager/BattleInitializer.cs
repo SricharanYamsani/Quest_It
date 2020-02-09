@@ -22,13 +22,13 @@ public class BattleInitializer : Singleton<BattleInitializer>
     {
         PlayerQualities quality = new PlayerQualities();
 
-        quality.character = BattleCharacters.BESTOFWORLDS;
+        quality.character = BattleCharacters.WIZARD;
 
         quality.IsTeamRed = isTeamRed;
 
-        for(int i =1;i<=4;i++)
+        for (int i = 1; i <= 4; i++)
         {
-            quality.chosenMoves.Add((MOVES)i);
+            quality.chosenMoves.Add((Moves)i);
         }
 
         quality.myAttributes = PlayerGenerator.AttributesGenerator();

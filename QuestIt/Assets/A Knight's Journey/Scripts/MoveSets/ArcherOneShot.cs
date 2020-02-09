@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 [CreateAssetMenu(fileName = "Objects", menuName = "ScriptableObjects/BATTLE CHOICES - ArcherOneShot")]
-public class ArcherOneShot : BattleChoice
+public class ArcherOneShot : MoveChoice
 {
     public IWeapon Bow;
 
@@ -23,11 +23,9 @@ public class ArcherOneShot : BattleChoice
 
             mObject.Trigger();
 
-            player.transform.DOLookAt(target[0].transform.position, 0.1f);
+            player.transform.DOLookAt(target[0].transform.position, 0.1f).OnComplete(() => { m_Arrow.Trigger(target); });
 
             player.mPlayerController.SetTrigger(m_AnimationClip.ToString());
-
-            m_Arrow.Trigger(target);
 
             DOVirtual.DelayedCall(endTime, () => { base.MoveWork(null, null); });
         }

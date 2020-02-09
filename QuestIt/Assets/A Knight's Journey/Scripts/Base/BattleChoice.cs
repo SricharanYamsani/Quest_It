@@ -8,11 +8,15 @@ public abstract class BattleChoice : ScriptableObject
 
     public AttackRange AttackValue = AttackRange.ONEENEMY;
 
+    public TypesOfChoices choiceType = TypesOfChoices.NONE;
+
     public MoveDuration MoveTurnsType;
 
     public AnimationType m_AnimationClip;
 
     public Currency m_Currency = Currency.NONE;
+
+    public Sprite ICON;
 
     public int m_CurrencyAmount = 0;
 
@@ -22,13 +26,9 @@ public abstract class BattleChoice : ScriptableObject
 
     public float endTime = 5f;
 
-    public string moveName;
-
     public string description = string.Empty;
 
-    public List<BattlePlayer> target = new List<BattlePlayer>();
-
-    public Sprite ICON;
+    public string moveName;
 
     public virtual void MoveWork(BattlePlayer player, List<BattlePlayer> targets)
     {

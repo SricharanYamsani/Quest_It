@@ -4,7 +4,7 @@ using DG.Tweening;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Objects", menuName = "ScriptableObjects/BATTLE CHOICES - HEAL")]
-public class Heal : BattleChoice
+public class Heal : MoveChoice
 {
     public IWeapon healWeapon;
 

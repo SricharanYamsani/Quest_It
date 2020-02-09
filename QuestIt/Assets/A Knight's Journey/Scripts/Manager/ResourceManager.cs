@@ -6,7 +6,7 @@ using System.Linq;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
-    public Dictionary<MOVES, BattleChoice> GetChoiceFromMove = new Dictionary<MOVES, BattleChoice>();
+    public Dictionary<Moves, MoveChoice> GetChoiceFromMove = new Dictionary<Moves, MoveChoice>();
 
     public List<Sprite> choiceSprites = new List<Sprite>();
 
@@ -27,7 +27,9 @@ public class ResourceManager : Singleton<ResourceManager>
 
         base.Awake();
 
-        BattleChoice[] choices = Resources.LoadAll<BattleChoice>("ScriptableObjects");
+        MoveChoice[] choices = Resources.LoadAll<MoveChoice>("ScriptableObjects");
+
+        ConsumableChoice[] consumables = Resources.LoadAll<ConsumableChoice>("ScriptableObjects");
 
         AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds");
 
@@ -39,11 +41,11 @@ public class ResourceManager : Singleton<ResourceManager>
 
         for (int i = 0; i < choices.Length; i++)
         {
-            MOVES move;
+            Moves move;
 
-            Enum.TryParse<MOVES>(choices[i].name, out move);
+            Enum.TryParse<Moves>(choices[i].name, out move);
 
-            if (move != MOVES.NONE)
+            if (move != Moves.NONE)
             {
 
                 if (!GetChoiceFromMove.ContainsKey(move))
