@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace RPG.Quest
 {
-    /*----------------------------------------------
+    /* ---------------------------------------------
     Quest Path represents the paths connecting nodes
     in the quest graph datatstructure
-    ------------------------------------------------*/
+    ------------------------------------------------ */
     public class QuestPath
     {
         //===================Variables==============//

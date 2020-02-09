@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace RPG.Quest
 {
-    /*---------------------------------------------------------------
+    /* --------------------------------------------------------------
     Quest Events represent the nodes in the quest graph datastructure
-    -----------------------------------------------------------------*/
+    ----------------------------------------------------------------- */
     public class QuestEvent
     {
         //==========================Variables===================//
@@ -17,7 +17,8 @@ namespace RPG.Quest
         //Task Information
         public byte[] id; //Unique ID assigned to a quest task on creation
         public string description;  //Description of the task
-        public string name; 
+        public string name;
+        public int orderNumber = -1;
         public List<QuestPath> pathList = new List<QuestPath>(); //Path to next task...Can be multiple
 
         //=========================Functions====================//

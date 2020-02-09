@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace RPG.Quest
 {
-    /*--------------------------------------------------
+    /* -------------------------------------------------
     Quest Manager is responsible for creating new quests
     and keeping track of all active quests
-    ----------------------------------------------------*/
+    ---------------------------------------------------- */
 
     public class QuestManager : MonoBehaviour
     {
@@ -32,6 +32,7 @@ namespace RPG.Quest
             quest.AddPath(c.GetID(), e.GetID()); //c to e
             quest.AddPath(d.GetID(), e.GetID()); //d to e
 
+            quest.BFS(a);
             quest.PrintQuestSystem();
         }
     }
