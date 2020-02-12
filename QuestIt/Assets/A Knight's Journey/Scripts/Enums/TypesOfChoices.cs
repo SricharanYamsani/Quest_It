@@ -7,6 +7,6 @@ public enum TypesOfChoices
     NONE,
     ATTACK,
     DEFEND,
-    ITEM,
+    CONSUMABLES,
     RUN
 }

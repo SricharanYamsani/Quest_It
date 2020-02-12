@@ -9,24 +9,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db902cb7e59084629b2fd3e8b8f24b9f, type: 3}
-  m_Name: MAGICHEAL
+  m_Script: {fileID: 11500000, guid: 18d9f4dd4241c492dadee23b4cd59cf6, type: 3}
+  m_Name: RESURRECT_SMALL_1
   m_EditorClassIdentifier: 
   battleTask: 5
   targetRange: 3
-  playerCondition: 2
-  choiceType: 1
+  playerCondition: 1
+  choiceType: 3
   MoveTurnsType: 2
   m_AnimationClip: 7
   affectedAttribute: 1
-  m_Currency: 1
-  ICON: {fileID: 21300000, guid: 0e700985539a64d4ba023f4167826456, type: 3}
-  m_CurrencyAmount: 15
+  m_Currency: 0
+  ICON: {fileID: 0}
+  m_CurrencyAmount: 0
   moveAffectDuration: 0
   attributeChange: 25
-  endTime: 3.5
-  description: 
-  moveName: Magic Heal
-  move: 4
-  healWeapon: {fileID: -6779147246751792646, guid: ff672eaca96d32c419d7a1f1b0346e8d,
+  endTime: 10
+  description: Resurrects one player with 25 hp
+  moveName: Resurrect!
+  itemName: 61
+  resurrectWeapon: {fileID: 6780868621941338680, guid: 644ecb149bc651142a6637ca6bb47dd6,
     type: 3}

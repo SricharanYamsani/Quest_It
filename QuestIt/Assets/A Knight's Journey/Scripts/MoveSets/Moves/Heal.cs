@@ -53,6 +53,7 @@ public class Heal : MoveChoice
                 }
 
             })).Append(DOVirtual.DelayedCall(playTime, () => {
+
                 player.transform.DORotateQuaternion(tempRotation, 0.3f);
 
             }));

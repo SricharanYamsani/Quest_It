@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System;
 
 [Serializable]
-public class PlayerQualities
+public class PlayerInfo
 {
     public PlayerAttributes myAttributes = new PlayerAttributes();
 
     public List<Moves> chosenMoves = new List<Moves>();
+
+    public List<ConsumablesInfo> consumables = new List<ConsumablesInfo>();
 
     public BattleCharacters character = BattleCharacters.NONE;
 

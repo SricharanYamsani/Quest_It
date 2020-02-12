@@ -97,7 +97,7 @@ public class BattleManager : Singleton<BattleManager>
         Sortplayers();
     }
 
-    public void InitializeBattle(List<PlayerQualities> allPlayers)
+    public void InitializeBattle(List<PlayerInfo> allPlayers)
     {
         ResetSystem();
 
@@ -124,11 +124,11 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (LoadFromScene)
         {
-            List<PlayerQualities> playerQ = new List<PlayerQualities>();
+            List<PlayerInfo> playerQ = new List<PlayerInfo>();
 
             for (int i = 0; i < 6; i++)
             {
-                PlayerQualities player = new PlayerQualities();
+                PlayerInfo player = new PlayerInfo();
 
                 player.myAttributes = PlayerGenerator.AttributesGenerator();
 
@@ -142,6 +142,14 @@ public class BattleManager : Singleton<BattleManager>
                 player.IsTeamRed = (i < 3);
 
                 player.IsPlayer = (i == 0 ? true : false);
+
+                ConsumablesInfo cInfo = new ConsumablesInfo();
+
+                cInfo.consumable = Consumables.RESURRECT_SMALL_1;
+
+                cInfo.amount = 1;
+
+                player.consumables.Add(cInfo);
 
                 playerQ.Add(player);
             }
@@ -265,9 +273,9 @@ public class BattleManager : Singleton<BattleManager>
     }
     #endregion
 
-    private void SetupPlayersOnField(List<PlayerQualities> qualities)
+    private void SetupPlayersOnField(List<PlayerInfo> qualities)
     {
-        foreach (PlayerQualities quality in qualities)
+        foreach (PlayerInfo quality in qualities)
         {
             Transform myTransform = GetSpawn(quality.IsTeamRed, quality.IsPlayer);
 
@@ -275,7 +283,7 @@ public class BattleManager : Singleton<BattleManager>
             {
                 BattlePlayer player = Instantiate<BattlePlayer>(ResourceManager.Instance.allModels[quality.character], myTransform);
 
-                player.playerQualities = quality;
+                player.playerInfo = quality;
 
                 validPlayers.Add(player);
             }
@@ -379,6 +387,72 @@ public class BattleManager : Singleton<BattleManager>
         }
 
         return null;
+    }
+
+    public List<BattlePlayer> GetTargetPlayers(BattleChoice choice, ref bool canSelect)
+    {
+        List<BattlePlayer> targets = new List<BattlePlayer>();
+
+        switch (choice.targetRange)
+        {
+            case AttackRange.ONEENEMY:
+            case AttackRange.ONETEAM:
+                canSelect = true;
+                break;
+            case AttackRange.ALLENEMY:
+            case AttackRange.ALLTEAM:
+            case AttackRange.EVERYONE:
+                canSelect = false;
+                break;
+        }
+
+        if (choice.playerCondition == PlayerConditions.ALIVE)
+        {
+            if (choice.targetRange == AttackRange.ALLENEMY || choice.targetRange == AttackRange.ONEENEMY)
+            {
+                foreach (BattlePlayer target in validPlayers)
+                {
+                    if ((currentPlayer.IsTeamRed != target.IsTeamRed) && (target.IsAlive))
+                    {
+                        targets.Add(target);
+                    }
+                }
+            }
+            else if (choice.targetRange == AttackRange.ALLTEAM || choice.targetRange == AttackRange.ONETEAM)
+            {
+                foreach (BattlePlayer target in validPlayers)
+                {
+                    if ((currentPlayer.IsTeamRed == target.IsTeamRed) && (target.IsAlive))
+                    {
+                        targets.Add(target);
+                    }
+                }
+            }
+        }
+        else if (choice.playerCondition == PlayerConditions.DEAD)
+        {
+            if (choice.targetRange == AttackRange.ALLENEMY || choice.targetRange == AttackRange.ONETEAM)
+            {
+                foreach (BattlePlayer target in validPlayers)
+                {
+                    if ((currentPlayer.IsTeamRed != target.IsTeamRed) && (!target.IsAlive))
+                    {
+                        targets.Add(target);
+                    }
+                }
+            }
+            else if (choice.targetRange == AttackRange.ALLTEAM || choice.targetRange == AttackRange.ONETEAM)
+            {
+                foreach (BattlePlayer target in validPlayers)
+                {
+                    if ((currentPlayer.IsTeamRed == target.IsTeamRed) && (!target.IsAlive))
+                    {
+                        targets.Add(target);
+                    }
+                }
+            }
+        }
+        return targets;
     }
 }
 public enum BattleStates

@@ -4,15 +4,19 @@ using UnityEngine;
 
 public abstract class BattleChoice : ScriptableObject
 {
-    public BattleTasks AttackStyle = BattleTasks.NONE;
+    public BattleTasks battleTask = BattleTasks.NONE;
 
-    public AttackRange AttackValue = AttackRange.ONEENEMY;
+    public AttackRange targetRange = AttackRange.ONEENEMY;
+
+    public PlayerConditions playerCondition = PlayerConditions.NONE;
 
     public TypesOfChoices choiceType = TypesOfChoices.NONE;
 
     public MoveDuration MoveTurnsType;
 
     public AnimationType m_AnimationClip;
+
+    public AttributeTypes affectedAttribute = AttributeTypes.NONE;
 
     public Currency m_Currency = Currency.NONE;
 
@@ -22,7 +26,7 @@ public abstract class BattleChoice : ScriptableObject
 
     public int moveAffectDuration;
 
-    public int healthChange;
+    public int attributeChange;
 
     public float endTime = 5f;
 

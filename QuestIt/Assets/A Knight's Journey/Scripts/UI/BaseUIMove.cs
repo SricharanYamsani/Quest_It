@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class BaseUIChoice : MonoBehaviour
+public class BaseUIMove : MonoBehaviour
 {
     public BattleChoice m_Choice;
 
@@ -53,15 +53,15 @@ public class BaseUIChoice : MonoBehaviour
 
             if ( choiceStyleIcon )
             {
-                choiceStyleIcon.sprite = ResourceManager.Instance.choiceSpritesRef [ m_Choice.AttackStyle.ToString ( ) ];
+                //choiceStyleIcon.sprite = ResourceManager.Instance.choiceSpritesRef [ m_Choice.AttackStyle.ToString ( ) ];
             }
             if ( currencyIcon )
             {
-                currencyIcon.sprite = ResourceManager.Instance.currencySpritesRef [ m_Choice.m_Currency.ToString ( ) ];
+                //currencyIcon.sprite = ResourceManager.Instance.currencySpritesRef [ m_Choice.m_Currency.ToString ( ) ];
             }
             if(m_ChoiceStyle)
             {
-                m_ChoiceStyle.text = m_Choice.healthChange.ToString ( );
+                m_ChoiceStyle.text = m_Choice.attributeChange.ToString ( );
             }
             if(m_CurrencyText)
             {
@@ -80,6 +80,6 @@ public class BaseUIChoice : MonoBehaviour
     {
         BattleManager.Instance.currentPlayer.currentChoice = m_Choice;
 
-        BattleUIManager.Instance.ShowTargetChoices(m_Choice.AttackValue);
+        BattleUIManager.Instance.ShowTargetChoices(m_Choice);
     }
 }

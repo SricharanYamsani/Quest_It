@@ -51,7 +51,9 @@ public class BattleUIManager : Singleton<BattleUIManager>
     private float sizeXSlider = 0.0f;
 
     [SerializeField]
-    List<BaseUIChoice> t_Choices = new List<BaseUIChoice>();
+    List<BaseUIMove> t_Choices = new List<BaseUIMove>();
+    [SerializeField]
+    List<BaseUIConsumables> c_Choices = new List<BaseUIConsumables>();
 
     protected override void Awake()
     {
@@ -147,6 +149,20 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
                     t_Choices[i].SetupChoice();
                 }
+
+                for (int i = 0; i < c_Choices.Count; i++)
+                {
+                    if (i < player.playerInfo.consumables.Count)
+                    {
+                        ConsumablesInfo choice = player.playerInfo.consumables[i];
+                        if (choice.amount > 0)
+                        {
+                            c_Choices[i].m_Choice = ResourceManager.Instance.GetChoiceFromConsumables[choice.consumable];
+
+                            c_Choices[i].SetupChoice(choice.amount);
+                        }
+                    }
+                }
             }
         }
     }
@@ -162,7 +178,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
                     SwitchGrids(0);
                     break;
                 case TypesOfChoices.DEFEND: SwitchGrids(1); break;
-                case TypesOfChoices.ITEM: SwitchGrids(2); break;
+                case TypesOfChoices.CONSUMABLES: SwitchGrids(2); break;
                 case TypesOfChoices.RUN: SwitchGrids(3); break;
             }
         }
@@ -171,85 +187,21 @@ public class BattleUIManager : Singleton<BattleUIManager>
     }
 
     #region TargetChoices
-    public void ShowTargetChoices(AttackRange range)
+    public void ShowTargetChoices(BattleChoice choice)
     {
         currentGrid.SetActive(false);
 
-        List<BattlePlayer> myTargets = new List<BattlePlayer>();
-
-        List<BattlePlayer> validPlayers = BattleManager.Instance.GetAllPlayers();
-
-        BattlePlayer currentPlayer = BattleManager.Instance.currentPlayer;
-
         bool canSelect = false;
 
-        switch (range)
-        {
-            case AttackRange.ONEENEMY:
-
-                foreach (BattlePlayer battlePlayer in validPlayers)
-                {
-                    if ((battlePlayer.IsTeamRed != currentPlayer.IsTeamRed) && battlePlayer.IsAlive)
-                    {
-                        myTargets.Add(battlePlayer);
-                    }
-                }
-                canSelect = true;
-
-                break;
-
-            case AttackRange.ONETEAM:
-
-                if(currentPlayer.IsTeamRed)
-                {
-                    myTargets = BattleManager.Instance.GetTeamRedPlayers();
-                }
-                else
-                {
-                    myTargets = BattleManager.Instance.GetTeamBluePlayers();
-                }
-
-                canSelect = true;
-
-                break;
-
-            case AttackRange.ALLENEMY:
-
-                foreach (BattlePlayer battlePlayer in validPlayers)
-                {
-                    if ((battlePlayer.IsTeamRed != currentPlayer.IsTeamRed) && battlePlayer.IsAlive)
-                    {
-                        myTargets.Add(battlePlayer);
-                    }
-                }
-                canSelect = false;
-
-                break;
-
-            case AttackRange.ALLTEAM:
-                foreach (BattlePlayer battlePlayer in validPlayers)
-                {
-                    if (battlePlayer.IsTeamRed == currentPlayer.IsTeamRed)
-                    {
-                        myTargets.Add(battlePlayer);
-                    }
-                }
-                canSelect = false;
-
-                break;
-
-            case AttackRange.EVERYONE:
-
-                myTargets.AddRange(validPlayers);
-
-                canSelect = false;
-
-                break;
-        }
+        List<BattlePlayer> myTargets = BattleManager.Instance.GetTargetPlayers(choice, ref canSelect);
 
         if (myTargets.Count > 0)
         {
             selectionBox.LoadOptions(myTargets, canSelect);
+        }
+        else
+        {
+            Debug.Log("Cannot find");
         }
     }
     #endregion

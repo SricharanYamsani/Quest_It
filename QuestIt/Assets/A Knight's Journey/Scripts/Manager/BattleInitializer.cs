@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BattleInitializer : Singleton<BattleInitializer>
 {
     public GameObject lobbyUI;
-    public List<PlayerQualities> lobbyPlayers = new List<PlayerQualities>();
+    public List<PlayerInfo> lobbyPlayers = new List<PlayerInfo>();
 
     /// <summary>Adds a Battle Player to the Lobby. </summary>
     /// <param name="player"> Battle Player</param>
@@ -20,7 +20,7 @@ public class BattleInitializer : Singleton<BattleInitializer>
 
     public void AddPlayer(bool isTeamRed)
     {
-        PlayerQualities quality = new PlayerQualities();
+        PlayerInfo quality = new PlayerInfo();
 
         quality.character = BattleCharacters.WIZARD;
 
@@ -45,11 +45,11 @@ public class BattleInitializer : Singleton<BattleInitializer>
         }
     }
 
-    public void AddaBattlePlayer(PlayerQualities player)
+    public void AddaBattlePlayer(PlayerInfo player)
     {
         if (lobbyPlayers == null)
         {
-            lobbyPlayers = new List<PlayerQualities>();
+            lobbyPlayers = new List<PlayerInfo>();
         }
 
         lobbyPlayers.Add(player);

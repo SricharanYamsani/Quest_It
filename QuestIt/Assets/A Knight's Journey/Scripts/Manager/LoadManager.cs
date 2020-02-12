@@ -16,7 +16,7 @@ public class LoadManager : Singleton<LoadManager>
         isDontDestroyOnLoad = true;
         base.Awake();
     }
-    public void LoadBattleScene(List<PlayerQualities> listOfPlayers, string battleGround)
+    public void LoadBattleScene(List<PlayerInfo> listOfPlayers, string battleGround)
     {
         if (loadUI == null)
         {
@@ -44,7 +44,7 @@ public class LoadManager : Singleton<LoadManager>
         });
     }
 
-    IEnumerator LoadSceneAsync(List<PlayerQualities> listOfPlayers, string battleGround)
+    IEnumerator LoadSceneAsync(List<PlayerInfo> listOfPlayers, string battleGround)
     {
         AsyncOperation loadOperation = SceneManager.LoadSceneAsync(battleGround);
 

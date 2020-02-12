@@ -42,7 +42,7 @@ public class ChoiceManager : Singleton<ChoiceManager>
 
     public void InvokeRemoveMyPlayer(BattlePlayer player)
     {
-        if(targets.Contains(player))
+        if (targets.Contains(player))
         {
             targets.Remove(player);
         }
@@ -55,40 +55,43 @@ public class ChoiceManager : Singleton<ChoiceManager>
 
     public void ExecutePlayerMove(BattlePlayer currentAttacker, BattleChoice move)
     {
-        if (move.AttackStyle == BattleTasks.ATTACK)
+        foreach (BattlePlayer target in targets)
         {
-            foreach (BattlePlayer target in targets)
+            bool isHurt = false;
+
+            if (move.affectedAttribute == AttributeTypes.AGILITY)
             {
-                if (DamageCalculator.IsDodge(target.CurrentLuck))
-                {
-                    // Set Dodge Animation
-                    target.SetReaction(PlayerState.BLOCK);
-                }
-                else
-                {
-                    target.SetReaction(PlayerState.HURT);
-
-                    target.CurrentHealth -= DamageCalculator.GetDamage(currentAttacker.playerQualities.myAttributes, target.playerQualities.myAttributes, move.healthChange);
-
-                    target.CurrentHealth = Mathf.Clamp(target.CurrentHealth, 0, target.MaxHealth);
-                }
+                target.CurrentAgility += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move,ref isHurt);
             }
-        }
-        else if(move.AttackStyle == BattleTasks.HEAL)
-        {
-            foreach(BattlePlayer target in targets)
+            else if (move.affectedAttribute == AttributeTypes.ATTACK)
             {
-                target.CurrentHealth += move.healthChange;
-
-                target.CurrentHealth = Mathf.Clamp(target.CurrentHealth, 0, target.MaxHealth);
+                target.CurrentAttack += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
             }
+            else if (move.affectedAttribute == AttributeTypes.DEFENSE)
+            {
+                target.CurrentDefense += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
+            }
+            else if (move.affectedAttribute == AttributeTypes.HEALTH)
+            {
+                target.CurrentHealth += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
+            }
+            else if (move.affectedAttribute == AttributeTypes.LUCK)
+            {
+                target.CurrentLuck += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
+            }
+            else if (move.affectedAttribute == AttributeTypes.MANA)
+            {
+                target.CurrentMana += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
+            }
+
+            target.SetReaction(isHurt);
         }
 
-        if(move.m_Currency == Currency.BRUTE)
+        if (move.m_Currency == Currency.BRUTE)
         {
             currentAttacker.CurrentHealth -= move.m_CurrencyAmount;
         }
-        else if(move.m_Currency == Currency.MANA)
+        else if (move.m_Currency == Currency.MANA)
         {
             currentAttacker.CurrentMana -= move.m_CurrencyAmount;
         }

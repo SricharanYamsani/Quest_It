@@ -18947,6 +18947,7 @@ GameObject:
   - component: {fileID: 8295442}
   - component: {fileID: 10811842}
   - component: {fileID: 11480852}
+  - component: {fileID: 6780868621941338680}
   m_Layer: 0
   m_Name: NovaBlue
   m_TagString: Untagged
@@ -19328,7 +19329,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationX:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 0
       maxCurve:
@@ -19381,7 +19382,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 0
       maxCurve:
@@ -23842,3 +23843,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   life: 0.3
   killAfterLife: 1
+--- !u!114 &6780868621941338680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e95c86ee155c742c5a43e362b12862fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Irounds: 0
+  moveDuration: 0
+  amount: 0

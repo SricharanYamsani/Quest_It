@@ -7,5 +7,8 @@ public enum BattleTasks
     NONE,
     ATTACK,
     DEFEND,
-    HEAL
+    HEAL,
+    RESURRECT,
+    ATTRIBUTE_ENHANCEMENT,
+    ATTRIBUTE_DECREMENT
 }

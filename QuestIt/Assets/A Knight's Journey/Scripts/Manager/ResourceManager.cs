@@ -8,6 +8,8 @@ public class ResourceManager : Singleton<ResourceManager>
 {
     public Dictionary<Moves, MoveChoice> GetChoiceFromMove = new Dictionary<Moves, MoveChoice>();
 
+    public Dictionary<Consumables, ConsumableChoice> GetChoiceFromConsumables = new Dictionary<Consumables, ConsumableChoice>();
+
     public List<Sprite> choiceSprites = new List<Sprite>();
 
     public List<Sprite> currencySprites = new List<Sprite>();
@@ -41,17 +43,17 @@ public class ResourceManager : Singleton<ResourceManager>
 
         for (int i = 0; i < choices.Length; i++)
         {
-            Moves move;
-
-            Enum.TryParse<Moves>(choices[i].name, out move);
-
-            if (move != Moves.NONE)
+            if (!GetChoiceFromMove.ContainsKey(choices[i].move))
             {
+                GetChoiceFromMove.Add(choices[i].move, choices[i]);
+            }
+        }
 
-                if (!GetChoiceFromMove.ContainsKey(move))
-                {
-                    GetChoiceFromMove.Add(move, choices[i]);
-                }
+        for (int i = 0; i < consumables.Length; i++)
+        {
+            if (!GetChoiceFromConsumables.ContainsKey(consumables[i].itemName))
+            {
+                GetChoiceFromConsumables.Add(consumables[i].itemName, consumables[i]);
             }
         }
 

@@ -12,18 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 747f570aefda144efb49fd0700aebe62, type: 3}
   m_Name: SWORD_SLASH
   m_EditorClassIdentifier: 
-  AttackStyle: 1
-  AttackValue: 1
+  battleTask: 6
+  targetRange: 1
+  playerCondition: 2
   choiceType: 1
   MoveTurnsType: 2
   m_AnimationClip: 1
+  affectedAttribute: 1
   m_Currency: 2
   ICON: {fileID: 0}
   m_CurrencyAmount: 0
   moveAffectDuration: 0
-  healthChange: 20
+  attributeChange: 30
   endTime: 5
   description: 
   moveName: Sword Slash
-  move: 0
+  move: 2
   sword: {fileID: 5288576339935000147, guid: f4e0cbed4315640519c7d071a57e42aa, type: 3}

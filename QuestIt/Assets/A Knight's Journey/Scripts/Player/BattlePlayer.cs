@@ -9,7 +9,7 @@ using Photon.Realtime;
 
 public class BattlePlayer : MonoBehaviour
 {
-    public PlayerQualities playerQualities = new PlayerQualities();
+    public PlayerInfo playerInfo = new PlayerInfo();
 
     public List<BattleChoice> validChoices = new List<BattleChoice>();
 
@@ -62,17 +62,37 @@ public class BattlePlayer : MonoBehaviour
 
     #region Properties
     /// <summary>Returns true if Battle Player is the user </summary>
-    public bool IsPlayer { get { return playerQualities.IsPlayer; } }
+    public bool IsPlayer { get { return playerInfo.IsPlayer; } }
 
     /// <summary>Returns true if Battle Player is Team Red </summary
-    public bool IsTeamRed { get { return playerQualities.IsTeamRed; } }
+    public bool IsTeamRed { get { return playerInfo.IsTeamRed; } }
 
     /// <summary>If player is defending or not. If it is. Changes Every Round </summary
     public bool IsDefending { get; set; } = false;
 
-    public int CurrentAgility { get { return 0; } }
+    public int CurrentAgility
+    {
+        get
+        {
+            return playerInfo.myAttributes.agility.current;
+        }
+        set
+        {
+            playerInfo.myAttributes.agility.current = value;
+        }
+    }
 
-    public int CurrentDefence { get { return 0; } }
+    public int CurrentDefense
+    {
+        get
+        {
+            return playerInfo.myAttributes.defense.current;
+        }
+        set
+        {
+            playerInfo.myAttributes.defense.current = value;
+        }
+    }
 
     public bool IsAlive { get { return CurrentHealth > 0; } }
 
@@ -80,7 +100,7 @@ public class BattlePlayer : MonoBehaviour
     {
         get
         {
-            return playerQualities.myAttributes.health.current;
+            return playerInfo.myAttributes.health.current;
         }
 
         set
@@ -90,12 +110,7 @@ public class BattlePlayer : MonoBehaviour
                 mPlayerController.SetTrigger(AnimationType.BACKTOLIFE.ToString());
             }
 
-            playerQualities.myAttributes.health.current = value;
-
-            if (!IsAlive)
-            {
-                mPlayerController.SetTrigger(AnimationType.DEAD.ToString());
-            }
+            playerInfo.myAttributes.health.current = value;
         }
     }
 
@@ -103,11 +118,11 @@ public class BattlePlayer : MonoBehaviour
     {
         get
         {
-            return playerQualities.myAttributes.mana.current;
+            return playerInfo.myAttributes.mana.current;
         }
         set
         {
-            playerQualities.myAttributes.mana.current = value;
+            playerInfo.myAttributes.mana.current = value;
         }
     }
 
@@ -115,11 +130,11 @@ public class BattlePlayer : MonoBehaviour
     {
         get
         {
-            return playerQualities.myAttributes.luck.current;
+            return playerInfo.myAttributes.luck.current;
         }
         set
         {
-            playerQualities.myAttributes.luck.current = value;
+            playerInfo.myAttributes.luck.current = value;
         }
     }
 
@@ -127,11 +142,11 @@ public class BattlePlayer : MonoBehaviour
     {
         get
         {
-            return playerQualities.myAttributes.attack.current;
+            return playerInfo.myAttributes.attack.current;
         }
         set
         {
-            playerQualities.myAttributes.attack.current = value;
+            playerInfo.myAttributes.attack.current = value;
         }
     }
 
@@ -139,7 +154,7 @@ public class BattlePlayer : MonoBehaviour
     {
         get
         {
-            return playerQualities.myAttributes.health.maximum;
+            return playerInfo.myAttributes.health.maximum;
         }
     }
 
@@ -147,7 +162,35 @@ public class BattlePlayer : MonoBehaviour
     {
         get
         {
-            return playerQualities.myAttributes.mana.maximum;
+            return playerInfo.myAttributes.mana.maximum;
+        }
+    }
+    public int MaxAgility
+    {
+        get
+        {
+            return playerInfo.myAttributes.agility.maximum;
+        }
+    }
+    public int MaxLuck
+    {
+        get
+        {
+            return playerInfo.myAttributes.luck.maximum;
+        }
+    }
+    public int MaxDefense
+    {
+        get
+        {
+            return playerInfo.myAttributes.defense.maximum;
+        }
+    }
+    public int MaxAttack
+    {
+        get
+        {
+            return playerInfo.myAttributes.attack.maximum;
         }
     }
     #endregion
@@ -162,9 +205,9 @@ public class BattlePlayer : MonoBehaviour
     {
         validChoices.Clear();
 
-        for (int i = 0; i < playerQualities.chosenMoves.Count; i++)
+        for (int i = 0; i < playerInfo.chosenMoves.Count; i++)
         {
-            validChoices.Add(ResourceManager.Instance.GetChoiceFromMove[playerQualities.chosenMoves[i]]);
+            validChoices.Add(ResourceManager.Instance.GetChoiceFromMove[playerInfo.chosenMoves[i]]);
         }
         if (validChoices.Count > 0)
         {
@@ -204,6 +247,7 @@ public class BattlePlayer : MonoBehaviour
     private void TurnOver()
     {
         m_PlayerState = PlayerState.NONE;
+
         playerIcon.UpdateUI(PlayerUIUpdater.Both);
     }
 
@@ -243,77 +287,9 @@ public class BattlePlayer : MonoBehaviour
     {
         currentChoice = validChoices[UnityEngine.Random.Range(0, validChoices.Count)];
 
-        List<BattlePlayer> myTargets = new List<BattlePlayer>();
-
-        List<BattlePlayer> validPlayers = BattleManager.Instance.GetAllPlayers();
-
-        BattlePlayer currentPlayer = BattleManager.Instance.currentPlayer;
-
         bool canSelect = false;
 
-        switch (currentChoice.AttackValue)
-        {
-            case AttackRange.ONEENEMY:
-
-                foreach (BattlePlayer battlePlayer in validPlayers)
-                {
-                    if ((battlePlayer.IsTeamRed != currentPlayer.IsTeamRed) && battlePlayer.IsAlive)
-                    {
-                        myTargets.Add(battlePlayer);
-                    }
-                }
-                canSelect = true;
-
-                break;
-
-            case AttackRange.ONETEAM:
-
-                if (currentPlayer.IsTeamRed)
-                {
-                    myTargets = BattleManager.Instance.GetTeamRedPlayers();
-                }
-                else
-                {
-                    myTargets = BattleManager.Instance.GetTeamBluePlayers();
-                }
-
-                canSelect = true;
-
-                break;
-
-            case AttackRange.ALLENEMY:
-
-                foreach (BattlePlayer battlePlayer in validPlayers)
-                {
-                    if ((battlePlayer.IsTeamRed != currentPlayer.IsTeamRed) && battlePlayer.IsAlive)
-                    {
-                        myTargets.Add(battlePlayer);
-                    }
-                }
-                canSelect = false;
-
-                break;
-
-            case AttackRange.ALLTEAM:
-                foreach (BattlePlayer battlePlayer in validPlayers)
-                {
-                    if (battlePlayer.IsTeamRed == currentPlayer.IsTeamRed)
-                    {
-                        myTargets.Add(battlePlayer);
-                    }
-                }
-                canSelect = false;
-
-                break;
-
-            case AttackRange.EVERYONE:
-
-                myTargets.AddRange(validPlayers);
-
-                canSelect = false;
-
-                break;
-        }
+        List<BattlePlayer> myTargets = BattleManager.Instance.GetTargetPlayers(currentChoice, ref canSelect);
 
         List<BattlePlayer> temp_Target = new List<BattlePlayer>();
 
@@ -359,29 +335,37 @@ public class BattlePlayer : MonoBehaviour
         }
     }
 
-    public void SetReaction(PlayerState state)
+    public void SetReaction(bool isHurt)
     {
-        m_PlayerState = state;
+        if (isHurt)
+        {
+            m_PlayerState = PlayerState.HURT;
+        }
+        else
+        {
+            m_PlayerState = PlayerState.BLOCK;
+        }
+
+        Logger.Error(isHurt.ToString());
     }
 
     public void PlayReaction(string animation = "")
     {
-        if (currentChoice.AttackStyle == BattleTasks.ATTACK)
+        if (m_PlayerState == PlayerState.BLOCK)
         {
-            if (m_PlayerState == PlayerState.BLOCK)
-            {
-                mPlayerController.SetTrigger(AnimationType.BLOCK.ToString());
+            mPlayerController.SetTrigger(AnimationType.BLOCK.ToString());
 
-                reactionText.text = "MISS!";
-            }
-            else if (m_PlayerState == PlayerState.HURT)
-            {
-                // change it to different Hits.
-                mPlayerController.SetTrigger(AnimationType.MIDHIT.ToString());
-
-                reactionText.text = "HIT";
-            }
+            reactionText.text = "MISS!";
         }
+        else if (m_PlayerState == PlayerState.HURT)
+        {
+            // change it to different Hits.
+            mPlayerController.SetTrigger(AnimationType.MIDHIT.ToString());
+
+            reactionText.text = "HIT";
+        }
+
+        m_PlayerState = PlayerState.NONE;
     }
 
     private void PerformMove(List<BattlePlayer> targets)
