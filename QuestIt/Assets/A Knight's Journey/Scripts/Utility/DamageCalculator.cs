@@ -4,110 +4,116 @@ using System;
 
 public static class DamageCalculator
 {
-    public static int GetDamage(PlayerAttributes attacker, PlayerAttributes defender, BattleChoice move, ref bool isHurt)
+    public static int GetChangeUpValue(PlayerAttributes attacker, PlayerAttributes defender, BattleChoice move, ref bool isHurt)
     {
         int damage = 0;
 
-        if (move.affectedAttribute == AttributeTypes.HEALTH)
+        if (move.battleTask == BattleTasks.ATTRIBUTE_DECREMENT)
         {
-            if (move.battleTask == BattleTasks.ATTRIBUTE_DECREMENT)
+            if (!IsDodge(GetCurrentAttribute(defender, AttributeTypes.LUCK)))
             {
-                if (!IsDodge(defender.luck.current))
-                {
-                    damage = (int)(Math.Ceiling((attacker.agility.current * 0.5f) / 10) + move.attributeChange);
+                damage = (int)(Math.Ceiling((GetCurrentAttribute(attacker, AttributeTypes.AGILITY) * 0.5f) / 10) + move.attributeChange);
 
-                    damage = (int)Math.Ceiling(damage - (defender.defense.current * 0.1f));
+                damage = (int)Math.Ceiling(damage - (GetCurrentAttribute(defender, AttributeTypes.DEFENSE) * 0.1f));
 
-                    damage.Clamp(0, defender.health.maximum);
+                damage.Clamp(0, GetMaxAttribute(defender, move.affectedAttribute));
 
-                    damage *= -1;
+                damage *= -1;
 
-                    isHurt = true;
-                }
-                else
-                {
-                    isHurt = false;
-                }
+                isHurt = true;
             }
             else
             {
-                damage = move.attributeChange;
-
-                damage.Clamp(0, defender.health.maximum);
+                isHurt = false;
             }
         }
-        else if (move.affectedAttribute == AttributeTypes.MANA)
+        else if(move.battleTask == BattleTasks.ATTRIBUTE_ENHANCEMENT)
         {
-            if (move.battleTask == BattleTasks.ATTRIBUTE_DECREMENT)
-            {
+            damage = move.attributeChange;
 
-            }
-            else
-            {
-                damage = move.attributeChange;
-
-                damage.Clamp(0, defender.mana.maximum);
-            }
-        }
-        else if (move.affectedAttribute == AttributeTypes.AGILITY)
-        {
-            if (move.battleTask == BattleTasks.ATTRIBUTE_DECREMENT)
-            {
-
-            }
-            else
-            {
-                damage = move.attributeChange;
-
-                damage.Clamp(0, defender.agility.maximum);
-            }
-        }
-        else if (move.affectedAttribute == AttributeTypes.ATTACK)
-        {
-            if (move.battleTask == BattleTasks.ATTRIBUTE_DECREMENT)
-            {
-
-            }
-            else
-            {
-                damage = move.attributeChange;
-
-                damage.Clamp(0, defender.attack.maximum);
-            }
-        }
-        else if (move.affectedAttribute == AttributeTypes.DEFENSE)
-        {
-            if (move.battleTask == BattleTasks.ATTRIBUTE_DECREMENT)
-            {
-
-            }
-            else
-            {
-                damage = move.attributeChange;
-
-                damage.Clamp(0, defender.defense.maximum);
-            }
-        }
-        else if (move.affectedAttribute == AttributeTypes.LUCK)
-        {
-            if (move.battleTask == BattleTasks.ATTRIBUTE_DECREMENT)
-            {
-
-            }
-            else
-            {
-                damage = move.attributeChange;
-
-                damage.Clamp(0, defender.luck.maximum);
-            }
-        }
-        else
-        {
-            Logger.Error("Logical Error");
+            damage.Clamp(0, GetMaxAttribute(defender, move.affectedAttribute));
         }
 
         return damage;
     }
+
+    public static int GetCurrentAttribute(PlayerAttributes attributes, AttributeTypes types)
+    {
+        switch (types)
+        {
+            case AttributeTypes.ATTACK:
+
+                return attributes.attack.current;
+
+            case AttributeTypes.AGILITY:
+
+                return attributes.agility.current;
+
+            case AttributeTypes.DEFENSE:
+
+                return attributes.defense.current;
+
+            case AttributeTypes.LUCK:
+
+                return attributes.luck.current;
+
+            case AttributeTypes.HEALTH:
+
+                return attributes.health.current;
+
+            case AttributeTypes.MANA:
+
+                return attributes.mana.current;
+
+            default:
+
+                Logger.Error("error in calculation");
+
+                return -9999;
+        }
+    }
+
+    public static int GetMaxAttribute(PlayerAttributes attributes, AttributeTypes types)
+    {
+        switch (types)
+        {
+            case AttributeTypes.ATTACK:
+
+                return attributes.attack.maximum;
+
+            case AttributeTypes.AGILITY:
+
+                return attributes.agility.maximum;
+
+            case AttributeTypes.DEFENSE:
+
+                return attributes.defense.maximum;
+
+            case AttributeTypes.LUCK:
+
+                return attributes.luck.maximum;
+
+            case AttributeTypes.HEALTH:
+
+                return attributes.health.maximum;
+
+            case AttributeTypes.MANA:
+
+                return attributes.mana.maximum;
+            default:
+
+                Logger.Error("error in calculation");
+
+                return -9999;
+        }
+    }
+
+    public static Dictionary<PercentageType, float> percentageValues = new Dictionary<PercentageType, float>
+    {
+        {PercentageType.SMALL,25.0f },
+        {PercentageType.MID,50.0f },
+        { PercentageType.FULL,100.0f}
+    };
 
     public static bool IsDodge(int defenderLuck)
     {
@@ -118,11 +124,25 @@ public static class DamageCalculator
         return (x <= defenderLuck);
     }
 
+
+    // Extension Funcions. Move to Utilities soon.
+    public static int RoundToInt(this float x)
+    {
+        float decimalValue = x - (int)x;
+
+        if (decimalValue > 0.5f)
+        {
+            return (int)x + 1;
+        }
+
+        return (int)x;
+    }
+
     public static int Clamp(this int x, int min, int max)
     {
         if (x < min)
         {
-            x = 0;
+            x = min;
         }
         else if (x > max)
         {
@@ -135,7 +155,7 @@ public static class DamageCalculator
     {
         if (x < min)
         {
-            x = 0;
+            x = min;
         }
         else if (x > max)
         {

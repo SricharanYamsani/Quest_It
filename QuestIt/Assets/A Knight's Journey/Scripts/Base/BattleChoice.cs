@@ -10,6 +10,8 @@ public abstract class BattleChoice : ScriptableObject
 
     public PlayerConditions playerCondition = PlayerConditions.NONE;
 
+    public PercentageType percentageType = PercentageType.NONE;
+
     public TypesOfChoices choiceType = TypesOfChoices.NONE;
 
     public MoveDuration MoveTurnsType;

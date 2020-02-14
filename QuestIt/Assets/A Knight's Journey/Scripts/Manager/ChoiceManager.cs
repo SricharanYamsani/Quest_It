@@ -61,27 +61,27 @@ public class ChoiceManager : Singleton<ChoiceManager>
 
             if (move.affectedAttribute == AttributeTypes.AGILITY)
             {
-                target.CurrentAgility += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move,ref isHurt);
+                target.CurrentAgility += DamageCalculator.GetChangeUpValue(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move,ref isHurt);
             }
             else if (move.affectedAttribute == AttributeTypes.ATTACK)
             {
-                target.CurrentAttack += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
+                target.CurrentAttack += DamageCalculator.GetChangeUpValue(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
             }
             else if (move.affectedAttribute == AttributeTypes.DEFENSE)
             {
-                target.CurrentDefense += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
+                target.CurrentDefense += DamageCalculator.GetChangeUpValue(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
             }
             else if (move.affectedAttribute == AttributeTypes.HEALTH)
             {
-                target.CurrentHealth += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
+                target.CurrentHealth += DamageCalculator.GetChangeUpValue(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
             }
             else if (move.affectedAttribute == AttributeTypes.LUCK)
             {
-                target.CurrentLuck += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
+                target.CurrentLuck += DamageCalculator.GetChangeUpValue(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
             }
             else if (move.affectedAttribute == AttributeTypes.MANA)
             {
-                target.CurrentMana += DamageCalculator.GetDamage(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
+                target.CurrentMana += DamageCalculator.GetChangeUpValue(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
             }
 
             target.SetReaction(isHurt);
