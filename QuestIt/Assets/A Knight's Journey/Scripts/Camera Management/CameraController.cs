@@ -10,10 +10,12 @@ namespace RPG.CameraControl
         public CinemachineBrain primaryCamera;
         public CinemachineVirtualCamera mainVirtualCamera;
         private CinemachineComposer mainCameraComposer;
+        private CinemachineGroupComposer mainGroupComposer; 
         private VirtualCameraComponent defaultVirtualCamera;
 
         Coroutine cameraControlCoroutine, cameraControlSubCoroutine;
 
+        private VirtualCameraType cameraType;
         private void Awake()
         {
             mainCameraComposer = mainVirtualCamera.GetCinemachineComponent<CinemachineComposer>();
@@ -24,6 +26,29 @@ namespace RPG.CameraControl
             else
             {
                 defaultVirtualCamera = new VirtualCameraComponent(mainVirtualCamera.transform, mainVirtualCamera.m_Lens.FieldOfView);
+            }
+
+            SwitchCameraType(VirtualCameraType.COMPOSER);
+        }
+
+        public void SwitchCameraType(VirtualCameraType type)
+        {
+            if(cameraType == type)
+            {
+                return;
+            }
+
+            cameraType = type;
+
+            if(type == VirtualCameraType.COMPOSER)
+            {
+                mainCameraComposer.gameObject.SetActive(true);
+                mainGroupComposer.gameObject.SetActive(false);
+            }
+            else
+            {
+                mainCameraComposer.gameObject.SetActive(false);
+                mainGroupComposer.gameObject.SetActive(true);
             }
         }
 
@@ -162,5 +187,12 @@ namespace RPG.CameraControl
         NONE,
         BLEND,
         CUT
+    }
+
+    public enum VirtualCameraType
+    {
+        NONE,
+        COMPOSER,
+        GROUPCOMPOSER
     }
 }
