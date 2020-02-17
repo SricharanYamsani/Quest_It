@@ -15,6 +15,7 @@ MonoBehaviour:
   battleTask: 6
   targetRange: 1
   playerCondition: 2
+  percentageType: 0
   choiceType: 1
   MoveTurnsType: 2
   m_AnimationClip: 1
@@ -27,5 +28,5 @@ MonoBehaviour:
   endTime: 5
   description: 
   moveName: Sword Slash
-  move: 2
+  move: 69
   sword: {fileID: 5288576339935000147, guid: f4e0cbed4315640519c7d071a57e42aa, type: 3}

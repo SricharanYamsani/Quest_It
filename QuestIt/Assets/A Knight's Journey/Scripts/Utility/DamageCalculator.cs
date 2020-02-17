@@ -12,7 +12,9 @@ public static class DamageCalculator
         {
             if (!IsDodge(GetCurrentAttribute(defender, AttributeTypes.LUCK)))
             {
-                damage = (int)(Math.Ceiling((GetCurrentAttribute(attacker, AttributeTypes.AGILITY) * 0.5f) / 10) + move.attributeChange);
+                damage = (int)(Math.Ceiling((GetCurrentAttribute(attacker, AttributeTypes.AGILITY) * 0.5f) / 10) +
+
+                    (move.percentageType == PercentageType.NONE ? move.attributeChange : percentageValues[move.percentageType] * GetMaxAttribute(attacker, move.affectedAttribute)));
 
                 damage = (int)Math.Ceiling(damage - (GetCurrentAttribute(defender, AttributeTypes.DEFENSE) * 0.1f));
 
@@ -29,7 +31,7 @@ public static class DamageCalculator
         }
         else if(move.battleTask == BattleTasks.ATTRIBUTE_ENHANCEMENT)
         {
-            damage = move.attributeChange;
+            damage =(int)(move.percentageType == PercentageType.NONE ? move.attributeChange : percentageValues[move.percentageType] * GetMaxAttribute(attacker, move.affectedAttribute));
 
             damage.Clamp(0, GetMaxAttribute(defender, move.affectedAttribute));
         }
@@ -122,46 +124,5 @@ public static class DamageCalculator
         int x = random.Next(0, 100);
 
         return (x <= defenderLuck);
-    }
-
-
-    // Extension Funcions. Move to Utilities soon.
-    public static int RoundToInt(this float x)
-    {
-        float decimalValue = x - (int)x;
-
-        if (decimalValue > 0.5f)
-        {
-            return (int)x + 1;
-        }
-
-        return (int)x;
-    }
-
-    public static int Clamp(this int x, int min, int max)
-    {
-        if (x < min)
-        {
-            x = min;
-        }
-        else if (x > max)
-        {
-            x = max;
-        }
-
-        return x;
-    }
-    public static float Clamp(this float x, float min, float max)
-    {
-        if (x < min)
-        {
-            x = min;
-        }
-        else if (x > max)
-        {
-            x = max;
-        }
-
-        return x;
     }
 }

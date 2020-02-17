@@ -19,11 +19,13 @@ public class SelectionBox : MonoBehaviour
 
     public CanvasGroup backgroundGroup;
 
-    public Button selectButton;
-
     public Image selectButtonImage;
 
+    public Button selectButton;
+
     public Button backButton;
+
+    public GameObject errorMessage;
 
     private bool allowSelection;
 
@@ -43,44 +45,58 @@ public class SelectionBox : MonoBehaviour
             }
         }
 
+        CheckForOptions(battlePlayers, canSelect);
+
         allowSelection = canSelect;
 
         OpenBox();
     }
 
+    private void CheckForOptions(List<BattlePlayer> battlePlayers, bool canSelect)
+    {
+        if (battlePlayers.Count > 0)
+        {
+            errorMessage.SetActive(false);
+        }
+        else
+        {
+            errorMessage.SetActive(true);
+        }
+
+    }
+
     private void OpenBox()
+    {
+        SetSelectionButton();
+
+        SetBackButton();
+
+        SetBackgrooundOpen();
+
+    }
+
+    private void SetBackgrooundOpen()
+    {
+        background.gameObject.SetActive(true);
+
+        background.DOKill(false);
+
+        background.sizeDelta = closed;
+
+        background.DOSizeDelta(opened, 0.4f).OnComplete(() =>
+        {
+            background.sizeDelta = opened;
+        });
+    }
+
+    private void SetSelectionButton()
     {
         selectButton.onClick.AddListener(() => {
 
             OnClickSelectButton();
         });
 
-        backButton.onClick.AddListener(() =>
-        {
-            OnBackButton();
-
-        });
-
-        background.gameObject.SetActive(true);
-
         selectButtonImage.DOKill(false);
-
-        background.DOKill(false);
-
-        buttonGroup.DOKill(false);
-
-        background.sizeDelta = closed;
-
-        background.DOSizeDelta(opened, 0.4f).OnComplete(() =>
-        {
-            background.sizeDelta = opened; 
-        });
-
-        buttonGroup.alpha = 0;
-
-        buttonGroup.gameObject.SetActive(true);
-
-        buttonGroup.DOFade(1, 0.4f);
 
         selectButtonImage.gameObject.SetActive(true);
 
@@ -89,7 +105,24 @@ public class SelectionBox : MonoBehaviour
         DOTween.To(() => selectButtonImage.fillAmount, x => selectButtonImage.fillAmount = x, 1, 0.4f);
     }
 
-    private void CloseBox( Callback callback = null)
+    private void SetBackButton()
+    {
+        backButton.onClick.AddListener(() =>
+        {
+            OnBackButton();
+
+        });
+
+        buttonGroup.DOKill(false);
+
+        buttonGroup.alpha = 0;
+
+        buttonGroup.gameObject.SetActive(true);
+
+        buttonGroup.DOFade(1, 0.4f);
+    }
+
+    private void CloseBox(Callback callback = null)
     {
         selectButton.onClick.RemoveAllListeners();
 
@@ -171,7 +204,7 @@ public class SelectionBox : MonoBehaviour
     private void OnBackButton()
     {
         BattleUIManager.Instance.CurrentGridActive(true);
+         
         CloseBox();
-        Logger.Error("back");
     }
 }

@@ -15,6 +15,7 @@ MonoBehaviour:
   battleTask: 6
   targetRange: 1
   playerCondition: 2
+  percentageType: 0
   choiceType: 1
   MoveTurnsType: 2
   m_AnimationClip: 6
@@ -27,6 +28,6 @@ MonoBehaviour:
   endTime: 7
   description: Godly Arrow which greatly inflict damage to your opponnent.
   moveName: Pierce Through
-  move: 3
+  move: 1
   Bow: {fileID: 4042279297866727367, guid: c330e66a0481a4e9c8151c787830bcc0, type: 3}
   arrow: {fileID: 2886713559955451662, guid: 11bed329b649d4978ba8e6d2348e1d10, type: 3}

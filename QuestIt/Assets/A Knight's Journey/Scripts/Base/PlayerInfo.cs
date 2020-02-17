@@ -16,4 +16,30 @@ public class PlayerInfo
     public bool IsTeamRed { get; set; }
 
     public bool IsPlayer { get; set; }
+
+    public int experience = 0;
+
+    public int GetLevel()
+    {
+        return ExperienceToLevel();
+    }
+
+    private int ExperienceToLevel()
+    {
+        int temp = experience;
+
+        int levelIndex = 0;
+
+        while (temp > 0)
+        {
+            temp -= (100 + (levelIndex > 0 ? (int)(Math.Pow(200, levelIndex)) : 0));
+
+            if (temp > 0)
+            {
+                levelIndex++;
+            }
+        }
+
+        return levelIndex;
+    }
 }

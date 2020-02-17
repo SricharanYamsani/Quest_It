@@ -22,7 +22,7 @@ public class BattleInitializer : Singleton<BattleInitializer>
     {
         PlayerInfo quality = new PlayerInfo();
 
-        quality.character = BattleCharacters.WIZARD;
+        quality.character = BattleCharacters.OCCULTIST;
 
         quality.IsTeamRed = isTeamRed;
 

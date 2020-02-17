@@ -19,6 +19,7 @@ namespace RPG.CameraControl
         private void Awake()
         {
             mainCameraComposer = mainVirtualCamera.GetCinemachineComponent<CinemachineComposer>();
+
             if(mainCameraComposer != null)
             {
                 defaultVirtualCamera = new VirtualCameraComponent(mainVirtualCamera.transform, mainVirtualCamera.m_Lens.FieldOfView, mainCameraComposer.m_ScreenX, mainCameraComposer.m_ScreenY);
@@ -33,25 +34,27 @@ namespace RPG.CameraControl
 
         public void SwitchCameraType(VirtualCameraType type)
         {
-            if(cameraType == type)
+            if (cameraType == type)
             {
                 return;
             }
 
             cameraType = type;
+            if (mainCameraComposer != null)
+            {
 
-            if(type == VirtualCameraType.COMPOSER)
-            {
-                mainCameraComposer.gameObject.SetActive(true);
-                mainGroupComposer.gameObject.SetActive(false);
-            }
-            else
-            {
-                mainCameraComposer.gameObject.SetActive(false);
-                mainGroupComposer.gameObject.SetActive(true);
+                if (type == VirtualCameraType.COMPOSER)
+                {
+                    mainCameraComposer.gameObject.SetActive(true);
+                    mainGroupComposer.gameObject.SetActive(false);
+                }
+                else
+                {
+                    mainCameraComposer.gameObject.SetActive(false);
+                    mainGroupComposer.gameObject.SetActive(true);
+                }
             }
         }
-
         public void ResetCameraToDefault()
         {
             if (cameraControlCoroutine != null)

@@ -34,9 +34,9 @@ public class BattleUIManager : Singleton<BattleUIManager>
     private GameObject currentGrid;
 
     //Selection
-    public RectTransform targetSelectionScreen;
     public GameObject selectionBackground;
     public SelectionBox selectionBox;
+    public TacticsSelection tacticSelection = null;
 
     public List<TargetSelection> selectors = new List<TargetSelection>();
     #endregion
@@ -95,21 +95,20 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
     private void TurnStart(BattlePlayer obj)
     {
-        if (obj.IsPlayer)
-        {
-                ShowRadialButton(true);
-        }
-        else
-        {
-            if (RadialButton.gameObject.activeInHierarchy)
-            {
-                DOVirtual.DelayedCall(0.4f, () => { RadialButton.interactable = false; ShowRadialButton(false); });
+       
+    }
 
-                MoveOptionsLayer(false);
+    public void CloseButton()
+    {
+        if (RadialButton.gameObject.activeInHierarchy)
+        {
+            DOVirtual.DelayedCall(0.4f, () => { RadialButton.interactable = false; ShowRadialButton(false); });
 
-            }
+            MoveOptionsLayer(false);
+
         }
     }
+
     private void LoadAllPlayerUI()
     {
         foreach (BattlePlayer player in BattleManager.Instance.GetAllPlayers())
@@ -174,8 +173,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
             switch (buttonElement)
             {
                 case TypesOfChoices.ATTACK:
-                    LoadValidMovesUI();
-                    SwitchGrids(0);
+                                        SwitchGrids(0);
                     break;
                 case TypesOfChoices.DEFEND: SwitchGrids(1); break;
                 case TypesOfChoices.CONSUMABLES: SwitchGrids(2); break;
@@ -195,14 +193,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
         List<BattlePlayer> myTargets = BattleManager.Instance.GetTargetPlayers(choice, ref canSelect);
 
-        if (myTargets.Count > 0)
-        {
-            selectionBox.LoadOptions(myTargets, canSelect);
-        }
-        else
-        {
-            Debug.Log("Cannot find");
-        }
+        selectionBox.LoadOptions(myTargets, canSelect);
     }
     #endregion
 
@@ -311,11 +302,13 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
         if (index == 0)
         {
+            LoadValidMovesUI();
             sizeXSlider = BattleManager.Instance.currentPlayer.validChoices.Count * 200f;
             currentGrid = gridAttack;
         }
         else if (index == 1)
         {
+            tacticSelection.OpenTacticsSelection();
             currentGrid = gridDefend;
         }
         else if (index == 2)

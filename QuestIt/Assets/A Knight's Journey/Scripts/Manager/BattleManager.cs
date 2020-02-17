@@ -132,7 +132,8 @@ public class BattleManager : Singleton<BattleManager>
 
                 player.myAttributes = PlayerGenerator.AttributesGenerator();
 
-                player.character = BattleCharacters.WIZARD;
+                player.character = (BattleCharacters)UnityEngine.Random.Range(1, 6);
+                //BattleCharacters.OCCULTIST;
 
                 player.chosenMoves.Add(Moves.SWIPE_SLASH);
                 player.chosenMoves.Add(Moves.PIERCE_ATTACK_1);
@@ -323,6 +324,25 @@ public class BattleManager : Singleton<BattleManager>
         return validPlayers;
     }
 
+    public List<BattlePlayer> GetTeamPlayers(BattlePlayer _currentPlayer = null)
+    {
+        if (_currentPlayer == null)
+        {
+            _currentPlayer = currentPlayer;
+        }
+
+        List<BattlePlayer> teamPlayers = new List<BattlePlayer>();
+
+        foreach (BattlePlayer player in validPlayers)
+        {
+            if (_currentPlayer.IsTeamRed == player.IsTeamRed && _currentPlayer != player)
+            {
+                teamPlayers.Add(player);
+            }
+        }
+        return teamPlayers;
+    }
+
     public List<Transform> GetAllPlayersTransform()
     {
         List<Transform> playerTransforms = new List<Transform>();
@@ -345,42 +365,20 @@ public class BattleManager : Singleton<BattleManager>
     {
         for (int i = 0; i < spawns.Count; i++)
         {
-            if (isTeamRed)
+            if (isPlayer)
             {
-                if (isPlayer)
+                if (spawns[i].isPlayerSpot)
                 {
-                    if (spawns[i].isPlayerSpot)
-                    {
-                        return spawns[i].spawn;
-                    }
-                }
-                else
-                {
-                    if (!spawns[i].IsOccupied && spawns[i].isTeamRed && !spawns[i].isPlayerSpot)
-                    {
-                        spawns[i].IsOccupied = true;
-
-                        return spawns[i].spawn;
-                    }
+                    return spawns[i].spawn;
                 }
             }
             else
             {
-                if (isPlayer)
+                if (!spawns[i].IsOccupied && spawns[i].isTeamRed == isTeamRed && !spawns[i].isPlayerSpot)
                 {
-                    if (spawns[i].isPlayerSpot)
-                    {
-                        return spawns[i].spawn;
-                    }
-                }
-                else
-                {
-                    if (!spawns[i].IsOccupied && !spawns[i].isTeamRed && !spawns[i].isPlayerSpot)
-                    {
-                        spawns[i].IsOccupied = true;
+                    spawns[i].IsOccupied = true;
 
-                        return spawns[i].spawn;
-                    }
+                    return spawns[i].spawn;
                 }
             }
         }
@@ -403,6 +401,7 @@ public class BattleManager : Singleton<BattleManager>
             case AttackRange.EVERYONE:
                 canSelect = false;
                 break;
+            default:throw new Exception("Invalid Target Range : Wrong Info in selected move");
         }
 
         if (choice.playerCondition == PlayerConditions.ALIVE)
@@ -430,7 +429,7 @@ public class BattleManager : Singleton<BattleManager>
         }
         else if (choice.playerCondition == PlayerConditions.DEAD)
         {
-            if (choice.targetRange == AttackRange.ALLENEMY || choice.targetRange == AttackRange.ONETEAM)
+            if (choice.targetRange == AttackRange.ALLENEMY || choice.targetRange == AttackRange.ONEENEMY)
             {
                 foreach (BattlePlayer target in validPlayers)
                 {

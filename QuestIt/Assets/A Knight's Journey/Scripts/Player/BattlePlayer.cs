@@ -11,6 +11,8 @@ public class BattlePlayer : MonoBehaviour
 {
     public PlayerInfo playerInfo = new PlayerInfo();
 
+    public BattleBuffs battleBuffs = new BattleBuffs();
+
     public List<BattleChoice> validChoices = new List<BattleChoice>();
 
     public BattleChoice currentChoice = null;
@@ -56,6 +58,16 @@ public class BattlePlayer : MonoBehaviour
 
     public Transform glowRing;
 
+    public Transform rightHand;
+
+    public Transform leftHand;
+
+    public Transform faceSpawn_head;
+
+    public Transform faceSpawn_face;
+
+    public Transform TorsoParent;
+
     #endregion
 
     public TextMeshProUGUI reactionText;
@@ -67,18 +79,19 @@ public class BattlePlayer : MonoBehaviour
     /// <summary>Returns true if Battle Player is Team Red </summary
     public bool IsTeamRed { get { return playerInfo.IsTeamRed; } }
 
-    /// <summary>If player is defending or not. If it is. Changes Every Round </summary
-    public bool IsDefending { get; set; } = false;
+    public bool IsTacticDictationEnabled { get; set; } = false;
 
     public int CurrentAgility
     {
         get
         {
-            return playerInfo.myAttributes.agility.current;
+            return (playerInfo.myAttributes.agility.current + battleBuffs.agilityBuff.current);
         }
         set
         {
-            playerInfo.myAttributes.agility.current = value;
+            battleBuffs.agilityBuff.current = value;
+
+            battleBuffs.agilityBuff.current.Clamp(0, battleBuffs.agilityBuff.maximum);
         }
     }
 
@@ -90,7 +103,9 @@ public class BattlePlayer : MonoBehaviour
         }
         set
         {
-            playerInfo.myAttributes.defense.current = value;
+            battleBuffs.defenseBuff.current = value;
+
+            battleBuffs.defenseBuff.current.Clamp(0, battleBuffs.defenseBuff.maximum);
         }
     }
 
@@ -111,6 +126,8 @@ public class BattlePlayer : MonoBehaviour
             }
 
             playerInfo.myAttributes.health.current = value;
+
+            playerInfo.myAttributes.health.current.Clamp(0, playerInfo.myAttributes.health.maximum);
         }
     }
 
@@ -123,6 +140,8 @@ public class BattlePlayer : MonoBehaviour
         set
         {
             playerInfo.myAttributes.mana.current = value;
+
+            playerInfo.myAttributes.mana.current.Clamp(0, playerInfo.myAttributes.mana.maximum);
         }
     }
 
@@ -130,11 +149,13 @@ public class BattlePlayer : MonoBehaviour
     {
         get
         {
-            return playerInfo.myAttributes.luck.current;
+            return playerInfo.myAttributes.luck.current + battleBuffs.luckBuff.current;
         }
         set
         {
-            playerInfo.myAttributes.luck.current = value;
+            battleBuffs.luckBuff.current = value;
+
+            battleBuffs.luckBuff.current.Clamp(0, battleBuffs.luckBuff.maximum); 
         }
     }
 
@@ -146,7 +167,9 @@ public class BattlePlayer : MonoBehaviour
         }
         set
         {
-            playerInfo.myAttributes.attack.current = value;
+            battleBuffs.attackBuff.current = value;
+
+            battleBuffs.attackBuff.current.Clamp(0, battleBuffs.attackBuff.maximum);
         }
     }
 
@@ -199,7 +222,7 @@ public class BattlePlayer : MonoBehaviour
 
     public Color playerColor = new Color(168, 168, 168, 255);
 
-    public PlayerState m_PlayerState { get; private set; } = PlayerState.NONE;
+    public PlayerState PlayerState { get; private set; } = PlayerState.NONE;
 
     public void SetPlayer()
     {
@@ -213,6 +236,8 @@ public class BattlePlayer : MonoBehaviour
         {
             currentChoice = validChoices[0];
         }
+
+        
     }
 
     public void TakePartInBattle(bool isTrue)
@@ -246,7 +271,7 @@ public class BattlePlayer : MonoBehaviour
 
     private void TurnOver()
     {
-        m_PlayerState = PlayerState.NONE;
+        PlayerState = PlayerState.NONE;
 
         playerIcon.UpdateUI(PlayerUIUpdater.Both);
     }
@@ -257,7 +282,7 @@ public class BattlePlayer : MonoBehaviour
         {
             if (this.IsAlive)
             {
-                if (this.IsPlayer)
+                if (this.IsPlayer || IsTacticDictationEnabled)
                 {
                     BattleUIManager.Instance.ShowRadialButton(true);
                 }
@@ -339,11 +364,11 @@ public class BattlePlayer : MonoBehaviour
     {
         if (isHurt)
         {
-            m_PlayerState = PlayerState.HURT;
+            PlayerState = PlayerState.HURT;
         }
         else
         {
-            m_PlayerState = PlayerState.BLOCK;
+            PlayerState = PlayerState.BLOCK;
         }
 
         Logger.Error(isHurt.ToString());
@@ -351,13 +376,13 @@ public class BattlePlayer : MonoBehaviour
 
     public void PlayReaction(string animation = "")
     {
-        if (m_PlayerState == PlayerState.BLOCK)
+        if (PlayerState == PlayerState.BLOCK)
         {
             mPlayerController.SetTrigger(AnimationType.BLOCK.ToString());
 
             reactionText.text = "MISS!";
         }
-        else if (m_PlayerState == PlayerState.HURT)
+        else if (PlayerState == PlayerState.HURT)
         {
             // change it to different Hits.
             mPlayerController.SetTrigger(AnimationType.MIDHIT.ToString());
@@ -365,7 +390,7 @@ public class BattlePlayer : MonoBehaviour
             reactionText.text = "HIT";
         }
 
-        m_PlayerState = PlayerState.NONE;
+        PlayerState = PlayerState.NONE;
     }
 
     private void PerformMove(List<BattlePlayer> targets)
@@ -373,5 +398,7 @@ public class BattlePlayer : MonoBehaviour
         currentChoice.MoveWork(this, targets);
 
         ChoiceManager.Instance.ExecutePlayerMove(this, currentChoice);
+
+        BattleUIManager.Instance.CloseButton();
     }
 }
