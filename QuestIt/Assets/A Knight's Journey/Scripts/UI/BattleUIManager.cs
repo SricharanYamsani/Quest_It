@@ -40,7 +40,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
     public List<TargetSelection> selectors = new List<TargetSelection>();
     #endregion
-    public TextMeshProUGUI mText;
+    public TextMeshProUGUI RoundText;
 
     #region Constants
     public const float fadeTimeRadial = 0.4f;
@@ -67,14 +67,11 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
         BattleManager.Instance.GameOver += GameOverScreen;
 
-        BattleManager.Instance.TurnStart += TurnStart;
-
-        BattleManager.Instance.RoundOver += RoundOver;
-
         ChoiceManager.Instance.OnChoiceSelectionCompleted += SelectPlayerGo;
 
         //selectTrueButton.onClick.AddListener(() => { SelectPlayerGo(); });
     }
+
     private void CheckForSetup()
     {
         if(selectionPanel.gameObject.activeInHierarchy)
@@ -86,16 +83,6 @@ public class BattleUIManager : Singleton<BattleUIManager>
         {
             RadialButton.gameObject.SetActive(false);
         }
-    }
-
-    private void RoundOver()
-    {
-       // Do stuff here for round Over
-    }
-
-    private void TurnStart(BattlePlayer obj)
-    {
-       
     }
 
     public void CloseButton()
@@ -308,8 +295,11 @@ public class BattleUIManager : Singleton<BattleUIManager>
         }
         else if (index == 1)
         {
-            tacticSelection.OpenTacticsSelection();
-            currentGrid = gridDefend;
+            if (BattleManager.Instance.currentPlayer.IsPlayer)
+            {
+                tacticSelection.OpenTacticsSelection();
+                currentGrid = gridDefend;
+            }
         }
         else if (index == 2)
         {
@@ -326,5 +316,11 @@ public class BattleUIManager : Singleton<BattleUIManager>
     public void CurrentGridActive(bool isTrue)
     {
         currentGrid.SetActive(isTrue);
+    }
+
+    public void NewRound()
+    {
+        RoundText.GetComponent<RectTransform>().DOPunchScale(new Vector2(0.5f, 0.5f), 0.4f, 0, 0.5f);
+        RoundText.text = BattleManager.Instance.Rounds.ToString();
     }
 }

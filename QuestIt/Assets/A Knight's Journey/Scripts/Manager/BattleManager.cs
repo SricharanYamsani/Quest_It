@@ -49,6 +49,10 @@ public class BattleManager : Singleton<BattleManager>
 
     public static int uniqueID = 0;
 
+    public int Rounds { get; private set; } = 0;
+
+    public int Turns { get; private set; } = 0;
+
     #region Camera Related
 
     public CameraController cameraController;
@@ -94,6 +98,10 @@ public class BattleManager : Singleton<BattleManager>
 
     private void RoundStartFunc()
     {
+        Rounds++;
+
+        BattleUIManager.Instance.NewRound();
+
         Sortplayers();
     }
 
@@ -162,11 +170,18 @@ public class BattleManager : Singleton<BattleManager>
     {
         RoundOver += RoundOverFunc;
 
+        TurnOver += TurnOverFunc;
+
         TurnStart += TurnStartFunc;
 
         RoundStart += RoundStartFunc;
 
         StartCoroutine(LoadAllPlayers()); // Remove It from here need a better process or make the system completely on Ienumerator
+    }
+
+    private void TurnOverFunc()
+    {
+        Turns++;
     }
 
 
@@ -241,19 +256,22 @@ public class BattleManager : Singleton<BattleManager>
             {
                 currentPlayer = validPlayers[i];
 
-                IsSelecting = true;
-
-                currentPlayer.PerformMoveFocus(true);
-
-                TurnStart?.Invoke(currentPlayer);
-
-                while (IsSelecting)
+                if (currentPlayer.IsAlive)
                 {
-                    yield return null;
-                }
-                currentPlayer.PerformMoveFocus(false);
+                    IsSelecting = true;
 
-                TurnOver?.Invoke();
+                    currentPlayer.PerformMoveFocus(true);
+
+                    TurnStart?.Invoke(currentPlayer);
+
+                    while (IsSelecting)
+                    {
+                        yield return null;
+                    }
+                    currentPlayer.PerformMoveFocus(false);
+
+                    TurnOver?.Invoke();
+                }
             }
         }
 
@@ -363,26 +381,25 @@ public class BattleManager : Singleton<BattleManager>
     /// <returns></returns>
     private Transform GetSpawn(bool isTeamRed, bool isPlayer = false)
     {
-        for (int i = 0; i < spawns.Count; i++)
+        foreach (SpawnPoint spawn in spawns)
         {
             if (isPlayer)
             {
-                if (spawns[i].isPlayerSpot)
+                if (spawn.isPlayerSpot)
                 {
-                    return spawns[i].spawn;
+                    return spawn.spawn;
                 }
             }
             else
             {
-                if (!spawns[i].IsOccupied && spawns[i].isTeamRed == isTeamRed && !spawns[i].isPlayerSpot)
+                if (!spawn.IsOccupied && spawn.isTeamRed == isTeamRed && !spawn.isPlayerSpot)
                 {
-                    spawns[i].IsOccupied = true;
+                    spawn.IsOccupied = true;
 
-                    return spawns[i].spawn;
+                    return spawn.spawn;
                 }
             }
         }
-
         return null;
     }
 

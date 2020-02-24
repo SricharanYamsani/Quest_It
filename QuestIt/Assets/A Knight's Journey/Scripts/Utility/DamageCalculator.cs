@@ -117,6 +117,43 @@ public static class DamageCalculator
         { PercentageType.FULL,100.0f}
     };
 
+    public static float DamageMultiplier(Elemental attackingElement, Elemental defenderElement)
+    {
+        if (attackingElement == Elemental.FIRE && defenderElement == Elemental.EARTH)
+        {
+            return 2;
+        }
+        else if (attackingElement == Elemental.EARTH && defenderElement == Elemental.WIND)
+        {
+            return 2;
+        }
+        else if (attackingElement == Elemental.WIND && defenderElement == Elemental.WATER)
+        {
+            return 2;
+        }
+        else if (attackingElement == Elemental.WATER && defenderElement == Elemental.FIRE)
+        {
+            return 2;
+        }
+        else if (attackingElement == Elemental.EARTH && defenderElement == Elemental.WATER)
+        {
+            return 0.5f;
+        }
+        else if (attackingElement == Elemental.WIND && defenderElement == Elemental.EARTH)
+        {
+            return 0.5f;
+        }
+        else if (attackingElement == Elemental.WATER && defenderElement == Elemental.WIND)
+        {
+            return 0.5f;
+        }
+        else if (attackingElement == Elemental.FIRE && defenderElement == Elemental.WATER)
+        {
+            return 0.5f;
+        }
+        return 1;
+    }
+
     public static bool IsDodge(int defenderLuck)
     {
         Random random = new Random();

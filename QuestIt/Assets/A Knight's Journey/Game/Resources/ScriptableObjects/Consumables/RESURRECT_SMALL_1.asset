@@ -15,9 +15,10 @@ MonoBehaviour:
   battleTask: 5
   targetRange: 3
   playerCondition: 1
+  percentageType: 0
   choiceType: 3
   MoveTurnsType: 2
-  m_AnimationClip: 7
+  m_AnimationClip: 9
   affectedAttribute: 1
   m_Currency: 0
   ICON: {fileID: 0}

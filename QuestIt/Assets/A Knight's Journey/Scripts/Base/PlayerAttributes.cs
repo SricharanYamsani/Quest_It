@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿
 using System;
 
 [Serializable]
@@ -21,6 +19,8 @@ public class PlayerAttributes
     public Attributes regenerationMana = new Attributes();
 
     public Attributes regenerationHealth = new Attributes();
+
+    public Elemental elements = Elemental.NONE;
 }
 
 [Serializable]

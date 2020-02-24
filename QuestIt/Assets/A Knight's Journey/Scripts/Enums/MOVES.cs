@@ -1,4 +1,5 @@
-﻿public enum Moves 
+﻿[System.Serializable]
+public enum Moves 
 {
    NONE = 0,
    // ARCHER MOVES 

@@ -23,6 +23,8 @@ public class ResourceManager : Singleton<ResourceManager>
 
     public Dictionary<BattleCharacters, BattlePlayer> allModels = new Dictionary<BattleCharacters, BattlePlayer>();
 
+    public Dictionary<string, IWeapon> effects = new Dictionary<string, IWeapon>();
+
     protected override void Awake()
     {
         isDontDestroyOnLoad = true;
@@ -37,9 +39,19 @@ public class ResourceManager : Singleton<ResourceManager>
 
         BattlePlayer[] models = Resources.LoadAll<BattlePlayer>("Models");
 
+        IWeapon[] p_Effects = Resources.LoadAll<IWeapon>("IWeapons");
+
         choiceSprites = Resources.LoadAll<Sprite>("Sprites/Choices").ToList();
 
         currencySprites = Resources.LoadAll<Sprite>("Sprites/Currency").ToList();
+
+        for (int i = 0; i < p_Effects.Length; i++)
+        {
+            if (!effects.ContainsKey(p_Effects[i].name))
+            {
+                effects.Add(p_Effects[i].name, p_Effects[i]);
+            }
+        }
 
         for (int i = 0; i < choices.Length; i++)
         {

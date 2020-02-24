@@ -1,4 +1,5 @@
-﻿public enum Consumables
+﻿[System.Serializable]
+public enum Consumables
 {
     NONE,
     //HEAL
