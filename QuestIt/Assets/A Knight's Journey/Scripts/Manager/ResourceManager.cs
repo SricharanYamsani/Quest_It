@@ -14,12 +14,16 @@ public class ResourceManager : Singleton<ResourceManager>
 
     public List<Sprite> currencySprites = new List<Sprite>();
 
+    public Dictionary<string, Sprite> playerIcons = new Dictionary<string, Sprite>();
+
     /// <summary>Currency Sprites -> Gold. Mana. Health. </summary>
     public Dictionary<string, Sprite> currencySpritesRef = new Dictionary<string, Sprite>();
 
     public Dictionary<string, Sprite> choiceSpritesRef = new Dictionary<string, Sprite>();
 
     public Dictionary<string, AudioClip> soundClips = new Dictionary<string, AudioClip>();
+
+    public Dictionary<string, AudioClip> bgClips = new Dictionary<string, AudioClip>();
 
     public Dictionary<BattleCharacters, BattlePlayer> allModels = new Dictionary<BattleCharacters, BattlePlayer>();
 
@@ -35,15 +39,25 @@ public class ResourceManager : Singleton<ResourceManager>
 
         ConsumableChoice[] consumables = Resources.LoadAll<ConsumableChoice>("ScriptableObjects");
 
-        AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds");
+        AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds/SFX");
 
         BattlePlayer[] models = Resources.LoadAll<BattlePlayer>("Models");
 
         IWeapon[] p_Effects = Resources.LoadAll<IWeapon>("IWeapons");
 
+        Sprite[] p_Icons = Resources.LoadAll<Sprite>("Sprites/PlayerIcons");
+
         choiceSprites = Resources.LoadAll<Sprite>("Sprites/Choices").ToList();
 
         currencySprites = Resources.LoadAll<Sprite>("Sprites/Currency").ToList();
+
+        foreach (Sprite icon in p_Icons)
+        {
+            if (!playerIcons.ContainsKey(icon.name))
+            {
+                playerIcons.Add(icon.name, icon);
+            }
+        }
 
         for (int i = 0; i < p_Effects.Length; i++)
         {

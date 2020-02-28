@@ -14,7 +14,7 @@ public static class DamageCalculator
             {
                 damage = (int)(Math.Ceiling((GetCurrentAttribute(attacker, AttributeTypes.AGILITY) * 0.5f) / 10) +
 
-                    (move.percentageType == PercentageType.NONE ? move.attributeChange : percentageValues[move.percentageType] * GetMaxAttribute(attacker, move.affectedAttribute)));
+                    (move.percentageType == PercentageType.NONE ? move.attributeChange : (percentageValues[move.percentageType] * GetMaxAttribute(attacker, move.affectedAttribute))));
 
                 damage = (int)Math.Ceiling(damage - (GetCurrentAttribute(defender, AttributeTypes.DEFENSE) * 0.1f));
 
@@ -112,9 +112,9 @@ public static class DamageCalculator
 
     public static Dictionary<PercentageType, float> percentageValues = new Dictionary<PercentageType, float>
     {
-        {PercentageType.SMALL,25.0f },
-        {PercentageType.MID,50.0f },
-        { PercentageType.FULL,100.0f}
+        {PercentageType.SMALL,0.25f },
+        {PercentageType.MID,.5f },
+        { PercentageType.FULL,1.0f}
     };
 
     public static float DamageMultiplier(Elemental attackingElement, Elemental defenderElement)

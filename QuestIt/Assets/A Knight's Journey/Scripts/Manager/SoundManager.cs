@@ -8,6 +8,11 @@ public class SoundManager : Singleton<SoundManager>
 
     public AudioSource settings;
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     public void PlaySound(string sound)
     {
         if (!(soundClips.Count > 0))

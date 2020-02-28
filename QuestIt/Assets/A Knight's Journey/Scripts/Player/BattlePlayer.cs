@@ -224,6 +224,12 @@ public class BattlePlayer : MonoBehaviour
 
     public PlayerState PlayerState { get; private set; } = PlayerState.NONE;
 
+    public void SetUpdateUI()
+    {
+        playerIcon.UpdateUI(PlayerUIUpdater.Both);
+    }
+
+
     public void SetPlayer()
     {
         validChoices.Clear();
@@ -384,6 +390,8 @@ public class BattlePlayer : MonoBehaviour
 
             reactionText.text = "HIT";
         }
+        // need to show a shield or blood work.
+        SetUpdateUI();
 
         PlayerState = PlayerState.NONE;
     }

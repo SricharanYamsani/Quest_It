@@ -146,6 +146,7 @@ public class BattleManager : Singleton<BattleManager>
                 player.chosenMoves.Add(Moves.SWIPE_SLASH);
                 player.chosenMoves.Add(Moves.PIERCE_ATTACK_1);
                 player.chosenMoves.Add(Moves.MAGIC_HEAL_SMALL_1);
+                player.chosenMoves.Add(Moves.LIGHTNING_SMALL_1);
 
                 player.IsTeamRed = (i < 3);
 

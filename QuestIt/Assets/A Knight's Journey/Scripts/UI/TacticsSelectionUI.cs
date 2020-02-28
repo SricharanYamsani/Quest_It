@@ -26,6 +26,11 @@ public class TacticsSelectionUI : MonoBehaviour
 
         toggleTacticsButton.onClick.AddListener(() => { OnButtonClickSelection(); });
 
+        if(characterImage)
+        {
+            characterImage.sprite = ResourceManager.Instance.playerIcons[_player.playerInfo.character.ToString()];
+        }
+
         SetText();
     }
 
