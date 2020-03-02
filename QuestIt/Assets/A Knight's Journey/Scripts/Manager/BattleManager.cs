@@ -34,6 +34,8 @@ public class BattleManager : Singleton<BattleManager>
 
     public event Action<BattlePlayer> TurnStart;
 
+    public event Action<List<BattlePlayer>> UpdatePlayerList;
+
     public event Action RoundStart;
 
     public event Action RoundOver;
@@ -419,7 +421,7 @@ public class BattleManager : Singleton<BattleManager>
             case AttackRange.EVERYONE:
                 canSelect = false;
                 break;
-            default:throw new Exception("Invalid Target Range : Wrong Info in selected move");
+            default: throw new Exception("Invalid Target Range : Wrong Info in selected move");
         }
 
         if (choice.playerCondition == PlayerConditions.ALIVE)
@@ -469,6 +471,21 @@ public class BattleManager : Singleton<BattleManager>
             }
         }
         return targets;
+    }
+
+    public void InvokeUpdatePlayerList()
+    {
+        List<BattlePlayer> t_Player = new List<BattlePlayer>();
+
+        foreach (BattlePlayer player in validPlayers)
+        {
+            if(player.IsAlive)
+            {
+                t_Player.Add(player);
+            }
+        }
+
+        UpdatePlayerList?.Invoke(t_Player);
     }
 }
 public enum BattleStates

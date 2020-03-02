@@ -123,11 +123,18 @@ public class BattlePlayer : MonoBehaviour
             if (!IsAlive && value > 0)
             {
                 mPlayerController.SetTrigger(AnimationType.BACKTOLIFE.ToString());
+
+                BattleManager.Instance.InvokeUpdatePlayerList(); // If I was dead and was resurrected.
             }
 
             playerInfo.myAttributes.health.current = value;
 
             playerInfo.myAttributes.health.current.Clamp(0, playerInfo.myAttributes.health.maximum);
+
+            if (!IsAlive)
+            {
+                BattleManager.Instance.InvokeUpdatePlayerList(); // If I die. Gets called Before UI Render.
+            }
         }
     }
 
