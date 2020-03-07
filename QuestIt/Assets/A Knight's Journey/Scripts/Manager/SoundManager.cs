@@ -8,6 +8,28 @@ public class SoundManager : Singleton<SoundManager>
 
     public AudioSource settings;
 
+    public AudioSource bgAudioSource = null;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if(bgAudioSource == null)
+        {
+            bgAudioSource = this.gameObject.AddComponent<AudioSource>();
+        }
+    }
+
+    public void PlayBGMusic(string musicName)
+    {
+        // if bg music resources contains shit. play that
+    }
+
+    public void StopBGMusic()
+    {
+        bgAudioSource.Stop();
+    }
+
     public void PlaySound(string sound)
     {
         if (!(soundClips.Count > 0))

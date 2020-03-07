@@ -123,11 +123,18 @@ public class BattlePlayer : MonoBehaviour
             if (!IsAlive && value > 0)
             {
                 mPlayerController.SetTrigger(AnimationType.BACKTOLIFE.ToString());
+
+                BattleManager.Instance.InvokeUpdatePlayerList(); // If I was dead and was resurrected.
             }
 
             playerInfo.myAttributes.health.current = value;
 
             playerInfo.myAttributes.health.current.Clamp(0, playerInfo.myAttributes.health.maximum);
+
+            if (!IsAlive)
+            {
+                BattleManager.Instance.InvokeUpdatePlayerList(); // If I die. Gets called Before UI Render.
+            }
         }
     }
 
@@ -223,6 +230,12 @@ public class BattlePlayer : MonoBehaviour
     public Color playerColor = new Color(168, 168, 168, 255);
 
     public PlayerState PlayerState { get; private set; } = PlayerState.NONE;
+
+    public void SetUpdateUI()
+    {
+        playerIcon.UpdateUI(PlayerUIUpdater.Both);
+    }
+
 
     public void SetPlayer()
     {
@@ -384,6 +397,8 @@ public class BattlePlayer : MonoBehaviour
 
             reactionText.text = "HIT";
         }
+        // need to show a shield or blood work.
+        SetUpdateUI();
 
         PlayerState = PlayerState.NONE;
     }

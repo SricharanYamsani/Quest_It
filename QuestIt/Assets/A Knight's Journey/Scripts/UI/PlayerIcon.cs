@@ -33,7 +33,10 @@ public class PlayerIcon : MonoBehaviour
 
         this.m_Player = m_Player;
 
-        //playerSprite.sprite = 
+        if (playerSprite)
+        {
+            playerSprite.sprite = ResourceManager.Instance.playerIcons[this.m_Player.playerInfo.character.ToString()];
+        }
     }
 
     public void UpdateUI(PlayerUIUpdater updater)

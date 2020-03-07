@@ -16,11 +16,9 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
 
                 if ( instance == null )
                 {
-                    GameObject temp = new GameObject ( );
+                    GameObject temp = new GameObject(typeof(T).Name, typeof(T));
 
-                    temp.name = typeof ( T ).Name;
-
-                    instance = temp.AddComponent<T> ( );
+                    instance = temp.GetComponent<T> ( );
                 }
             }
 
