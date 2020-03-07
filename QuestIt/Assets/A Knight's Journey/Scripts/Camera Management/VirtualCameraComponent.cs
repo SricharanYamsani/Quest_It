@@ -28,6 +28,12 @@ namespace RPG.CameraControl
             this.screenX = virtualCameraTransform.screenX;
             this.screenY = virtualCameraTransform.screenY;
         }
+
+        public static VirtualCameraComponent GetVirtualCameraComponent(Transform virtualCameraTransform, float FOV, float screenX = 0.5f, float screenY = 0.5f)
+        {
+            VirtualCameraComponent component = new VirtualCameraComponent(virtualCameraTransform, FOV, screenX, screenY);
+            return component;
+        }
     }
 }
 

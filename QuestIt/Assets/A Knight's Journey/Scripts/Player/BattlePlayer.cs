@@ -26,7 +26,7 @@ public class BattlePlayer : MonoBehaviour
     public Transform playerVirtualCameraTransform;
     public float virtualCameraParentRotationY;
 
-    public int UNIQUE_ID { get; private set; }
+    public int UNIQUE_ID { get; set; }
 
     [Space(20)]
     #region PositionReferences

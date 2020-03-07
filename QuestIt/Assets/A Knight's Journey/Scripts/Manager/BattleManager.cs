@@ -126,6 +126,8 @@ public class BattleManager : Singleton<BattleManager>
         }
 
         InitializeBattle(InformationHandler.Instance.lobbyPlayers);
+
+        //cameraController.SwitchCameraType(VirtualCameraType.GROUPCOMPOSER);
     }
 
     private void GeneratePlayers()
@@ -260,6 +262,9 @@ public class BattleManager : Singleton<BattleManager>
                 {
                     IsSelecting = true;
 
+                    Debug.LogError("HERE");
+                    yield return StartCoroutine(cameraController.StartCameraSwitch(currentPlayer.UNIQUE_ID));
+                    
                     currentPlayer.PerformMoveFocus(true);
 
                     TurnStart?.Invoke(currentPlayer);
@@ -310,6 +315,17 @@ public class BattleManager : Singleton<BattleManager>
                 Debug.Log(quality.IsPlayer + " : " + "Cannot find appropriate spawn. Passing players > 6?");
             }
         }
+
+
+        for (int i = validPlayers.Count - 1; i >= 0; i--)
+        {
+            validPlayers[i].UNIQUE_ID = i;
+            //cameraController.AddTransformToTargetGroup(validPlayers[i].torsoTransform);
+            cameraController.RegisterTarget(i, validPlayers[i].torsoTransform, validPlayers[i].IsTeamRed);
+        }
+        cameraController.OnTargetsRegistered();
+
+
         Setup();
     }
 
