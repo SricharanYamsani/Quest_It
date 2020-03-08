@@ -22,7 +22,7 @@ namespace RPG.Control
         int wayPointIndex;
         Transform playerTransform;
 
-        ActionScheduler actionScheduler;
+        public ActionScheduler actionScheduler;
 
         //==========================Functions====================//
 
@@ -32,7 +32,7 @@ namespace RPG.Control
         {
             worldMovement = GetComponent<WorldMovement>();
             playerTransform = FindObjectOfType<PlayerWorldController>().transform;
-            actionScheduler = GetComponent<ActionScheduler>();            
+            actionScheduler = worldMovement.actionScheduler;          
         }
 
         //-----------

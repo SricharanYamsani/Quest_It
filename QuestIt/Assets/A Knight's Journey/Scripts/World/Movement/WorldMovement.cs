@@ -12,7 +12,7 @@ namespace RPG.Movement
 
         NavMeshAgent agent;
         Animator animator;
-        ActionScheduler actionScheduler;
+        public ActionScheduler actionScheduler;
 
         //============================Functions======================//
 

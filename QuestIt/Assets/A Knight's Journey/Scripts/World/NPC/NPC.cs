@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.Control;
+using RPG.QuestSystem;
 
 namespace RPG.NPCs
 {
@@ -9,19 +10,31 @@ namespace RPG.NPCs
     {  
         //=========================Variables=====================//
 
-        public enum NPCType { Vendor, Duel, Quest};
+        public enum NPCType { Vendor, Duel, Quest };
         public NPCType npcType;
         public NPCWorldController worldController;
         public Transform playerTransform;
-
+        public QuestLog questLog;
+        public float interactionRange;
+                            
         //=========================Functions=====================//
-        //------------------
-        private void Start()
+        //-------------------------
+        public virtual void Start()
         {
             worldController = GetComponent<NPCWorldController>();
-            playerTransform = FindObjectOfType<PlayerWorldController>().transform;
+            playerTransform = FindObjectOfType<PlayerWorldController>().transform;           
         }
 
-        public virtual void InteractWithPlayer() { }
+        //------------------
+        public void Update()
+        {
+            if(Vector3.Distance(transform.position, playerTransform.position) < interactionRange)
+            {
+                InteractWithPlayer();
+            }
+        }
+
+        public virtual void CreateQuest() { }
+        public virtual void InteractWithPlayer() { } 
     }
 }

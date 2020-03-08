@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using RPG.Movement;
 using RPG.NPCs;
 
@@ -12,6 +13,7 @@ namespace RPG.Control
 
         WorldMovement worldMovement;
         FollowNPC follow;
+        [SerializeField] EventSystem eventSystem;
 
         //============================Functions=====================//
 
@@ -36,10 +38,13 @@ namespace RPG.Control
         {
             if (Input.GetMouseButtonDown(0))
             {
-                RaycastHit hit;
-                if (Physics.Raycast(GetMouseRay(), out hit))
+                if (!eventSystem.IsPointerOverGameObject())
                 {
-                    worldMovement.StartMoveAction(hit.point);
+                    RaycastHit hit;
+                    if (Physics.Raycast(GetMouseRay(), out hit))
+                    {
+                        worldMovement.StartMoveAction(hit.point);
+                    }
                 }
             }
         }
@@ -49,16 +54,18 @@ namespace RPG.Control
         {
             if(Input.GetMouseButtonDown(0))
             {
-                RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
-
-                for(int i = 0; i < hits.Length; i++)
+                if (!eventSystem.IsPointerOverGameObject())
                 {
-                    if(hits[i].transform.GetComponent<NPC>())
+                    RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+
+                    for (int i = 0; i < hits.Length; i++)
                     {
-                        Debug.Log("NPC");
-                        worldMovement.StartMoveAction(hits[i].point);
-                        follow.SetTargetTransform(hits[i].transform);
-                        return true;
+                        if (hits[i].transform.GetComponent<NPC>())
+                        {
+                            worldMovement.StartMoveAction(hits[i].point);
+                            follow.SetTargetTransform(hits[i].transform);
+                            return true;
+                        }
                     }
                 }
             }

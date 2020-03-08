@@ -20,7 +20,7 @@ namespace RPG.Movement
         private void Start()
         {
             worldMovement = GetComponent<WorldMovement>();
-            actionScheduler = GetComponent<ActionScheduler>();
+            actionScheduler = worldMovement.actionScheduler;
         }
 
         //-------------------
@@ -38,12 +38,10 @@ namespace RPG.Movement
             //Follow if player has selected a NPC upto a given range
             if (!InRange())
             {
-                Debug.Log("Not In Range");
                 worldMovement.MoveTo(targetNPCTransform.position);
             }
             else
             {
-                Debug.Log("in Range");
                 worldMovement.CancelAction();
             }
         }
