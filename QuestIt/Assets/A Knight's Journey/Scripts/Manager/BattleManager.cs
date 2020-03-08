@@ -265,7 +265,6 @@ public class BattleManager : Singleton<BattleManager>
                 {
                     IsSelecting = true;
 
-                    Debug.LogError("HERE");
                     yield return StartCoroutine(cameraController.StartCameraSwitch(currentPlayer.UNIQUE_ID));
                     
                     currentPlayer.PerformMoveFocus(true);

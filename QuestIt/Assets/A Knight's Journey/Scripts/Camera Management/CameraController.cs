@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.Playables;
+using DG.Tweening;
 
 namespace RPG.CameraControl
 {
@@ -291,7 +292,7 @@ namespace RPG.CameraControl
         public void OnTargetsRegistered()
         {
             sum /= count;
-            camParent.transform.position = new Vector3(sum.x, -4.5f, sum.y);
+            camParent.transform.position = new Vector3(sum.x, 0, sum.y);
 
             for (int i = 0;i<ids.Count; i++)
             {
@@ -300,12 +301,14 @@ namespace RPG.CameraControl
                 Transform targetTransform = targetDict[i];
                 Vector2 diff = new Vector2(camParent.position.x, camParent.position.z) - new Vector2(targetTransform.position.x, targetTransform.position.z);
 
+                Debug.DrawLine(camParent.transform.position, targetTransform.position, Color.red, 10000f);
+
                 y = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg ;
-                Debug.LogError(camParent.transform.position.ToString() + targetTransform.position.ToString() + diff.ToString() + y);
+
+                Debug.Log(y);
+
                 yAngles.Add(id, y);
             }
-
-            Debug.LogError(Mathf.Atan2(0, -1) * Mathf.Rad2Deg);
         }
 
         public void SwitchToActivePlayer(int playerId)
@@ -317,31 +320,30 @@ namespace RPG.CameraControl
         {
             float currentY = camParent.transform.localRotation.eulerAngles.y;
             float toY = 0f;
-            Debug.LogError("HERE 2");
 
             if (targetDict.ContainsKey(toPlayer))
             {
-                Debug.LogError("HERE 3");
-
                 toY = yAngles[toPlayer];
                 
                 float elaspedTime = 0f;
                 Vector3 tempEuler;
-                while (elaspedTime <= switchTime)
-                {
-                    tempEuler = camParent.transform.localRotation.eulerAngles;
-                    tempEuler.y = Mathf.Lerp(currentY, toY, elaspedTime / switchTime);
-                    camParent.transform.localRotation = Quaternion.Euler(tempEuler);
-                    elaspedTime += Time.deltaTime;
-                    yield return null;
-                }
-                Debug.LogError("HERE 4");
 
-                tempEuler = camParent.transform.localRotation.eulerAngles;
-                camParent.transform.localRotation = Quaternion.Euler(tempEuler);
+                camParent.DORotate(new Vector3(0, toY, 0), switchTime);
+
+                //while (elaspedTime <= switchTime)
+                //{
+                //    tempEuler = camParent.transform.localRotation.eulerAngles;
+                //    tempEuler.y = Mathf.Lerp(currentY, toY, elaspedTime / switchTime);
+                //    camParent.transform.localRotation = Quaternion.Euler(tempEuler);
+                //    elaspedTime += Time.deltaTime;
+                //    yield return null;
+                //}
+                //tempEuler = camParent.transform.localRotation.eulerAngles;
+                //camParent.transform.localRotation = Quaternion.Euler(tempEuler);
 
                 tempEuler.y = toY;
             }
+            yield return new WaitForSeconds(switchTime);
         }
     }
 
