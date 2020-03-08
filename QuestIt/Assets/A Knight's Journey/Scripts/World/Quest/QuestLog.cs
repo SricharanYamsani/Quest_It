@@ -73,6 +73,7 @@ namespace RPG.QuestSystem
                 {
                     activeQuest = quests[UnityEngine.Random.Range(0, quests.Count)];
                 }
+                TrackNextTask();
             }
         }
 
@@ -136,6 +137,8 @@ namespace RPG.QuestSystem
             questInfoPanelInstance.GetComponentInChildren<TextMeshProUGUI>().text = "Quest : " + quest.questDesc;
             questInfoPanelInstance.SetActive(true);
             questInfoPanelInstances.Add(questInfoPanelInstance);
+
+            activeQuest = quest;
             TrackNextTask();
 
             //TODO add functionality to support quest updation for quests that are not being tracked but are in the log

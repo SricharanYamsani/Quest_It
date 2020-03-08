@@ -6,8 +6,8 @@ namespace RPG.QuestSystem
 {
     public class QuestEnums : MonoBehaviour
     {
-        public enum NPCKillType { A, B, C }
-        public enum ItemType { A, B, C }
-        public enum DefendType { A, B, C}
+        public enum NPCKillType { A, B, C, D, E }
+        public enum ItemType { A, B, C, D, E }
+        public enum DefendType { A, B, C, D, E }
     }
 }
