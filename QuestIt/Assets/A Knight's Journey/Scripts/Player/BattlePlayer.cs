@@ -26,7 +26,7 @@ public class BattlePlayer : MonoBehaviour
     public Transform playerVirtualCameraTransform;
     public float virtualCameraParentRotationY;
 
-    public int UNIQUE_ID { get; private set; }
+    public int UNIQUE_ID { get; set; }
 
     [Space(20)]
     #region PositionReferences
@@ -73,10 +73,10 @@ public class BattlePlayer : MonoBehaviour
     public TextMeshProUGUI reactionText;
 
     #region Properties
-    /// <summary>Returns true if Battle Player is the user </summary>
+    /// <summary>Returns true if Battle Player is the user. </summary>
     public bool IsPlayer { get { return playerInfo.IsPlayer; } }
 
-    /// <summary>Returns true if Battle Player is Team Red </summary
+    /// <summary>Returns true if Battle Player is Team Red. </summary
     public bool IsTeamRed { get { return playerInfo.IsTeamRed; } }
 
     public bool IsTacticDictationEnabled { get; set; } = false;
@@ -123,11 +123,18 @@ public class BattlePlayer : MonoBehaviour
             if (!IsAlive && value > 0)
             {
                 mPlayerController.SetTrigger(AnimationType.BACKTOLIFE.ToString());
+
+                BattleManager.Instance.InvokeUpdatePlayerList(); // If I was dead and was resurrected.
             }
 
             playerInfo.myAttributes.health.current = value;
 
             playerInfo.myAttributes.health.current.Clamp(0, playerInfo.myAttributes.health.maximum);
+
+            if (!IsAlive)
+            {
+                BattleManager.Instance.InvokeUpdatePlayerList(); // If I die. Gets called Before UI Render.
+            }
         }
     }
 
@@ -224,6 +231,12 @@ public class BattlePlayer : MonoBehaviour
 
     public PlayerState PlayerState { get; private set; } = PlayerState.NONE;
 
+    public void SetUpdateUI()
+    {
+        playerIcon.UpdateUI(PlayerUIUpdater.Both);
+    }
+
+
     public void SetPlayer()
     {
         validChoices.Clear();
@@ -236,8 +249,6 @@ public class BattlePlayer : MonoBehaviour
         {
             currentChoice = validChoices[0];
         }
-
-        
     }
 
     public void TakePartInBattle(bool isTrue)
@@ -370,8 +381,6 @@ public class BattlePlayer : MonoBehaviour
         {
             PlayerState = PlayerState.BLOCK;
         }
-
-        Logger.Error(isHurt.ToString());
     }
 
     public void PlayReaction(string animation = "")
@@ -384,11 +393,12 @@ public class BattlePlayer : MonoBehaviour
         }
         else if (PlayerState == PlayerState.HURT)
         {
-            // change it to different Hits.
             mPlayerController.SetTrigger(AnimationType.MIDHIT.ToString());
 
             reactionText.text = "HIT";
         }
+        // need to show a shield or blood work.
+        SetUpdateUI();
 
         PlayerState = PlayerState.NONE;
     }

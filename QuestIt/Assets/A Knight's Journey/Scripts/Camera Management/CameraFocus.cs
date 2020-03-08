@@ -58,9 +58,4 @@ public class CameraFocus : MonoBehaviour
             }
         }
     }
-
-    private void OnDestroy()
-    {
-        BattleManager.Instance.TurnStart -= GetLookAt;
-    }
 }

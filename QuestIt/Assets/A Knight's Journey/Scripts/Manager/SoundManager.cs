@@ -8,6 +8,28 @@ public class SoundManager : Singleton<SoundManager>
 
     public AudioSource settings;
 
+    public AudioSource bgAudioSource = null;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if(bgAudioSource == null)
+        {
+            bgAudioSource = this.gameObject.AddComponent<AudioSource>();
+        }
+    }
+
+    public void PlayBGMusic(string musicName)
+    {
+        // if bg music resources contains shit. play that
+    }
+
+    public void StopBGMusic()
+    {
+        bgAudioSource.Stop();
+    }
+
     public void PlaySound(string sound)
     {
         if (!(soundClips.Count > 0))
@@ -19,16 +41,14 @@ public class SoundManager : Singleton<SoundManager>
         {
             if (soundClips.ContainsKey(sound))
             {
-                GameObject soundObject = new GameObject();
+                GameObject soundObject = new GameObject(sound + " SFX", typeof(AudioSource));
 
-                AudioSource mySource = soundObject.AddComponent<AudioSource>();
+                AudioSource mySource = soundObject.GetComponent<AudioSource>();
 
                 if (settings)
                 {
                     mySource.volume = settings.volume;
                 }
-
-                mySource.name = sound + " SFX";
 
                 mySource.PlayOneShot(soundClips[sound]);
 

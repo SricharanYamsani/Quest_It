@@ -13,6 +13,8 @@ public class PlayerInfo
 
     public BattleCharacters character = BattleCharacters.NONE;
 
+    public Elemental playerElements = Elemental.NONE;
+
     public bool IsTeamRed { get; set; }
 
     public bool IsPlayer { get; set; }

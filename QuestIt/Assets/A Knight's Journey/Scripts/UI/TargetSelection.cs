@@ -84,7 +84,8 @@ public class TargetSelection : MonoBehaviour
             isSelected = !isInteractable;
 
             frame.gameObject.SetActive(isSelected);
-            //characterSprite = ResourceManager.Instance.
+
+            characterSprite.sprite = ResourceManager.Instance.playerIcons[mPlayer.playerInfo.character.ToString()];
         }
         else
         {
