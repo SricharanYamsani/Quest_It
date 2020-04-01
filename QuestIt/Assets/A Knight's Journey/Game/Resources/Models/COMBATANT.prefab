@@ -172,9 +172,11 @@ MonoBehaviour:
       regenerationHealth:
         maximum: 0
         current: 0
+      elements: 0
     chosenMoves: 
     consumables: []
     character: 3
+    playerElements: 0
     experience: 0
   battleBuffs:
     attackBuff:
