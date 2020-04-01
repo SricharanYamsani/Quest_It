@@ -12,8 +12,7 @@ public class LoadManager : Singleton<LoadManager>
     public LoadManagerUI reference;
 
     protected override void Awake()
-    {
-        isDontDestroyOnLoad = true;
+    { 
         base.Awake();
     }
     public void LoadBattleScene(List<PlayerInfo> listOfPlayers, string battleGround)
@@ -24,28 +23,26 @@ public class LoadManager : Singleton<LoadManager>
             {
                 reference = Resources.Load<LoadManagerUI>("Prefabs/UI/LoaderManagerUI");
             }
-
-
             loadUI = Instantiate<LoadManagerUI>(reference);
         }
         DontDestroyOnLoad(loadUI);
 
-        isDontDestroyOnLoad = true;
-
-        loadUI.gameObject.SetActive(false);
-
         loadUI.gameObject.SetActive(true);
+
+        loadUI.loadingImage.fillAmount = 0;
+
+        Logger.Log("Fade");
 
         loadUI.backgroundCanvas.DOFade(1, 0.2f).OnComplete(() =>
         {
-            loadUI.loadingImage.fillAmount = 0;
-
             StartCoroutine(LoadSceneAsync(listOfPlayers, battleGround));
         });
     }
 
     IEnumerator LoadSceneAsync(List<PlayerInfo> listOfPlayers, string battleGround)
     {
+        Logger.Log("Started loading");
+
         AsyncOperation loadOperation = SceneManager.LoadSceneAsync(battleGround);
 
         loadOperation.allowSceneActivation = false;
@@ -67,7 +64,6 @@ public class LoadManager : Singleton<LoadManager>
 
                 loadUI.backgroundCanvas.DOFade(0, 0.2f).OnComplete(() =>
                 {
-
                     loadUI.gameObject.SetActive(false);
                 });
             }

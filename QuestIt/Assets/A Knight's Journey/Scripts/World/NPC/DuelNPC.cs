@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.QuestSystem;
+using UnityEngine.SceneManagement;
 
 namespace RPG.NPCs
 {
@@ -34,9 +35,11 @@ namespace RPG.NPCs
         //---------------------------------------
         public override void InteractWithPlayer()
         {
-            BattleInitializer.Instance.AddaBattlePlayer(playerInfo); //NPC
-            BattleInitializer.Instance.AddaBattlePlayer(player.playerInfo); //Player
-            BattleInitializer.Instance.InitializeLobby();
+            playerInfo.IsTeamRed = false;
+            player.playerInfo.IsTeamRed = true;
+            BattleInitializer.Instance.AddBattlePlayer(playerInfo); //NPC
+            BattleInitializer.Instance.AddBattlePlayer(player.playerInfo); //Player
+            SceneManager.LoadScene("Lobby");
             
             //if (questTask != null)
             //{

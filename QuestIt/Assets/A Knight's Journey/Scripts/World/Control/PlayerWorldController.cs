@@ -24,6 +24,8 @@ namespace RPG.Control
             worldMovement = GetComponent<WorldMovement>();
             follow = GetComponent<FollowNPC>();
             Input.multiTouchEnabled = false;
+            playerInfo.IsPlayer = true;
+            playerInfo.IsTeamRed = true;
         }
 
         //-------------------

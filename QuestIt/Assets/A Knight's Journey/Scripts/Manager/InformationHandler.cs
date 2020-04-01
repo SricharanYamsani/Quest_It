@@ -5,7 +5,7 @@ using System;
 
 public class InformationHandler : Singleton<InformationHandler>
 {
-    public List<PlayerInfo> lobbyPlayers = new List<PlayerInfo>();
+    public List<PlayerInfo> lobbyPlayers;
 
     public bool isLoaded = false;
 
@@ -17,8 +17,14 @@ public class InformationHandler : Singleton<InformationHandler>
 
     public void SetLobby(List<PlayerInfo> lobby)
     {
+        if (lobbyPlayers == null)
+        {
+            lobbyPlayers = new List<PlayerInfo>();
+        }
         lobbyPlayers = lobby;
 
         isLoaded = true;
+
+        Logger.Log("Lobby Set");
     }
 }

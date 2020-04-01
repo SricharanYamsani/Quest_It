@@ -5,17 +5,16 @@ using UnityEngine.UI;
 
 public class BattleInitializer : Singleton<BattleInitializer>
 {
-    public GameObject lobbyUI;
-    public List<PlayerInfo> lobbyPlayers = new List<PlayerInfo>();
+    public List<PlayerInfo> lobbyPlayers;
 
     /// <summary>Adds a Battle Player to the Lobby. </summary>
     /// <param name="player"> Battle Player</param>
 
     protected override void Awake()
     {
+        isDontDestroyOnLoad = true; 
         base.Awake();
 
-        isDontDestroyOnLoad = true;
     }
 
     public void AddPlayer(bool isTeamRed)
@@ -26,26 +25,26 @@ public class BattleInitializer : Singleton<BattleInitializer>
 
         quality.IsTeamRed = isTeamRed;
 
-        for (int i = 1; i <= 4; i++)
-        {
-            quality.chosenMoves.Add((Moves)i);
-        }
+        quality.chosenMoves.Add(Moves.SWIPE_SLASH);
+        quality.chosenMoves.Add(Moves.PIERCE_ATTACK_1);
+        quality.chosenMoves.Add(Moves.MAGIC_HEAL_SMALL_1);
+        quality.chosenMoves.Add(Moves.LIGHTNING_SMALL_1);
 
         quality.myAttributes = PlayerGenerator.AttributesGenerator();
 
 
-        AddaBattlePlayer(quality);
+        AddBattlePlayer(quality);
     }
 
     public void StartLobby()
     {
-        if( !InitializeLobby())
+        if (!InitializeLobby())
         {
             Debug.Log("Something failed");
         }
     }
 
-    public void AddaBattlePlayer(PlayerInfo player)
+    public void AddBattlePlayer(PlayerInfo player)
     {
         if (lobbyPlayers == null)
         {
@@ -56,13 +55,9 @@ public class BattleInitializer : Singleton<BattleInitializer>
     }
 
     public bool InitializeLobby()
-    { 
+    {
         if (lobbyPlayers.Count > 1)
         {
-            lobbyPlayers[0].IsPlayer = true;
-
-            lobbyUI.gameObject.SetActive(false);
-
             LoadManager.Instance.LoadBattleScene(lobbyPlayers, "BattleGround");
 
             return true;

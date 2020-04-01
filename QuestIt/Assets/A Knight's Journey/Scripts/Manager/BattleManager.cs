@@ -122,10 +122,10 @@ public class BattleManager : Singleton<BattleManager>
 
         QualitySettings.vSyncCount = 0;
 
-        if (InformationHandler.Instance.lobbyPlayers.Count <= 0)
-        {
-            GeneratePlayers();
-        }
+        //if (InformationHandler.Instance.lobbyPlayers.Count <= 0)
+        //{
+        //    GeneratePlayers();
+        //}
 
         InitializeBattle(InformationHandler.Instance.lobbyPlayers);
 
