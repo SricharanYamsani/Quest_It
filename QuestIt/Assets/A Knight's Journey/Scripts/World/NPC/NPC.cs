@@ -16,6 +16,8 @@ namespace RPG.NPCs
         public Transform playerTransform;
         public QuestLog questLog;
         public float interactionRange;
+
+        public bool completedInteraction;
                             
         //=========================Functions=====================//
         //-------------------------
@@ -28,7 +30,7 @@ namespace RPG.NPCs
         //------------------
         public void Update()
         {
-            if(Vector3.Distance(transform.position, playerTransform.position) < interactionRange)
+            if(Vector3.Distance(transform.position, playerTransform.position) < interactionRange && !completedInteraction)
             {
                 InteractWithPlayer();
             }

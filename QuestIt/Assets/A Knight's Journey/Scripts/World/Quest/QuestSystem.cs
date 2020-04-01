@@ -25,6 +25,9 @@ namespace RPG.QuestSystem
         int currentQuestTaskIndex;
         [HideInInspector] public bool completedQuest;
 
+        public List<string> questDialogue;
+        public int currentDialogueIndex;
+
         //============================Functions=====================//
 
         //-----------------------------------------------------------

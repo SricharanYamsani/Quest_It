@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.QuestSystem;
+using TMPro;
 
 namespace RPG.NPCs
 {
@@ -10,7 +11,8 @@ namespace RPG.NPCs
         //============================Variables=====================//
 
         public List<Quest> quests = new List<Quest>();
-
+        Quest availableQuest;
+               
         //============================Functions=====================//
 
         // Start is called before the first frame update
@@ -20,11 +22,15 @@ namespace RPG.NPCs
             base.Start();
             npcType = NPCType.Quest;
             questLog = FindObjectOfType<QuestLog>();
+
+            QuestEvents.QuestAccepted += QuestAccepted;
         }
 
         //---------------------------------------
         public override void InteractWithPlayer()
         {
+            //TODO implement proper player interaction with dialogue bubble etc.
+
             //TODO use actual player level
             //Get quests that are available according to the player level
             List<Quest> unlockedQuests = quests.FindAll((Quest quest) => 
@@ -36,26 +42,36 @@ namespace RPG.NPCs
                 Quest playerHasQuest = questLog.quests.Find((Quest quest) => quest.id == unlockedQuests[i].id);
                 if(playerHasQuest == null)
                 {
-                    //TODO Dialogue
-                    StartCoroutine(Dialogue());
+                    availableQuest = unlockedQuests[i];
 
-                    questLog.DisplayQuestUpdateInfo("New Quest : " + unlockedQuests[i].questDesc);
-                    questLog.AddQuest(unlockedQuests[i]);
-                    //Remove quest given to player from quest list
-                    for (int j = 0; j < quests.Count; j++)
-                    {
-                        if (unlockedQuests[i].id == quests[j].id)
-                        {
-                            quests.RemoveAt(j);
-                        }
-                    }
+                    //Start Dialogue
+                    QuestEvents.StartDialogue(availableQuest);
+                    break;
                 }
             }
+
+            completedInteraction = true;
         }
 
-        public IEnumerator Dialogue()
+        //--------------------------
+        private void QuestAccepted()
         {
-            yield return null;
+            questLog.DisplayQuestUpdateInfo("New Quest : " + availableQuest.questDesc);
+            questLog.AddQuest(availableQuest);
+            //Remove quest given to player from quest list
+            for (int j = 0; j < quests.Count; j++)
+            {
+                if (availableQuest.id == quests[j].id)
+                {
+                    quests.RemoveAt(j);
+                }
+            }           
+        }
+
+        //----------------------
+        private void OnDisable()
+        {
+            QuestEvents.QuestAccepted -= QuestAccepted;
         }
     }
 }
