@@ -14,6 +14,7 @@ namespace RPG.Control
         WorldMovement worldMovement;
         FollowNPC follow;
         [SerializeField] EventSystem eventSystem;
+        public PlayerInfo playerInfo;
 
         //============================Functions=====================//
 

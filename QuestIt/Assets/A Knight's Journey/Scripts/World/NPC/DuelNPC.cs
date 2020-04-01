@@ -34,14 +34,18 @@ namespace RPG.NPCs
         //---------------------------------------
         public override void InteractWithPlayer()
         {
-            if (questTask != null)
-            {
-                if (questTask.taskType.type == TaskType.Types.KILL &&
-                   questTask.taskType.killTargets.npcType == npcKillType)
-                {
-                    questTask.UpdateTask();
-                }
-            }
+            BattleInitializer.Instance.AddaBattlePlayer(playerInfo); //NPC
+            BattleInitializer.Instance.AddaBattlePlayer(player.playerInfo); //Player
+            BattleInitializer.Instance.InitializeLobby();
+            
+            //if (questTask != null)
+            //{
+            //    if (questTask.taskType.type == TaskType.Types.KILL &&
+            //       questTask.taskType.killTargets.npcType == npcKillType)
+            //    {
+            //        questTask.UpdateTask();
+            //    }
+            //}
         }
 
         //----------------------
