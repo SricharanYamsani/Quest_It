@@ -162,7 +162,7 @@ public class BattlePlayer : MonoBehaviour
         {
             battleBuffs.luckBuff.current = value;
 
-            battleBuffs.luckBuff.current.Clamp(0, battleBuffs.luckBuff.maximum); 
+            battleBuffs.luckBuff.current.Clamp(0, battleBuffs.luckBuff.maximum);
         }
     }
 
@@ -230,6 +230,8 @@ public class BattlePlayer : MonoBehaviour
     public Color playerColor = new Color(168, 168, 168, 255);
 
     public PlayerState PlayerState { get; private set; } = PlayerState.NONE;
+
+    private string currentTrigger = string.Empty;
 
     public void SetUpdateUI()
     {
@@ -410,5 +412,20 @@ public class BattlePlayer : MonoBehaviour
         ChoiceManager.Instance.ExecutePlayerMove(this, currentChoice);
 
         BattleUIManager.Instance.CloseButton();
+    }
+
+    public void PlayAnimation(string animation = "")
+    {
+        if (!String.IsNullOrEmpty(animation))
+        {
+            if (!string.IsNullOrEmpty(currentTrigger))
+            {
+                mPlayerController.ResetTrigger(currentTrigger);
+            }
+
+            mPlayerController.SetTrigger(animation);
+
+            currentTrigger = animation;
+        }
     }
 }
