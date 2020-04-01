@@ -23,6 +23,7 @@ namespace RPG.Control
         {
             worldMovement = GetComponent<WorldMovement>();
             follow = GetComponent<FollowNPC>();
+            Input.multiTouchEnabled = false;
         }
 
         //-------------------
@@ -38,6 +39,18 @@ namespace RPG.Control
         private void MoveToCursor()
         {
             if (Input.GetMouseButtonDown(0))
+            {
+                if (!eventSystem.IsPointerOverGameObject())
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(GetMouseRay(), out hit))
+                    {
+                        worldMovement.StartMoveAction(hit.point);
+                    }
+                }
+            }
+
+            else if(Input.touchCount > 0)
             {
                 if (!eventSystem.IsPointerOverGameObject())
                 {
@@ -67,6 +80,18 @@ namespace RPG.Control
                             follow.SetTargetTransform(hits[i].transform);
                             return true;
                         }
+                    }
+                }
+            }
+
+            else if (Input.touchCount > 0)
+            {
+                if (!eventSystem.IsPointerOverGameObject())
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(GetMouseRay(), out hit))
+                    {
+                        worldMovement.StartMoveAction(hit.point);
                     }
                 }
             }
