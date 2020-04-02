@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.QuestSystem;
+using UnityEngine.SceneManagement;
 
 namespace RPG.NPCs
 {
@@ -34,14 +35,20 @@ namespace RPG.NPCs
         //---------------------------------------
         public override void InteractWithPlayer()
         {
-            if (questTask != null)
-            {
-                if (questTask.taskType.type == TaskType.Types.KILL &&
-                   questTask.taskType.killTargets.npcType == npcKillType)
-                {
-                    questTask.UpdateTask();
-                }
-            }
+            playerInfo.IsTeamRed = false;
+            player.playerInfo.IsTeamRed = true;
+            BattleInitializer.Instance.AddBattlePlayer(playerInfo); //NPC
+            BattleInitializer.Instance.AddBattlePlayer(player.playerInfo); //Player
+            SceneManager.LoadScene("Lobby");
+            
+            //if (questTask != null)
+            //{
+            //    if (questTask.taskType.type == TaskType.Types.KILL &&
+            //       questTask.taskType.killTargets.npcType == npcKillType)
+            //    {
+            //        questTask.UpdateTask();
+            //    }
+            //}
         }
 
         //----------------------

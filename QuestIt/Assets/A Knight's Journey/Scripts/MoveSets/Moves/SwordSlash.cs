@@ -25,7 +25,7 @@ public class SwordSlash : MoveChoice
             {
                 player.transform.DOLookAt(target[0].transform.position, 0.4f);
 
-                player.mPlayerController.SetTrigger(m_AnimationClip.ToString());
+                player.PlayAnimation(m_AnimationClip.ToString());
 
             })).Append(DOVirtual.DelayedCall(endTime, () => {; }));
 
