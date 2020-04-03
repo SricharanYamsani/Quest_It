@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67494873cae5b491ca013a425f982400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lobbyGameObject: {fileID: 1887396719}
+  lobbyGameObject: {fileID: 2083808922}
   teamRed:
   - {fileID: 1491465700}
   teamBlue:
