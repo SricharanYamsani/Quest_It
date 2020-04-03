@@ -68,7 +68,7 @@ public class StartLobbyButton : MonoBehaviour
 
         fillCircle.fillAmount = 0;
 
-        fillCircle.DOFillAmount(0, 5).OnUpdate(() =>
+        fillCircle.DOFillAmount(1, 5).OnUpdate(() =>
         {
             fillAmount.text = ((fillCircle.fillAmount) * 100).ToString("0");
         })
