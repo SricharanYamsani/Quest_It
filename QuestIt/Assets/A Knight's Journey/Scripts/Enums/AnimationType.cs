@@ -12,6 +12,7 @@ public enum AnimationType
     SMALLHIT,
     ARROWSHOTONE,
     MAGICHEAL,
+    ELECTROCUTE,
     DEAD,
     BACKTOLIFE,
 

@@ -295,6 +295,8 @@ public class BattlePlayer : MonoBehaviour
         {
             if (this.IsAlive)
             {
+                playerIcon.SetCurrent(true);
+
                 if (this.IsPlayer || IsTacticDictationEnabled)
                 {
                     BattleUIManager.Instance.ShowRadialButton(true);
@@ -304,7 +306,7 @@ public class BattlePlayer : MonoBehaviour
                     // AI Shit to go here.
                     AIChoice();
                 }
-
+                
                 glowRing.gameObject.SetActive(true);
             }
             else
@@ -407,6 +409,8 @@ public class BattlePlayer : MonoBehaviour
 
     private void PerformMove(List<BattlePlayer> targets)
     {
+        playerIcon.SetCurrent(false);
+
         currentChoice.MoveWork(this, targets);
 
         ChoiceManager.Instance.ExecutePlayerMove(this, currentChoice);
