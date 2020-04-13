@@ -10,17 +10,15 @@ namespace RPG.NPCs
     {
         //=========================Variables=====================//
         public PlayerInfo playerInfo;
-
-
+        
         public enum NPCType { Vendor, Duel, Quest };
         public NPCType npcType;
         public NPCWorldController worldController;
         public PlayerWorldController player;
         public QuestLog questLog;
         public float interactionRange;
-
-        public bool completedInteraction;
-                            
+        public GameObject interactionIcon;
+                                                   
         //=========================Functions=====================//
         //-------------------------
         public virtual void Start()
@@ -28,16 +26,7 @@ namespace RPG.NPCs
             worldController = GetComponent<NPCWorldController>();
             player = FindObjectOfType<PlayerWorldController>();      
         }
-
-        //------------------
-        public void Update()
-        {
-            if(Vector3.Distance(transform.position, player.transform.position) < interactionRange && !completedInteraction)
-            {
-                InteractWithPlayer();
-            }
-        }
-
+                
         public virtual void CreateQuest() { }
         public virtual void InteractWithPlayer() { } 
     }

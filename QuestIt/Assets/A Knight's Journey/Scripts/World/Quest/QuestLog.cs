@@ -19,12 +19,15 @@ namespace RPG.QuestSystem
         [Header("Quests")]
         public List<Quest> quests = new List<Quest>();
         public GameObject questPanel;
+        public GameObject questArrow;
 
         //Quest information that is shown when the quest log is opened
         public GameObject questLogQuestInfo;
 
-        public GameObject questUpdatedInfo;
-        public TextMeshProUGUI questUpdatedInfoText;
+        public GameObject questInfo;
+        public TextMeshProUGUI questInfoText;
+        public GameObject questCompletedInfo;
+        public TextMeshProUGUI questCompletedInfoText;
 
         //Quest information that is shown to the player in the scene
         //when the quest gets updated i.e. next task description, quest completed etc.
@@ -38,7 +41,7 @@ namespace RPG.QuestSystem
         //-----------------
         public void Start()
         {
-            QuestEvents.TaskUpdated += TrackNextTask;
+            QuestEvents.TaskUpdated += TrackNextTask;            
         }
 
         //------------------
@@ -55,15 +58,16 @@ namespace RPG.QuestSystem
             }
 
             //UI related
-            if (questUpdatedInfoText.canvasRenderer.GetAlpha() == 0 && questUpdatedInfo.activeSelf)
+            if (questCompletedInfoText.canvasRenderer.GetAlpha() == 0 && questCompletedInfo.activeSelf)
             {
-                questUpdatedInfo.SetActive(false);
+                questCompletedInfo.SetActive(false);
             }
         }
 
         //---------------------------
         private void QuestCompleted()
         {
+            QuestEvents.QuestCompleted();
             RemoveQuest();
             //Track a new quest if available
             if (quests.Count > 0)
@@ -73,15 +77,22 @@ namespace RPG.QuestSystem
                 {
                     activeQuest = quests[UnityEngine.Random.Range(0, quests.Count)];
                 }
-                TrackNextTask();
-            }
+
+                if (activeQuest != null)
+                {
+                    ToggleQuestActive(activeQuest.id);
+                    return;
+                }
+            }            
         }
 
         //------------------------
         private void RemoveQuest()
         {
+            questArrow.SetActive(false);
+            questInfoText.text = "";
             taskDescText.text = "";
-            DisplayQuestUpdateInfo("Quest Completed : " + activeQuest.questDesc);
+            DisplayQuestCompleted("Quest Completed");
             for (int i = 0; i < quests.Count; i++)
             {
                 if (activeQuest.id == quests[i].id)
@@ -94,7 +105,7 @@ namespace RPG.QuestSystem
             {
                 GameObject questInfoPanelInstance = questInfoPanelInstances[i];
                 if (questInfoPanelInstance.GetComponentInChildren<Button>().
-                    GetComponent<QuestButtonID>().questID == activeQuest.id)
+                    GetComponent<QuestTrackButton>().questID == activeQuest.id)
                 {
                     Destroy(questInfoPanelInstance);
                     questInfoPanelInstances.RemoveAt(i);
@@ -107,19 +118,23 @@ namespace RPG.QuestSystem
         //-------------------------
         public void TrackNextTask()
         {
-            if (activeQuest != null)
-            {
-                activeQuest.TrackNextTask(taskDescText);
-            }
-        } 
+            activeQuest.TrackNextTask(taskDescText);
+        }
 
-        //---------------------------------------------
-        public void DisplayQuestUpdateInfo(string info)
+        //-----------------------------------
+        public void DisplayQuest(string info)
         {
-            questUpdatedInfo.SetActive(true);
-            questUpdatedInfoText.canvasRenderer.SetAlpha(1.0f);
-            questUpdatedInfoText.text = info;
-            questUpdatedInfoText.CrossFadeAlpha(0, 10f, false);
+            questInfo.SetActive(true);
+            questInfoText.text = info;            
+        }
+
+        //--------------------------------------------
+        public void DisplayQuestCompleted(string info)
+        {
+            questCompletedInfo.SetActive(true);
+            questCompletedInfoText.canvasRenderer.SetAlpha(1.0f);
+            questCompletedInfoText.CrossFadeAlpha(0, 10f, false);
+            questCompletedInfoText.text = info;
         }
 
         //-------------------------------
@@ -132,16 +147,14 @@ namespace RPG.QuestSystem
             quest.id = Guid.NewGuid().ToByteArray();
             quests.Add(quest);
             GameObject questInfoPanelInstance = Instantiate(questLogQuestInfo, questPanel.transform);
-            questInfoPanelInstance.GetComponentInChildren<Button>().onClick.AddListener( () => SetActiveQuest(quest.id));
-            questInfoPanelInstance.GetComponentInChildren<Button>().GetComponent<QuestButtonID>().questID = quest.id;
-            questInfoPanelInstance.GetComponentInChildren<TextMeshProUGUI>().text = "Quest : " + quest.questDesc;
+            questInfoPanelInstance.GetComponentInChildren<Button>().onClick.AddListener( () => ToggleQuestActive(quest.id));
+            questInfoPanelInstance.GetComponentInChildren<Button>().GetComponent<QuestTrackButton>().questID = quest.id;
+            questInfoPanelInstance.GetComponentInChildren<TextMeshProUGUI>().text = quest.questDesc;
             questInfoPanelInstance.SetActive(true);
             questInfoPanelInstances.Add(questInfoPanelInstance);
 
             activeQuest = quest;
-            TrackNextTask();
-
-            //TODO add functionality to support quest updation for quests that are not being tracked but are in the log
+            ToggleQuestActive(activeQuest.id);
         }
 
         //--------------------------
@@ -151,12 +164,56 @@ namespace RPG.QuestSystem
             questPanel.SetActive(toggle);
         }
 
-        //-----------------------------------
-        public void SetActiveQuest(byte[] id)
+        //------------------------------------------
+        private void UpdateQuestPanel(Button button)
         {
-            activeQuest = quests.Find((Quest quest) => quest.id == id);
-            DisplayQuestUpdateInfo("Quest : " + activeQuest.questDesc);
-            TrackNextTask();   
+            for (int i = 0; i < questInfoPanelInstances.Count; i++)
+            {
+                if (questInfoPanelInstances[i].GetComponentInChildren<Button>() != button)
+                {
+                    questInfoPanelInstances[i].GetComponentInChildren<Button>().
+                        GetComponentInChildren<TextMeshProUGUI>().text = "Track";
+                    questInfoPanelInstances[i].GetComponentInChildren<Button>().
+                        GetComponent<QuestTrackButton>().track = false;
+                }                
+            }            
+        }
+
+        //--------------------------------------
+        public void ToggleQuestActive(byte[] id)
+        {
+            questArrow.SetActive(false);
+            for (int i = 0; i < questInfoPanelInstances.Count; i++)
+            {
+                //Get button in the list that matches 'this' button
+                if (questInfoPanelInstances[i].GetComponentInChildren<Button>().
+                    GetComponent<QuestTrackButton>().questID == id)
+                {
+                    Button button = questInfoPanelInstances[i].GetComponentInChildren<Button>();
+                    button.GetComponent<QuestTrackButton>().track = !button.GetComponent<QuestTrackButton>().track;
+
+                    //toggle
+                    UpdateQuestPanel(button);
+                    if (button.GetComponent<QuestTrackButton>().track)
+                    {
+                        button.GetComponentInChildren<TextMeshProUGUI>().text = "Untrack";
+                        activeQuest = quests.Find((Quest quest) => quest.id == id);
+                        questArrow.SetActive(true);
+                        DisplayQuest(activeQuest.questDesc);
+                        TrackNextTask();
+                        break;
+                    }
+                    else
+                    {
+                        button.GetComponentInChildren<TextMeshProUGUI>().text = "Track";
+                        activeQuest = null;
+                        questInfoText.text = "";
+                        taskDescText.text = "";                        
+                        QuestEvents.UntrackTask();
+                        break;
+                    }
+                }
+            }            
         }
 
         //---------------------

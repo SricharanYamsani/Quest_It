@@ -70,6 +70,8 @@ public class DialogueSystem : MonoBehaviour
         availableQuest.currentDialogueIndex = 0;
         dialoguePanel.SetActive(false);
         proceedButtonText.text = "Next";
+
+        QuestEvents.InteractionFinished();
     }
 
     //----------------------

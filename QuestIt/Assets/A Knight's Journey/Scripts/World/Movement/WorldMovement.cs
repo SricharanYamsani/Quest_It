@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using RPG.Core;
+using RPG.Control;
+using RPG.QuestSystem;
 
 namespace RPG.Movement
 {
@@ -23,6 +25,8 @@ namespace RPG.Movement
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
             actionScheduler = GetComponent<ActionScheduler>();
+            QuestEvents.InteractionStarted += DisableMovement;
+            QuestEvents.InteractionFinished += EnableMovement;            
         }
 
         // Update is called once per frame
@@ -35,21 +39,41 @@ namespace RPG.Movement
         //----------------------------------------------
         public void StartMoveAction(Vector3 destination)
         {
-            actionScheduler.StartAction(this);
-            MoveTo(destination);
+            if (agent.enabled)
+            {
+                actionScheduler.StartAction(this);
+                MoveTo(destination);
+            }
         }
 
-        //--------------------------------------
+        //-------------------------------------
         public void MoveTo(Vector3 destination)
         {
             agent.destination = destination;
             agent.isStopped = false;
         }
 
-        //------------------
+        //------------------------
         public void CancelAction()
         {
-            agent.isStopped = true;
+            if (agent.enabled)
+            {
+                agent.isStopped = true;
+            }
+        }
+
+        //--------------------------
+        public void EnableMovement()
+        {
+            if (GetComponent<PlayerWorldController>())
+            { agent.enabled = true; }
+        }
+
+        //---------------------------
+        public void DisableMovement()
+        {
+            if (GetComponent<PlayerWorldController>())
+            { agent.enabled = false; }
         }
 
         //---------------------------
@@ -58,6 +82,13 @@ namespace RPG.Movement
             Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity);
             float speed = localVelocity.z;
             animator.SetFloat("ForwardSpeed", speed);
+        }
+
+        //--------------
+        void OnDisable()
+        {
+            QuestEvents.InteractionStarted -= DisableMovement;
+            QuestEvents.InteractionFinished -= EnableMovement;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using RPG.NPCs;
 
 namespace RPG.QuestSystem
 {
@@ -60,22 +61,22 @@ namespace RPG.QuestSystem
         public TaskType taskType;
 
         //=========================Functions====================//
-       
+
         //----------------------
         public void UpdateTask()
         {
-            taskType.killTargets.numberOfTimes--;
-            if(taskType.killTargets.numberOfTimes <= 0)
+            taskType.current++;
+            if (taskType.current >= taskType.numberOfTimes)
             {
-                completedTask = true;
-                QuestEvents.TaskUpdated();
-            }       
+                completedTask = true;                
+            }
+            QuestEvents.TaskUpdated();
         }
 
         //--------------------------------------------------------------------
         public void DisplayTaskDescription(TextMeshProUGUI sceneQuestInfoText)
         {
-            sceneQuestInfoText.text = description;   
+            sceneQuestInfoText.text = description + " " + taskType.current + "/" + taskType.numberOfTimes;   
         }
     }
 
@@ -85,6 +86,9 @@ namespace RPG.QuestSystem
         public enum Types { KILL, DEFEND, GATHER }
         public Types type;
 
+        [HideInInspector] public int current = 0;
+        public int numberOfTimes;
+
         public KillTargets killTargets = new KillTargets();
         public DefendTargets defendTargets = new DefendTargets();
         public GatherTargets gatherTargets = new GatherTargets();
@@ -93,21 +97,18 @@ namespace RPG.QuestSystem
     [System.Serializable]
     public class KillTargets
     {
-        public int numberOfTimes;
         public QuestEnums.NPCKillType npcType;
     }
 
     [System.Serializable]
     public class DefendTargets
     {
-        public int numberOfTimes;
         public QuestEnums.DefendType npcType;
     }
 
     [System.Serializable]
     public class GatherTargets
     {
-        public int numberOfTimes;
         public QuestEnums.ItemType itemType;
     }
         

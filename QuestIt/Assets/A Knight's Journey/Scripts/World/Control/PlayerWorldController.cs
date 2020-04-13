@@ -15,7 +15,7 @@ namespace RPG.Control
         FollowNPC follow;
         [SerializeField] EventSystem eventSystem;
         public PlayerInfo playerInfo;
-
+        
         //============================Functions=====================//
 
         //------------------
@@ -29,10 +29,11 @@ namespace RPG.Control
         }
 
         //-------------------
-        private void Update()  
+        private void Update()
         {
             //Action priority to prioritize NPC interaction over movement
-            if(InteractWithNPC()) { return; }
+            if (InteractWithNPC()) { return; }
+            if (GoToNPC()) { return; }
             MoveToCursor();
         }
 
@@ -45,7 +46,7 @@ namespace RPG.Control
                 if (!eventSystem.IsPointerOverGameObject())
                 {
                     RaycastHit hit;
-                    if (Physics.Raycast(GetMouseRay(), out hit))
+                    if (Physics.Raycast(GetRayFromInput(Input.mousePosition), out hit))
                     {
                         worldMovement.StartMoveAction(hit.point);
                     }
@@ -57,7 +58,7 @@ namespace RPG.Control
                 if (!eventSystem.IsPointerOverGameObject())
                 {
                     RaycastHit hit;
-                    if (Physics.Raycast(GetMouseRay(), out hit))
+                    if (Physics.Raycast(GetRayFromInput(Input.GetTouch(0).position), out hit))
                     {
                         worldMovement.StartMoveAction(hit.point);
                     }
@@ -65,14 +66,14 @@ namespace RPG.Control
             }
         }
 
-        //--------------------
-        bool InteractWithNPC()
+        //------------
+        bool GoToNPC()
         {
             if(Input.GetMouseButtonDown(0))
             {
                 if (!eventSystem.IsPointerOverGameObject())
                 {
-                    RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+                    RaycastHit[] hits = Physics.RaycastAll(GetRayFromInput(Input.mousePosition));
 
                     for (int i = 0; i < hits.Length; i++)
                     {
@@ -91,7 +92,7 @@ namespace RPG.Control
                 if (!eventSystem.IsPointerOverGameObject())
                 {
                     RaycastHit hit;
-                    if (Physics.Raycast(GetMouseRay(), out hit))
+                    if (Physics.Raycast(GetRayFromInput(Input.GetTouch(0).position), out hit))
                     {
                         worldMovement.StartMoveAction(hit.point);
                     }
@@ -101,10 +102,49 @@ namespace RPG.Control
             return false;
         }
 
-        //------------------------------
-        private static Ray GetMouseRay()
+        //--------------------
+        bool InteractWithNPC()
         {
-            return Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!eventSystem.IsPointerOverGameObject())
+                {
+                    RaycastHit[] hits = Physics.RaycastAll(GetRayFromInput(Input.mousePosition));
+
+                    for (int i = 0; i < hits.Length; i++)
+                    {
+                        if (hits[i].transform.GetComponent<NPCInteractionIcon>())
+                        {
+                            hits[i].transform.GetComponent<NPCInteractionIcon>().Interact();
+                            return true;
+                        }
+                    }
+                }
+            }
+            else if(Input.touchCount > 0)
+            {
+                if (!eventSystem.IsPointerOverGameObject())
+                {
+                    RaycastHit[] hits = Physics.RaycastAll(GetRayFromInput(Input.GetTouch(0).position));
+
+                    for (int i = 0; i < hits.Length; i++)
+                    {
+                        if (hits[i].transform.GetComponent<NPCInteractionIcon>())
+                        {
+                            hits[i].transform.GetComponent<NPCInteractionIcon>().Interact();
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        //--------------------------------------------------
+        private static Ray GetRayFromInput(Vector3 position)
+        {
+            return Camera.main.ScreenPointToRay(position);
         }    
     }
 }
