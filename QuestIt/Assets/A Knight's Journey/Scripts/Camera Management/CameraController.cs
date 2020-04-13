@@ -9,6 +9,8 @@ namespace RPG.CameraControl
 {
     public class CameraController : MonoBehaviour
     {
+        public float camParentYPos = -5.2f;
+
         public CinemachineBrain primaryCamera; //Main CinemachineBrain
         public CinemachineVirtualCamera primaryComposerVirtualCamera; //Primary Virtual Camera of composer type
         public CinemachineVirtualCamera primaryGroupComposerVirtualCamera; //Primary Virtual Camera of group composer type
@@ -42,6 +44,7 @@ namespace RPG.CameraControl
 
         private void Awake()
         {
+            camParentYPos = -5.2f;
             if(primaryComposerVirtualCamera != null)
             {
                 primaryCameraComposer = primaryComposerVirtualCamera.GetCinemachineComponent<CinemachineComposer>();
@@ -292,7 +295,7 @@ namespace RPG.CameraControl
         public void OnTargetsRegistered()
         {
             sum /= count;
-            camParent.transform.position = new Vector3(sum.x, 0, sum.y);
+            camParent.transform.position = new Vector3(sum.x, camParentYPos , sum.y);
 
             for (int i = 0;i<ids.Count; i++)
             {

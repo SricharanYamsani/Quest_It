@@ -89,10 +89,14 @@ public class BattleUIManager : Singleton<BattleUIManager>
     {
         if (RadialButton.gameObject.activeInHierarchy)
         {
-            DOVirtual.DelayedCall(0.4f, () => { RadialButton.interactable = false; ShowRadialButton(false); });
+            DOVirtual.DelayedCall(0.4f, () =>
+            {
+                RadialButton.interactable = false;
+
+                ShowRadialButton(false);
+            });
 
             MoveOptionsLayer(false);
-
         }
     }
 

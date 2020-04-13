@@ -38,7 +38,7 @@ public class FixedData : MonoBehaviour
 
         if (SaveManager.SaveResourceJson(info,"Occultist"))
         {
-            Debug.Log(true);
+            
         }
     }
 }

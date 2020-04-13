@@ -6,9 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/A Knight's Journey/Scenes/Lobby.unity
-    guid: 67c730d1df7e04292a2ac2dcfb3ecbae
+    path: Assets/A Knight's Journey/Scenes/World.unity
+    guid: 54ca7e0c64d72724d9d7ceed470ab997
   - enabled: 1
     path: Assets/A Knight's Journey/Scenes/BattleGround.unity
     guid: 74992ee0c736f41a7940744c55b46d46
+  - enabled: 1
+    path: Assets/A Knight's Journey/Scenes/Lobby.unity
+    guid: 67c730d1df7e04292a2ac2dcfb3ecbae
   m_configObjects: {}
