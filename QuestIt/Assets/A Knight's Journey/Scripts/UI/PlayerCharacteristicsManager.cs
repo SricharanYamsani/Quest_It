@@ -16,6 +16,7 @@ public class PlayerCharacteristicsManager : MonoBehaviour
 
     public List<PlayerMoveUI> otherMoves;
 
+    public Image playerIcon;
     private void Start()
     {
         SetUpButtons();
@@ -26,13 +27,14 @@ public class PlayerCharacteristicsManager : MonoBehaviour
         {
             SetUpAllStatsUI(currentPlayerInfo);
             SetUpAllMovesUI(currentPlayerInfo);
+            SetPlayerImage();
         }
-
     }
 
     PlayerInfo GetCurrentPlayerInfo()
     {
         PlayerInfo player = null;
+        player = UIManager.Instance.playerController.playerInfo;
         return player;
     }
 
@@ -70,6 +72,11 @@ public class PlayerCharacteristicsManager : MonoBehaviour
     void OnCloseButtonClicked()
     {
         this.gameObject.SetActive(false);
+    }
+
+    void SetPlayerImage()
+    {
+        playerIcon.sprite = UIManager.Instance.GetPlayerImage(currentPlayerInfo.character);
     }
 
     public enum EStat

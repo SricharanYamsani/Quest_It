@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    private UIManager instance;
-    public UIManager Instance
+    private static UIManager instance;
+    public static UIManager Instance
     {
         get { return instance; }
     }
@@ -15,10 +15,16 @@ public class UIManager : MonoBehaviour
     public RectTransform HUDPanel;
     public RectTransform OverlayPanel;
 
+    [SerializeField]
+    public RPG.Control.PlayerWorldController playerController;
+
     public Button playerCharacteristicsButton;
 
     [HideInInspector]public PlayerCharacteristicsManager playerCharacteristicsManager;
     public PlayerCharacteristicsManager playerCharacteristicsManagerPrefab;
+
+    [EnumNamedArray(typeof(BattleCharacters))]
+    public List<Sprite> playerIcons;
 
     void Awake()
     {
@@ -61,6 +67,20 @@ public class UIManager : MonoBehaviour
         {
             playerCharacteristicsManager = Instantiate(playerCharacteristicsManagerPrefab, OverlayPanel.transform);
         }
+    }
+
+    public Sprite GetPlayerImage(BattleCharacters character)
+    {
+        switch (character)
+        {
+            case BattleCharacters.FOOL:
+            case BattleCharacters.OCCULTIST:
+            case BattleCharacters.COMBATANT:
+            case BattleCharacters.GUARDIAN:
+            case BattleCharacters.TOXOPHILITE:
+                return playerIcons[(int)character];
+        }
+        return null;
     }
 
 }
