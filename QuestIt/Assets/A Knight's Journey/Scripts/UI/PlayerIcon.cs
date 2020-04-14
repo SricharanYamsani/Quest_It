@@ -15,6 +15,8 @@ public class PlayerIcon : MonoBehaviour
     //<summary>Player Sprite UI Reference</summary>
     public Image playerSprite;
 
+    public Image currentBorder;
+
     public BattlePlayer m_Player = null;
 
     private float t_CurrentHealth = 0.0f;
@@ -36,6 +38,20 @@ public class PlayerIcon : MonoBehaviour
         if (playerSprite)
         {
             playerSprite.sprite = ResourceManager.Instance.playerIcons[this.m_Player.playerInfo.character.ToString()];
+        }
+    }
+
+    public void SetCurrent(bool isCurrent)
+    {
+        currentBorder.DOKill(true);
+
+        if(isCurrent)
+        {
+            currentBorder.DOFade(1, 0.5f);
+        }
+        else
+        {
+            currentBorder.DOFade(0, 0.5f);
         }
     }
 

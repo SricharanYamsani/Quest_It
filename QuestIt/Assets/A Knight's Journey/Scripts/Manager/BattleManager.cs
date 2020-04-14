@@ -122,11 +122,11 @@ public class BattleManager : Singleton<BattleManager>
 
         QualitySettings.vSyncCount = 0;
 
-        //if (InformationHandler.Instance.lobbyPlayers.Count <= 0)
-        //{
-        //    GeneratePlayers();
-        //}
-
+        if (InformationHandler.Instance.lobbyPlayers == null)
+        {
+            GeneratePlayers();
+        }
+       
         InitializeBattle(InformationHandler.Instance.lobbyPlayers);
 
         //cameraController.SwitchCameraType(VirtualCameraType.GROUPCOMPOSER);

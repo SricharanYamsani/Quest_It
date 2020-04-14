@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using RPG.Core;
+using RPG.Control;
 
 namespace RPG.Movement
 {
@@ -13,6 +15,7 @@ namespace RPG.Movement
         Transform targetNPCTransform;
         WorldMovement worldMovement;
         ActionScheduler actionScheduler;
+        [SerializeField] EventSystem eventSystem;
 
         //==========================Functions==================================//
 
@@ -53,7 +56,7 @@ namespace RPG.Movement
             this.targetNPCTransform = targetNPCTransform;
         }
 
-        //--------------------
+        //-------------------
         private bool InRange()
         {
             return (Vector3.Distance(transform.position, targetNPCTransform.position) < stopRange);
