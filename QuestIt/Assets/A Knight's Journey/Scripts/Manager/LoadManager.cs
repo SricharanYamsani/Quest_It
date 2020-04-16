@@ -31,18 +31,17 @@ public class LoadManager : Singleton<LoadManager>
 
         loadUI.loadingImage.fillAmount = 0;
 
-        Logger.Log("Fade");
-
         loadUI.backgroundCanvas.DOFade(1, 0.2f).OnComplete(() =>
         {
-            StartCoroutine(LoadSceneAsync(listOfPlayers, battleGround));
+            loadUI.loadingImage.DOFillAmount(0.2f, 0.4f).OnComplete(() =>
+            {
+                StartCoroutine(LoadSceneAsync(listOfPlayers, battleGround));
+            });
         });
     }
 
     IEnumerator LoadSceneAsync(List<PlayerInfo> listOfPlayers, string battleGround)
     {
-        Logger.Log("Started loading");
-
         AsyncOperation loadOperation = SceneManager.LoadSceneAsync(battleGround);
 
         loadOperation.allowSceneActivation = false;

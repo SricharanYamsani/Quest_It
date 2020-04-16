@@ -10,6 +10,8 @@ public abstract class IWeapon : MonoBehaviour
 
     public int amount;
 
+    public float reactionTime = 0.5f;
+
     public void Awake ( )
     {
         Irounds = 0;
