@@ -79,6 +79,9 @@ public class QuestArrow : MonoBehaviour
         targetNPCs.Clear();                                                             
         QuestEvents.AddNPCLocation -= AddTargetNPC;
         QuestEvents.TaskUpdated -= UpdateTargetNPCList;
-        distanceText.gameObject.SetActive(false);
+        if (distanceText != null)
+        {
+            distanceText.gameObject.SetActive(false);
+        }
     }
 }

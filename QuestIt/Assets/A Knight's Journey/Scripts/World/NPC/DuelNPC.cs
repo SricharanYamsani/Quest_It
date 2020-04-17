@@ -66,13 +66,13 @@ namespace RPG.NPCs
         //---------------------------------------
         public override void InteractWithPlayer()
         {
-            //playerInfo.IsTeamRed = false;
-            //player.playerInfo.IsTeamRed = true;
-            //BattleInitializer.Instance.AddBattlePlayer(playerInfo); //NPC
-            //BattleInitializer.Instance.AddBattlePlayer(player.playerInfo); //Player
-            //SceneManager.LoadScene("Lobby");
-            questTask.UpdateTask();
-            gameObject.SetActive(false);
+            playerInfo.IsTeamRed = false;
+            player.playerInfo.IsTeamRed = true;
+            BattleInitializer.Instance.AddBattlePlayer(playerInfo); //NPC
+            BattleInitializer.Instance.AddBattlePlayer(player.playerInfo); //Player
+            SceneManager.LoadScene("Lobby");
+            //questTask.UpdateTask();
+            //gameObject.SetActive(false);
         }
 
         //----------------------
