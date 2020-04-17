@@ -147,7 +147,7 @@ public class BattleManager : Singleton<BattleManager>
                 player.character = (BattleCharacters)UnityEngine.Random.Range(1, 6);
                 //BattleCharacters.OCCULTIST;
 
-                player.chosenMoves.Add(Moves.SWIPE_SLASH);
+                player.chosenMoves.Add(Moves.SWORD_SLASH);
                 player.chosenMoves.Add(Moves.PIERCE_ATTACK_1);
                 player.chosenMoves.Add(Moves.MAGIC_HEAL_SMALL_1);
                 player.chosenMoves.Add(Moves.LIGHTNING_SMALL_1);
@@ -307,6 +307,8 @@ public class BattleManager : Singleton<BattleManager>
             if (myTransform != null)
             {
                 BattlePlayer player = Instantiate<BattlePlayer>(ResourceManager.Instance.allModels[quality.character], myTransform);
+
+                player.OriginalSpawn = myTransform;
 
                 player.playerInfo = quality;
 
