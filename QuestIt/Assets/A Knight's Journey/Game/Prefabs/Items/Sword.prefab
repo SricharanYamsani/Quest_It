@@ -47,7 +47,7 @@ MonoBehaviour:
   Irounds: 0
   moveDuration: 0
   amount: 0
-  reactionTime: 0.5
+  reactionTime: 1.75
 --- !u!1001 &6605360987521199310
 PrefabInstance:
   m_ObjectHideFlags: 0

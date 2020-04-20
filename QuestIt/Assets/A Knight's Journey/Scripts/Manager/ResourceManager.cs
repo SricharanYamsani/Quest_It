@@ -29,6 +29,8 @@ public class ResourceManager : Singleton<ResourceManager>
 
     public Dictionary<string, IWeapon> effects = new Dictionary<string, IWeapon>();
 
+    public Dictionary<string, GameObject> reactionObjects = new Dictionary<string, GameObject>();
+
     protected override void Awake()
     {
         isDontDestroyOnLoad = true;
@@ -46,6 +48,8 @@ public class ResourceManager : Singleton<ResourceManager>
         IWeapon[] p_Effects = Resources.LoadAll<IWeapon>("IWeapons");
 
         Sprite[] p_Icons = Resources.LoadAll<Sprite>("Sprites/PlayerIcons");
+
+        GameObject[] reactions = Resources.LoadAll<GameObject>("Prefabs/ReactionObjects");
 
         choiceSprites = Resources.LoadAll<Sprite>("Sprites/Choices").ToList();
 
@@ -103,6 +107,14 @@ public class ResourceManager : Singleton<ResourceManager>
             if (!currencySpritesRef.ContainsKey(currencySprites[i].name))
             {
                 currencySpritesRef.Add(currencySprites[i].name, currencySprites[i]);
+            }
+        }
+
+        for (int i = 0; i < reactions.Length; i++)
+        {
+            if (!reactionObjects.ContainsKey(reactions[i].name))
+            {
+                reactionObjects.Add(reactions[i].name, reactions[i]);
             }
         }
 

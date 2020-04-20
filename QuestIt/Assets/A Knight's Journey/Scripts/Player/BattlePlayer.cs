@@ -389,20 +389,31 @@ public class BattlePlayer : MonoBehaviour
 
     public void PlayReaction(string animation = "")
     {
+        GameObject m = new GameObject();
+
         if (PlayerState == PlayerState.BLOCK)
         {
             mPlayerController.SetTrigger(AnimationType.BLOCK.ToString());
 
             reactionText.text = "MISS!";
+
+            m = Instantiate<GameObject>(ResourceManager.Instance.reactionObjects["Shield"], leftHandSpawnOutside);
         }
         else if (PlayerState == PlayerState.HURT)
         {
             mPlayerController.SetTrigger(AnimationType.MIDHIT.ToString());
 
+            m = Instantiate<GameObject>(ResourceManager.Instance.reactionObjects["Blood"], torsoTransform);
+
             reactionText.text = "HIT";
         }
         // need to show a shield or blood work.
         SetUpdateUI();
+
+        DOVirtual.DelayedCall(3, () =>
+        {
+            Destroy(m);
+        });
 
         PlayerState = PlayerState.NONE;
     }
