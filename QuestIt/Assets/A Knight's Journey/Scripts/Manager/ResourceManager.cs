@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
+using RPG.NPCs;
+using RPG.Control;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
@@ -26,6 +28,8 @@ public class ResourceManager : Singleton<ResourceManager>
     public Dictionary<string, AudioClip> bgClips = new Dictionary<string, AudioClip>();
 
     public Dictionary<BattleCharacters, BattlePlayer> allModels = new Dictionary<BattleCharacters, BattlePlayer>();
+
+    public Dictionary<BattleCharacters, PlayerWorldController> playerMovement = new Dictionary<BattleCharacters, PlayerWorldController>();
 
     public Dictionary<string, IWeapon> effects = new Dictionary<string, IWeapon>();
 
@@ -51,9 +55,19 @@ public class ResourceManager : Singleton<ResourceManager>
 
         GameObject[] reactions = Resources.LoadAll<GameObject>("Prefabs/ReactionObjects");
 
+        PlayerWorldController[] controllers = Resources.LoadAll<PlayerWorldController>("Models/PlayerControllers");
+
         choiceSprites = Resources.LoadAll<Sprite>("Sprites/Choices").ToList();
 
         currencySprites = Resources.LoadAll<Sprite>("Sprites/Currency").ToList();
+
+        foreach (PlayerWorldController controller in controllers)
+        {
+            if (!playerMovement.ContainsKey(controller.playerInfo.character))
+            {
+                playerMovement.Add(controller.playerInfo.character, controller);
+            }
+        }
 
         foreach (Sprite icon in p_Icons)
         {
