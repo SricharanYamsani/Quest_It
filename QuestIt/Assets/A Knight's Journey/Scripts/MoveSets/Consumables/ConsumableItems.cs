@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-[CreateAssetMenu(fileName = "Objects", menuName = "ScriptableObjects/Consumables - Resurrect")]
-public class Resurrect : ConsumableChoice
+[CreateAssetMenu(fileName = "Objects", menuName = "ScriptableObjects/Consumables - CONSUMABLE")]
+public class ConsumableItems : ConsumableChoice
 {
-   public IWeapon resurrectWeapon;
+    public IWeapon consumableWeapon;
 
     public override void MoveWork(BattlePlayer player, List<BattlePlayer> targets)
     {
@@ -28,11 +28,12 @@ public class Resurrect : ConsumableChoice
             {
                 player.mPlayerController.SetTrigger(m_AnimationClip.ToString());
 
-            })).Append(DOVirtual.DelayedCall(1f, () => {
+            })).Append(DOVirtual.DelayedCall(1f, () =>
+            {
 
                 for (int i = 0; i < targets.Count; i++)
                 {
-                    IWeapon mObject = Instantiate<IWeapon>(resurrectWeapon, targets[i].bottomTransform);
+                    IWeapon mObject = Instantiate<IWeapon>(consumableWeapon, targets[i].bottomTransform);
 
                     mObject.amount = moveAffectDuration;
 
@@ -41,7 +42,8 @@ public class Resurrect : ConsumableChoice
                     mObject.Trigger();
                 }
 
-            })).Append(DOVirtual.DelayedCall(playTime, () => {
+            })).Append(DOVirtual.DelayedCall(playTime, () =>
+            {
                 player.transform.DORotateQuaternion(tempRotation, 0.3f);
 
             }));

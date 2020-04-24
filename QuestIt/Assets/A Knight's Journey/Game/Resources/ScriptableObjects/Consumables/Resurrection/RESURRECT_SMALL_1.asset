@@ -15,19 +15,18 @@ MonoBehaviour:
   battleTask: 5
   targetRange: 3
   playerCondition: 1
-  percentageType: 0
+  percentageType: 1
   choiceType: 3
   MoveTurnsType: 2
-  m_AnimationClip: 9
+  m_AnimationClip: 10
   affectedAttribute: 1
   m_Currency: 0
   ICON: {fileID: 0}
   m_CurrencyAmount: 0
   moveAffectDuration: 0
-  attributeChange: 25
-  endTime: 10
-  description: Resurrects one player with 25 hp
-  moveName: Resurrect!
+  attributeChange: 0
+  endTime: 5
+  description: 
+  moveName: 
   itemName: 61
-  resurrectWeapon: {fileID: 6780868621941338680, guid: 644ecb149bc651142a6637ca6bb47dd6,
-    type: 3}
+  consumableWeapon: {fileID: 0}
