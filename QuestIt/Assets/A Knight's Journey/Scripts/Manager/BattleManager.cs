@@ -87,6 +87,7 @@ public class BattleManager : Singleton<BattleManager>
             if (players[i].IsAlive)
             {
                 isAlive = true;
+
                 break;
             }
         }
@@ -163,6 +164,14 @@ public class BattleManager : Singleton<BattleManager>
                 cInfo.amount = 1;
 
                 player.consumables.Add(cInfo);
+
+                ConsumablesInfo cmInfo = new ConsumablesInfo();
+
+                cmInfo.consumable = Consumables.ATTACK_INCREASE_FULL_1;
+
+                cmInfo.amount = 1;
+
+                player.consumables.Add(cmInfo);
 
                 playerQ.Add(player);
             }
