@@ -410,9 +410,9 @@ public class BattlePlayer : MonoBehaviour
         // need to show a shield or blood work.
         SetUpdateUI();
 
-        DOVirtual.DelayedCall(3, () =>
+        DOVirtual.DelayedCall(1, () =>
         {
-            Destroy(m);
+            Destroy(m.gameObject);
         });
 
         PlayerState = PlayerState.NONE;
