@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18d9f4dd4241c492dadee23b4cd59cf6, type: 3}
-  m_Name: ATTACK_INCREASE_SMALL_TEAM 1
+  m_Name: ATTACK_INCREASE_FULL_TEAM
   m_EditorClassIdentifier: 
   battleTask: 5
   targetRange: 4
   playerCondition: 2
-  percentageType: 1
+  percentageType: 0
   choiceType: 3
-  MoveTurnsType: 0
+  MoveTurnsType: 2
   m_AnimationClip: 7
   affectedAttribute: 4
   m_Currency: 0
-  ICON: {fileID: 0}
+  ICON: {fileID: 21300000, guid: 54d7b8e456f3c43eca206adfe1ebfb00, type: 3}
   m_CurrencyAmount: 0
   moveAffectDuration: 0
-  attributeChange: 0
+  attributeChange: 20
   endTime: 5
   description: 
   moveName: 
-  itemName: 31
+  itemName: 35
   consumableWeapon: {fileID: 2930685039041452339, guid: 31bea997407d42b4c815aff8926295bb,
     type: 3}
