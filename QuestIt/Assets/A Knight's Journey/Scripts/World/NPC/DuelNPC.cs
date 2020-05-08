@@ -8,7 +8,7 @@ namespace RPG.NPCs
 {
     public class DuelNPC : NPC
     {
-        public QuestEnums.NPCKillType npcKillType;
+        public BattleCharacters npcKillType;
         QuestTask questTask;
 
         //--------------------------

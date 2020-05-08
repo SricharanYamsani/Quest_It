@@ -97,7 +97,7 @@ namespace RPG.QuestSystem
     [System.Serializable]
     public class KillTargets
     {
-        public QuestEnums.NPCKillType npcType;
+        public BattleCharacters npcType;
     }
 
     [System.Serializable]

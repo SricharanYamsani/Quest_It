@@ -38,11 +38,7 @@ public class LightningStrike : MoveChoice
 
                     mObject.moveDuration = MoveTurnsType;
 
-                    List<BattlePlayer> rTargets = new List<BattlePlayer>();
-
-                    rTargets.Add(targets[i]);
-
-                    mObject.Trigger(rTargets);
+                    mObject.Trigger(targets[i]);
                 }
 
             })).Append(DOVirtual.DelayedCall(playTime, () =>
