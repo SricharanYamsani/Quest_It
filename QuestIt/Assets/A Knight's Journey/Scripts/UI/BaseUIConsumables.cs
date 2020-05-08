@@ -12,6 +12,8 @@ public class BaseUIConsumables : MonoBehaviour
 
     public TextMeshProUGUI m_amountLeftText;
 
+    public Image spriteIcon;
+
     private Button m_Button;
 
     private void Awake()
@@ -36,7 +38,11 @@ public class BaseUIConsumables : MonoBehaviour
             }
             if (m_amountLeftText)
             {
-                m_amountLeftText.text = amountLeft.ToString();
+                m_amountLeftText.text = string.Format("Owned - {0}", amountLeft);
+            }
+            if(m_Choice.ICON)
+            {
+                spriteIcon.sprite = m_Choice.ICON;
             }
 
             this.gameObject.SetActive(true);

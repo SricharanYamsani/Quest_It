@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18d9f4dd4241c492dadee23b4cd59cf6, type: 3}
+  m_Name: ATTACK_INCREASE_FULL_1
+  m_EditorClassIdentifier: 
+  battleTask: 5
+  targetRange: 3
+  playerCondition: 2
+  percentageType: 0
+  choiceType: 3
+  MoveTurnsType: 2
+  m_AnimationClip: 7
+  affectedAttribute: 4
+  m_Currency: 0
+  ICON: {fileID: 21300000, guid: 54d7b8e456f3c43eca206adfe1ebfb00, type: 3}
+  m_CurrencyAmount: 0
+  moveAffectDuration: 0
+  attributeChange: 20
+  endTime: 5
+  description: Increases attack by 20 for a member on team
+  moveName: RISE UP
+  itemName: 29
+  consumableWeapon: {fileID: 2930685039041452339, guid: 31bea997407d42b4c815aff8926295bb,
+    type: 3}

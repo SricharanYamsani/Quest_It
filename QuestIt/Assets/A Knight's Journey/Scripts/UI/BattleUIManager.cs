@@ -140,17 +140,29 @@ public class BattleUIManager : Singleton<BattleUIManager>
                     t_Choices[i].SetupChoice();
                 }
 
+                ConsumablesInfo choice = new ConsumablesInfo();
+
                 for (int i = 0; i < c_Choices.Count; i++)
                 {
+
                     if (i < player.playerInfo.consumables.Count)
                     {
-                        ConsumablesInfo choice = player.playerInfo.consumables[i];
+                        choice = player.playerInfo.consumables[i];
+
                         if (choice.amount > 0)
                         {
                             c_Choices[i].m_Choice = ResourceManager.Instance.GetChoiceFromConsumables[choice.consumable];
 
                             c_Choices[i].SetupChoice(choice.amount);
                         }
+                        else
+                        {
+                            c_Choices[i].gameObject.SetActive(false);
+                        }
+                    }
+                    else
+                    {
+                        c_Choices[i].gameObject.SetActive(false);
                     }
                 }
             }

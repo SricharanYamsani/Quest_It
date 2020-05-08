@@ -39,7 +39,7 @@ public class SwordSlash : MoveChoice
 
                 timeTaken += tTime;
 
-                player.transform.DOMoveZ(target[0].meleeAttackSpawn.position.z, tTime).OnComplete(() =>
+                player.transform.DOMove(target[0].meleeAttackSpawn.position, tTime).OnComplete(() =>
                 {
                     player.mPlayerController.SetBool("WALK", false);
 
@@ -68,7 +68,7 @@ public class SwordSlash : MoveChoice
 
                 player.mPlayerController.SetBool("WALK", true);
 
-                player.transform.DOMoveZ(player.OriginalSpawn.position.z, tTime).OnComplete(() =>
+                player.transform.DOMove(player.OriginalSpawn.position, tTime).OnComplete(() =>
                 {
                     player.mPlayerController.SetBool("WALK", false);
 

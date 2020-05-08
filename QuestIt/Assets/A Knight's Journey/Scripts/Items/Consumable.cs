@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class SinglePlayerHeal : IWeapon
+public class Consumable : IWeapon
 {
 
 }   

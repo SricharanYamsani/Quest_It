@@ -4702,6 +4702,7 @@ GameObject:
   - component: {fileID: 490934}
   - component: {fileID: 19887274}
   - component: {fileID: 19958516}
+  - component: {fileID: -4475595442260333738}
   m_Layer: 0
   m_Name: SpinZoneBlue
   m_TagString: Untagged
@@ -4717,7 +4718,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 124416}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.167914, y: 0.38, z: -3.1585503}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 404868}
@@ -9376,6 +9377,22 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &-4475595442260333738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e95c86ee155c742c5a43e362b12862fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Irounds: 0
+  moveDuration: 0
+  amount: 0
+  reactionTime: 0.5
 --- !u!1 &149522
 GameObject:
   m_ObjectHideFlags: 0
