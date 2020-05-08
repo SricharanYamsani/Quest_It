@@ -64,6 +64,53 @@ public class BattleManager : Singleton<BattleManager>
     protected override void Awake()
     {
         base.Awake();
+
+        GameOver += GameOverMethod;
+    }
+
+    private void GameOverMethod()
+    {
+        BattleData data = new BattleData();
+
+        bool blueLost = true;
+
+        for (int i = 0; i < CurrentBlueTeam.Count; i++)
+        {
+            if (CurrentBlueTeam[i].IsAlive)
+            {
+                blueLost = false;
+            }
+        }
+        foreach (BattlePlayer player in CurrentBlueTeam)
+        {
+            if (blueLost)
+            {
+                data.BattleLosers.Add(player.playerInfo.character);
+            }
+            else
+            {
+                data.BattleWinners.Add(player.playerInfo.character);
+            }
+        }
+        foreach (BattlePlayer player in CurrentRedTeam)
+        {
+            if (!blueLost)
+            {
+                data.BattleLosers.Add(player.playerInfo.character);
+            }
+            else
+            {
+                data.BattleWinners.Add(player.playerInfo.character);
+            }
+        }
+
+        data.RoundsPlayed = Rounds;
+
+        data.TurnsPlayed = Turns;
+
+        data.Outcome = blueLost ? BattleOutcome.WIN : BattleOutcome.LOSE;
+
+        GameManager.Instance.CheckForQuestCompletion((response) => { }, data);
     }
 
     private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over
@@ -96,7 +143,7 @@ public class BattleManager : Singleton<BattleManager>
 
     private void TurnStartFunc(BattlePlayer player) // Turn Over Method
     {
-
+        Turns++;
     }
 
     private void RoundStartFunc()
@@ -148,7 +195,7 @@ public class BattleManager : Singleton<BattleManager>
                 player.character = (BattleCharacters)UnityEngine.Random.Range(1, 6);
                 //BattleCharacters.OCCULTIST;
 
-                player.chosenMoves.Add(Moves.SWORD_SLASH);
+                player.chosenMoves.Add(Moves.GUT_MID_1);
                 player.chosenMoves.Add(Moves.PIERCE_ATTACK_1);
                 player.chosenMoves.Add(Moves.MAGIC_HEAL_SMALL_1);
                 player.chosenMoves.Add(Moves.LIGHTNING_SMALL_1);
@@ -450,7 +497,7 @@ public class BattleManager : Singleton<BattleManager>
             default: throw new Exception("Invalid Target Range : Wrong Info in selected move");
         }
 
-        if (choice.playerCondition == PlayerConditions.ALIVE)
+        if (choice.TargetCondition == PlayerConditions.ALIVE)
         {
             if (choice.targetRange == AttackRange.ALLENEMY || choice.targetRange == AttackRange.ONEENEMY)
             {
@@ -473,7 +520,7 @@ public class BattleManager : Singleton<BattleManager>
                 }
             }
         }
-        else if (choice.playerCondition == PlayerConditions.DEAD)
+        else if (choice.TargetCondition == PlayerConditions.DEAD)
         {
             if (choice.targetRange == AttackRange.ALLENEMY || choice.targetRange == AttackRange.ONEENEMY)
             {

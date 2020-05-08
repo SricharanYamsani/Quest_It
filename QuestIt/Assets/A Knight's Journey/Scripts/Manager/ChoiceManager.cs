@@ -84,6 +84,19 @@ public class ChoiceManager : Singleton<ChoiceManager>
                 target.CurrentMana += DamageCalculator.GetChangeUpValue(currentAttacker.playerInfo.myAttributes, target.playerInfo.myAttributes, move, ref isHurt);
             }
 
+            if (isHurt)
+            {
+                if (move.damagePercentage != DamagePercentage.NONE)
+                {
+                    int x = UnityEngine.Random.Range(0, 100);
+
+                    if (x <= (int)move.damagePercentage)
+                    {
+                        // Hit was successful
+                    }
+                }
+            }
+
             target.SetReaction(isHurt);
         }
 

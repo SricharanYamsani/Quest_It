@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class BattleInitializer : Singleton<BattleInitializer>
@@ -12,7 +13,7 @@ public class BattleInitializer : Singleton<BattleInitializer>
 
     protected override void Awake()
     {
-        isDontDestroyOnLoad = true; 
+        isDontDestroyOnLoad = true;
         base.Awake();
 
     }
@@ -25,7 +26,7 @@ public class BattleInitializer : Singleton<BattleInitializer>
 
         quality.IsTeamRed = isTeamRed;
 
-        quality.chosenMoves.Add(Moves.SWIPE_SLASH);
+        quality.chosenMoves.Add(Moves.GUT_MID_1);
         quality.chosenMoves.Add(Moves.PIERCE_ATTACK_1);
         quality.chosenMoves.Add(Moves.MAGIC_HEAL_SMALL_1);
         quality.chosenMoves.Add(Moves.LIGHTNING_SMALL_1);
@@ -64,5 +65,10 @@ public class BattleInitializer : Singleton<BattleInitializer>
         }
 
         return false;
+    }
+
+    public void LoadWorldScene(string world)
+    {
+        LoadManager.Instance.LoadWorldScene(world);
     }
 }

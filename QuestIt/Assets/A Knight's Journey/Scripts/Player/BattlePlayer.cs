@@ -19,6 +19,8 @@ public class BattlePlayer : MonoBehaviour
 
     public PlayerIcon playerIcon;
 
+    public PlayerCondition playerCondition = PlayerCondition.NORMAL;
+
     //[EnumNamedArray(typeof(EPlayerCamera))]
     //public List<RPG.CameraControl.VirtualCameraComponent> playerCameras;
 

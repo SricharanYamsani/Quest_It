@@ -8,19 +8,23 @@ public abstract class BattleChoice : ScriptableObject
 
     public AttackRange targetRange = AttackRange.ONEENEMY;
 
-    public PlayerConditions playerCondition = PlayerConditions.NONE;
+    public PlayerConditions TargetCondition = PlayerConditions.NONE;
 
     public PercentageType percentageType = PercentageType.NONE;
 
     public TypesOfChoices choiceType = TypesOfChoices.NONE;
 
-    public MoveDuration MoveTurnsType;
-
-    public AnimationType m_AnimationClip;
-
     public AttributeTypes affectedAttribute = AttributeTypes.NONE;
 
     public Currency m_Currency = Currency.NONE;
+
+    public PlayerCondition playerCondition = PlayerCondition.NORMAL;
+
+    public DamagePercentage damagePercentage = DamagePercentage.NONE;
+
+    public MoveDuration MoveTurnsType;
+
+    public AnimationType m_AnimationClip;
 
     public Sprite ICON;
 

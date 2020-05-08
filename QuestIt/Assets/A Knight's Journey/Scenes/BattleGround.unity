@@ -517,6 +517,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 224438578}
     m_Modifications:
+    - target: {fileID: 437760513048115879, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 437760513048115879, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 437760513048115879, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 437760513048115879, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 437760513048115879, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1138223577387079797, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -676,6 +701,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI Choice Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 1584287946261407394, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1584287946261407394, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1584287946261407394, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1584287946261407394, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1584287946261407394, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1588525112027518759, guid: 8abb27f7e032447e0abbfa66cc49fb3f,
         type: 3}
@@ -3098,6 +3148,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f0abd58cd7994e978428aa0ec58cb4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1808875955
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1808875956}
+  m_Layer: 0
+  m_Name: BackgroundSoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1808875956
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808875955}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1062.5, y: 200, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1830263830 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1584287946881496164, guid: 8abb27f7e032447e0abbfa66cc49fb3f,

@@ -13,8 +13,6 @@ public class ArcherOneShot : MoveChoice
     {
         if (player != null)
         {
-            IWeapon m_Arrow = Instantiate<IWeapon>(arrow, player.rightHandSpawnInside);
-
             IWeapon mObject = Instantiate<IWeapon>(Bow, player.leftHandSpawnInside);
 
             mObject.amount = moveAffectDuration;
@@ -23,7 +21,15 @@ public class ArcherOneShot : MoveChoice
 
             mObject.Trigger();
 
-            player.transform.DOLookAt(target[0].transform.position, 0.1f).OnComplete(() => { m_Arrow.Trigger(target); });
+            player.transform.DOLookAt(target[0].transform.position, 0.1f).OnComplete(() =>
+            {
+                foreach (BattlePlayer myPlayer in target)
+                {
+                    IWeapon m_Arrow = Instantiate<IWeapon>(arrow, player.rightHandSpawnInside);
+
+                    m_Arrow.Trigger(myPlayer);
+                }
+            });
 
             player.mPlayerController.SetTrigger(m_AnimationClip.ToString());
 
