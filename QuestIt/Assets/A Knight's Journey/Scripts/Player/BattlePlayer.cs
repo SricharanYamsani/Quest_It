@@ -7,7 +7,14 @@ using TMPro;
 using DG.Tweening;
 using Photon.Realtime;
 
-public class BattlePlayer : MonoBehaviour
+public class
+
+
+
+
+
+
+    BattlePlayer : MonoBehaviour
 {
     public PlayerInfo playerInfo = new PlayerInfo();
 
@@ -306,7 +313,7 @@ public class BattlePlayer : MonoBehaviour
                 else
                 {
                     // AI Shit to go here.
-                    AIChoice();
+                    DOVirtual.DelayedCall(1.5f, () => { AIChoice(); });
                 }
                 
                 glowRing.gameObject.SetActive(true);

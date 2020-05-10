@@ -41,8 +41,6 @@ public class TacticsSelectionUI : MonoBehaviour
         if(_player != null)
         {
             _player.IsTacticDictationEnabled = isPlayerControlled;
-
-            Logger.Error("a");
         }
 
         SetText();
