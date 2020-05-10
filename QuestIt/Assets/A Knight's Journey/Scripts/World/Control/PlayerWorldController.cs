@@ -15,7 +15,7 @@ namespace RPG.Control
         FollowNPC follow;
         [SerializeField] EventSystem eventSystem;
         public PlayerInfo playerInfo;
-        
+
         //============================Functions=====================//
 
         //------------------
@@ -27,7 +27,8 @@ namespace RPG.Control
             playerInfo.IsPlayer = true;
             playerInfo.IsTeamRed = true;
 
-            transform.position = GameManager.Instance.playerWorldPos;
+            transform.position = GameManager.Instance.GetPlayerSpawnPosition();
+            Debug.LogError(transform.position);
         }
 
         //-------------------

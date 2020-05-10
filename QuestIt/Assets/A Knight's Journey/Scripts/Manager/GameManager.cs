@@ -155,7 +155,7 @@ public class GameManager : Singleton<GameManager>
         //{
         //    hasPlayerLost = false;
         //    return hospitalWorldPos;
-        //}
+        //} 
 
         return playerWorldPos;
     }
