@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using RPG.QuestSystem;
 using System;
+using RPG.Control;
+using UnityEngine.PlayerLoop;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -10,7 +13,37 @@ public class GameManager : Singleton<GameManager>
 
     private PlayerInventory playerInventory;
 
-    private List<Quest> currentQuests = new List<Quest>();
+    public List<Quest> playerQuests = new List<Quest>();
+    [SerializeField] List<Quest> completedQuests = new List<Quest>();
+    Quest currentTrackedQuest;
+    
+    //-------------------------------
+    private QuestLog questLog = null;
+    public QuestLog QuestLogInstance
+    {
+        get
+        {
+            if (questLog == null)
+            {
+                questLog = FindObjectOfType<QuestLog>();
+            }
+            return questLog;
+        }        
+    }
+
+    //------------------------------------------
+    private PlayerWorldController player = null;
+    public PlayerWorldController Player
+    {
+        get
+        {
+            if (player == null)
+            {
+                player = FindObjectOfType<PlayerWorldController>();
+            }
+            return player;
+        }
+    }
 
     private static int playerLevel;
 
@@ -30,6 +63,13 @@ public class GameManager : Singleton<GameManager>
 
     public string worldScene = "World";
 
+    protected override void Awake()
+    {
+        isDontDestroyOnLoad = true;
+        QuestEvents.QuestCompleted += AddCompletedQuestToList;
+        base.Awake();
+    }
+
     private void Start()
     {
         playerInventory = new PlayerInventory();
@@ -46,76 +86,89 @@ public class GameManager : Singleton<GameManager>
         return playerInventory;
     }
 
+    //-------------------------------------------------------------------
+    public void PreBattleSetup(PlayerInfo npcInfo, PlayerInfo playerInfo) //Susceptible to change. Depends on number of enemies
+    {
+        currentTrackedQuest = QuestLogInstance.GetCurrentTrackedQuest();
+        playerWorldPos = Player.transform.position;
+        BattleInitializer.Instance.AddBattlePlayer(npcInfo); //NPC
+        BattleInitializer.Instance.AddBattlePlayer(playerInfo); //Player            
+
+        //Start Battle
+        SceneManager.LoadScene("Lobby");
+    }
+
     public void CheckForQuestCompletion(Action<Quest, bool> callback, Consumables consumable) // If Addition in Inventory
     {
 
     }
 
-    public void CheckForQuestCompletion(Action<bool> callback, BattleData data) // If Completed a Battle
+    //---------------------------------------
+    public void UpdateQuests(BattleData data) // If Completed a Battle
     {
-        Quest holder;
-
-        bool questChanged = false;
-
-        for (int i = 0; i < currentQuests.Count; i++)
+        //Iterate through all player quests
+        for (int i = 0; i < playerQuests.Count; i++)
         {
-            holder = currentQuests[i];
+            Quest quest = playerQuests[i];
+            //Get current task requirement for every quest
+            TaskType currentQuestTaskType = quest.questTasks[quest.currentQuestTaskIndex].taskType;
 
-            for (int j = 0; j < holder.questTasks.Count; j++)
+            //If npc matches quest task requirement update task
+            /* TODO : Function currently takes into account 1v1 battles and therefore
+                      only a single quest is updated */               
+               
+            if (currentQuestTaskType.type == TaskType.Types.KILL)
             {
-                TaskType type = holder.questTasks[j].taskType;
-
-                if (type.type == TaskType.Types.KILL)
+                foreach (BattleCharacters character in data.BattleLosers)
                 {
-
-                    foreach (BattleCharacters character in data.BattleLosers)
+                    if (character.Equals(currentQuestTaskType.killTargets.npcType))
                     {
-                        if (character.Equals(type.killTargets.npcType))
-                        {
-                            type.current++;
-
-                            if (type.current >= type.numberOfTimes)
-                            {
-                                holder.questTasks[j].completedTask = true;
-                            }
-
-                            questChanged = true;
-                        }
+                        quest.UpdateQuest();
+                        break;
                     }
                 }
-            }
-
-            bool questCompleted = true;
-
-            foreach (QuestTask qt in holder.questTasks)
-            {
-                if (!qt.completedTask)
-                {
-                    questCompleted = false;
-                }
-            }
-
-            holder.completedQuest = questCompleted;
+            }            
         }
 
-        callback?.Invoke(questChanged);
+        BattleInitializer.Instance.lobbyPlayers.Clear();
     }
 
-    public void GetCurrentQuests(Action<List<Quest>> callback)
+    //----------------------------------------------
+    public void AddCompletedQuestToList(Quest quest)
     {
-        List<Quest> temp = new List<Quest>();
-
-        for (int i = 0; i < currentQuests.Count; i++)
+        completedQuests.Add(quest);
+        for (int i = 0; i < playerQuests.Count; i++)
         {
-            temp.Add(currentQuests[i]);
+            if(playerQuests[i].id == quest.id)
+            {
+                playerQuests.RemoveAt(i);
+                break;
+            }
         }
+    }    
 
-        callback?.Invoke(temp);
+    //----------------------------------
+    public List<Quest> GetPlayerQuests()
+    {
+        return playerQuests;
     }
 
-    public void AddQuests(Quest quest)
+    //-------------------------------------
+    public List<Quest> GetCompletedQuests()
     {
-        currentQuests.Add(quest);
+        return completedQuests;
+    }
+
+    //-----------------------------------
+    public Quest GetCurrentTrackedQuest()
+    {
+        return currentTrackedQuest;
+    }
+
+    //---------------------
+    public void OnDisable()
+    {
+        QuestEvents.QuestCompleted -= AddCompletedQuestToList;
     }
 }
 

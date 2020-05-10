@@ -12,12 +12,10 @@ namespace RPG.QuestSystem
         public static System.Action InteractionStarted;
         public static System.Action InteractionFinished;
 
-        public static System.Action UntrackTask;
         public static System.Action<QuestTask> TrackTask;
         public static System.Action TaskUpdated;
-        public static System.Action TaskCompleted;
-        public static System.Action QuestCompleted;
-
+        public static System.Action<Quest> QuestCompleted;
+       
         public static System.Action<NPC> AddNPCLocation;
 
         public static System.Action<Quest> StartDialogue;

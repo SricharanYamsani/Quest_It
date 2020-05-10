@@ -9,31 +9,23 @@ namespace RPG.NPCs
     public class DuelNPC : NPC
     {
         public BattleCharacters npcKillType;
-        QuestTask questTask;
-
+        
         //--------------------------
         public override void Start()
         {
             base.Start();
             npcType = NPCType.Duel;
-            QuestEvents.TrackTask += TrackTask;
-            QuestEvents.TaskCompleted += TaskCompleted;
-            QuestEvents.UntrackTask += UntrackTask;
+            QuestEvents.TrackTask += TrackTask;            
         }
 
         //-------------------
         private void Update()
         {
-            //Player in interaction range and quest available
-            if (Vector3.Distance(player.transform.position, transform.position) <= interactionRange &&
-                questTask != null)
+            //Player in interaction range
+            if (Vector3.Distance(player.transform.position, transform.position) <= interactionRange)
             {
-                if (questTask.taskType.type == TaskType.Types.KILL &&
-                    questTask.taskType.killTargets.npcType == npcKillType)
-                {
-                    interactionIcon.SetActive(true);
-                }
-            } 
+                interactionIcon.SetActive(true);
+            }
             else
             {
                 interactionIcon.SetActive(false);
@@ -43,7 +35,6 @@ namespace RPG.NPCs
         //----------------------------------------
         public void TrackTask(QuestTask questTask)
         {
-            this.questTask = questTask;
             if (questTask.taskType.type == TaskType.Types.KILL &&
                    questTask.taskType.killTargets.npcType == npcKillType)
             {
@@ -51,36 +42,19 @@ namespace RPG.NPCs
             }
         }
 
-        //-------------------------
-        public void TaskCompleted()
-        {
-            questTask = null;            
-        }
-
-        //-----------------------
-        public void UntrackTask()
-        {
-            questTask = null;
-        }
-
         //---------------------------------------
-        public override void InteractWithPlayer()
+        public override void OnPlayerInteraction()
         {
-            playerInfo.IsTeamRed = false;
+            npcInfo.IsTeamRed = false;
             player.playerInfo.IsTeamRed = true;
-            BattleInitializer.Instance.AddBattlePlayer(playerInfo); //NPC
-            BattleInitializer.Instance.AddBattlePlayer(player.playerInfo); //Player
-            SceneManager.LoadScene("Lobby");
-            //questTask.UpdateTask();
-            //gameObject.SetActive(false);
+
+            GameManager.Instance.PreBattleSetup(npcInfo, player.playerInfo);            
         }
 
         //----------------------
         public void OnDisable()
         {
-            QuestEvents.TrackTask -= TrackTask;
-            QuestEvents.TaskCompleted -= TaskCompleted;
-            QuestEvents.UntrackTask -= UntrackTask;
+            QuestEvents.TrackTask -= TrackTask;            
         }
     }
 }
