@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviour
 
     public Button playerCharacteristicsButton;
 
+    public Image playerCharacteristicsIcon;
+
     [HideInInspector]public PlayerCharacteristicsManager playerCharacteristicsManager;
     public PlayerCharacteristicsManager playerCharacteristicsManagerPrefab;
 
@@ -55,6 +57,8 @@ public class UIManager : MonoBehaviour
         playerCharacteristicsButton.onClick.RemoveAllListeners();
 
         playerCharacteristicsButton.onClick.AddListener(OnPlayerCharacteristicsButtonClicked);
+
+        playerCharacteristicsIcon.sprite = GetPlayerImage(playerController.playerInfo.character);
     }
 
     void OnPlayerCharacteristicsButtonClicked()
