@@ -11,7 +11,12 @@ public class DialogueSystem : MonoBehaviour
     public TextMeshProUGUI dialogueText;
     public TextMeshProUGUI proceedButtonText;
 
-    Quest availableQuest;
+    public List<string> questDialog;
+    public bool questInitiationDialog;
+    public int currentDialogIndex;
+
+    public GameObject proceedButton;
+    public GameObject backButton;
 
     //------------------
     private void Start()
@@ -19,59 +24,99 @@ public class DialogueSystem : MonoBehaviour
         QuestEvents.StartDialogue += StartDialogue;
     }
 
-    //------------------------------------
-    public void StartDialogue(Quest quest)
+    //-----------------------------------------------------------------------------
+    public void StartDialogue(List<string> questDialog, bool questInitiationDialog)
     {
-        availableQuest = quest;
+        this.questDialog = questDialog;
+        this.questInitiationDialog = questInitiationDialog;
+
         dialoguePanel.SetActive(true);
-        dialogueText.text = availableQuest.questDialogue[0];
+        dialogueText.text = questDialog[0];
+        if (currentDialogIndex == questDialog.Count - 1)
+        {
+            if (questInitiationDialog)
+            {
+                proceedButtonText.text = "Accept";
+            }
+            else
+            {
+                proceedButton.SetActive(false);
+            }
+        }
     }
 
     //----------------------------
     public void ShowNextDialogue()
     {
-        availableQuest.currentDialogueIndex++;
-        if (availableQuest.currentDialogueIndex == availableQuest.questDialogue.Count - 1)
+        currentDialogIndex++;
+        if (currentDialogIndex == questDialog.Count - 1)
         {
-            proceedButtonText.text = "Accept";
+            if (questInitiationDialog)
+            {
+                proceedButtonText.text = "Accept";
+            }
+            else
+            {
+                proceedButton.SetActive(false);
+            }
         }
-        if (availableQuest.currentDialogueIndex >= availableQuest.questDialogue.Count)
+       
+        if (currentDialogIndex >= questDialog.Count)
         {
-            QuestEvents.QuestAccepted();
             ExitDialogue();
+            QuestEvents.QuestAccepted();
         }
         else
         {
-            dialogueText.text = availableQuest.questDialogue[availableQuest.currentDialogueIndex];
+            dialogueText.text = questDialog[currentDialogIndex];
         }
     }
 
     //--------------------------------
     public void ShowPreviousDialogue()
     {
-        availableQuest.currentDialogueIndex--;
-        availableQuest.currentDialogueIndex = Mathf.Clamp(availableQuest.currentDialogueIndex, 
-                                0, availableQuest.questDialogue.Count - 1);
+        currentDialogIndex--;
+        currentDialogIndex = Mathf.Clamp(currentDialogIndex, 0, questDialog.Count - 1);
         
-        if(availableQuest.currentDialogueIndex < availableQuest.questDialogue.Count - 1)
+        if(currentDialogIndex < questDialog.Count - 1)
         {
             proceedButtonText.text = "Next";
         }
-        
-        if (availableQuest.currentDialogueIndex >= 0)
+        if (currentDialogIndex >= 0)
         {
-            dialogueText.text = availableQuest.questDialogue[availableQuest.currentDialogueIndex];
+            dialogueText.text = questDialog[currentDialogIndex];
         }
     }
 
     //------------------------
     public void ExitDialogue()
     {
-        availableQuest.currentDialogueIndex = 0;
+        currentDialogIndex = 0;
         dialoguePanel.SetActive(false);
         proceedButtonText.text = "Next";
 
         QuestEvents.InteractionFinished();
+
+        //If dialog not part of quest initiation i.e. part of a quest task
+        if(!questInitiationDialog)
+        {
+            proceedButton.SetActive(true);
+            List<Quest> playerQuests = GameManager.Instance.GetPlayerQuests();
+            for (int i = 0; i < playerQuests.Count; i++)
+            {
+                Quest quest = playerQuests[i];
+                //Get current task requirement for every quest
+                TaskType currentQuestTaskType = quest.questTasks[quest.currentQuestTaskIndex].taskType;
+
+                //If item type matches quest task requirement update task
+                /* TODO : only a single quest is updated */
+                if (currentQuestTaskType.type == TaskType.Types.RETURN_TO_QUESTGIVER)
+                {
+                    quest.UpdateQuest();
+                    break;                    
+                }
+            }
+        }
     }
 
     //----------------------

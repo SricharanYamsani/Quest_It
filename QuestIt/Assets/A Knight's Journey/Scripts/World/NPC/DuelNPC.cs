@@ -42,7 +42,7 @@ namespace RPG.NPCs
             }
         }
 
-        //---------------------------------------
+        //----------------------------------------
         public override void OnPlayerInteraction()
         {
             npcInfo.IsTeamRed = false;
@@ -51,7 +51,7 @@ namespace RPG.NPCs
             GameManager.Instance.PreBattleSetup(npcInfo, player.playerInfo);            
         }
 
-        //----------------------
+        //---------------------
         public void OnDisable()
         {
             QuestEvents.TrackTask -= TrackTask;            

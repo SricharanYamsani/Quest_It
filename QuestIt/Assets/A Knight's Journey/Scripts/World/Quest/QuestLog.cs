@@ -196,7 +196,7 @@ namespace RPG.QuestSystem
                     if (button.GetComponent<QuestTrackButton>().track)
                     {
                         button.GetComponentInChildren<TextMeshProUGUI>().text = "Untrack";
-                        currentTrackedQuest = GameManager.Instance.playerQuests.Find((Quest quest) => quest.id == id);
+                        currentTrackedQuest = GameManager.Instance.GetPlayerQuests().Find((Quest quest) => quest.id == id);
                         questArrow.SetActive(true);
                         DisplayQuest(currentTrackedQuest.questDesc);
                         TrackNextTask();

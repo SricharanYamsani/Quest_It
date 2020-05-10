@@ -13,7 +13,7 @@ public class GameManager : Singleton<GameManager>
 
     private PlayerInventory playerInventory;
 
-    public List<Quest> playerQuests = new List<Quest>();
+    [SerializeField] List<Quest> playerQuests = new List<Quest>();
     [SerializeField] List<Quest> completedQuests = new List<Quest>();
     Quest currentTrackedQuest;
     
@@ -140,6 +140,16 @@ public class GameManager : Singleton<GameManager>
             }
         }
     }    
+
+    //------------------------------------------------------
+    public void AddAvailableQuestToPlayerQuests(Quest quest)
+    {
+        playerQuests.Add(quest);
+        for (int i = 0; i < quest.questTasks.Count; i++)
+        {
+            quest.questTasks[i].parentQuest = quest;
+        }
+    }
 
     //----------------------------------
     public List<Quest> GetPlayerQuests()

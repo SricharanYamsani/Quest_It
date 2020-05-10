@@ -13,8 +13,11 @@ namespace RPG.NPCs
 
         [SerializeField] GameObject questIcon;
         public List<Quest> quests = new List<Quest>();
-        Quest availableQuest;
-                               
+        public Quest availableQuest;
+
+        public List<string> questDialog;
+        public bool questInitiationDialog;
+
         //============================Functions=====================//
 
         // Start is called before the first frame update
@@ -25,6 +28,7 @@ namespace RPG.NPCs
             npcType = NPCType.QuestGiver;
             questLog = FindObjectOfType<QuestLog>();
 
+            QuestEvents.TrackTask += TrackTask;
             QuestEvents.QuestAccepted += QuestAccepted;
             QuestEvents.QuestCompleted += CheckQuestAvailable;
 
@@ -44,30 +48,46 @@ namespace RPG.NPCs
             }
             //Remove quests that have already been completed
             List<Quest> completedQuests = GameManager.Instance.GetCompletedQuests();
-            for (int i = 0; i < completedQuests.Count; i++)
+            if (completedQuests.Count > 0)
             {
-                int index = quests.FindIndex((Quest quest) => quest.id == completedQuests[i].id);
-                quests.RemoveAt(index);
+                for (int i = 0; i < completedQuests.Count; i++)
+                {
+                    int index = quests.FindIndex((Quest quest) => quest.id == completedQuests[i].id);
+                    CheckQuestAvailable(completedQuests[i]);
+                    quests.RemoveAt(index);
+                }
             }
-            CheckQuestAvailable();
+            else
+            {
+                CheckQuestAvailable();
+            }              
         }
 
         //-------------------
         private void Update()
         {
             //Player in interaction range and quest available
-            if(Vector3.Distance(player.transform.position, transform.position) <= interactionRange && 
-                availableQuest != null)
+            if(Vector3.Distance(player.transform.position, transform.position) <= interactionRange)
             {
                 questIcon.SetActive(false);
                 interactionIcon.SetActive(true);
             }
             //Player out of interaction range and quest available
-            else if(Vector3.Distance(player.transform.position, transform.position) > interactionRange &&
-                availableQuest != null)
+            else if(Vector3.Distance(player.transform.position, transform.position) > interactionRange)
             {
                 questIcon.SetActive(true);
                 interactionIcon.SetActive(false);
+            }
+        }
+
+        //----------------------------------------
+        public void TrackTask(QuestTask questTask)
+        {
+            if (questTask.taskType.type == TaskType.Types.RETURN_TO_QUESTGIVER)
+            {
+                QuestEvents.AddNPCLocation(this);
+                questDialog = questTask.taskDialog;
+                questInitiationDialog = false;                
             }
         }
 
@@ -75,16 +95,34 @@ namespace RPG.NPCs
         public void CheckQuestAvailable(Quest quest = null)
         {
             //Get quests that are available according to the player level
-            List<Quest> unlockedQuests = quests.FindAll((Quest item) =>
-                                item.questType.unlockRequirements.level == 0);
+            List<Quest> unlockedQuests = new List<Quest>();
+            for (int i = 0; i < quests.Count; i++)
+            {
+                //TODO : Replace 0 with actual player level
+                if(quests[i].questType.unlockRequirements.level == 0)
+                {
+                    if(quests[i].questType.unlockRequirements.questID != -1 &&
+                        quests[i].questType.unlockRequirements.questID == quest.id)
+                    {
+                        unlockedQuests.Add(quests[i]);
+                    }
+
+                    if(quests[i].questType.unlockRequirements.questID == -1)
+                    {
+                        unlockedQuests.Add(quests[i]);
+                    }
+                }
+            }
 
             for (int i = 0; i < unlockedQuests.Count; i++)
             {
                 //Find a quest that is not yet given to the player
-                Quest playerHasQuest = GameManager.Instance.playerQuests.Find((Quest item) => item.id == unlockedQuests[i].id);
+                Quest playerHasQuest = GameManager.Instance.GetPlayerQuests().Find((Quest item) => item.id == unlockedQuests[i].id);
                 if (playerHasQuest == null)
                 {
                     availableQuest = unlockedQuests[i];
+                    questDialog = availableQuest.questDialog;
+                    questInitiationDialog = true;
                     questIcon.SetActive(true);
                     return;
                 }
@@ -96,15 +134,15 @@ namespace RPG.NPCs
             availableQuest = null;
         }
 
-        //---------------------------------------
+        //----------------------------------------
         public override void OnPlayerInteraction()
         {
             //Disable Player movement while dialog is active
             QuestEvents.InteractionStarted();
 
             //Start Dialogue
-            QuestEvents.StartDialogue(availableQuest);
-            interactionIcon.SetActive(false);
+            QuestEvents.StartDialogue(questDialog, questInitiationDialog);
+            interactionIcon.SetActive(false);            
         }
 
         //--------------------------
@@ -115,7 +153,7 @@ namespace RPG.NPCs
 
             questLog.DisplayQuest(availableQuest.questDesc);
             questLog.SetupQuestInQuestLog(availableQuest);
-            GameManager.Instance.playerQuests.Add(availableQuest);
+            GameManager.Instance.AddAvailableQuestToPlayerQuests(availableQuest);
             questLog.ToggleQuestActive(availableQuest.id);
 
             //Remove quest given to player from quest list
@@ -127,7 +165,7 @@ namespace RPG.NPCs
                 }
             }
 
-            CheckQuestAvailable();
+            //CheckQuestAvailable();
         }
 
         //----------------------
@@ -135,6 +173,7 @@ namespace RPG.NPCs
         {
             QuestEvents.QuestAccepted -= QuestAccepted;
             QuestEvents.QuestCompleted -= CheckQuestAvailable;
+            QuestEvents.TrackTask -= TrackTask;
         }
     }
 }

@@ -23,15 +23,15 @@ namespace RPG.QuestSystem
         public string questDesc;
         public List<QuestTask> questTasks = new List<QuestTask>();
         public int currentQuestTaskIndex;
-
+        
         [HideInInspector] public bool completedQuest;
         [HideInInspector] public bool questCompletionDisplayed;
 
-        public List<string> questDialogue;
+        public List<string> questDialog;
         public int currentDialogueIndex;
 
         //============================Functions=====================//
-
+                
         //-----------------------------------------------------------
         public void TrackNextTask(TextMeshProUGUI sceneQuestInfoText)
         {
@@ -63,9 +63,12 @@ namespace RPG.QuestSystem
     public class QuestTask
     {
         //==========================Variables===================//
+        public Quest parentQuest;
         [HideInInspector] public bool completedTask;
         public string description;  //Description of the task
         public TaskType taskType;
+
+        public List<string> taskDialog;
 
         //=========================Functions====================//
 
@@ -82,21 +85,23 @@ namespace RPG.QuestSystem
         //--------------------------------------------------------------------
         public void DisplayTaskDescription(TextMeshProUGUI sceneQuestInfoText)
         {
-            sceneQuestInfoText.text = description + " " + taskType.current + "/" + taskType.numberOfTimes;   
+            if (taskType.numberOfTimes > 0)
+            {
+                sceneQuestInfoText.text = description + " " + taskType.current + "/" + taskType.numberOfTimes;
+            }
         }
     }
 
     [System.Serializable]
     public class TaskType
     {
-        public enum Types { KILL, DEFEND, GATHER }
+        public enum Types { KILL, DEFEND, GATHER, RETURN_TO_QUESTGIVER }
         public Types type;
 
         [HideInInspector] public int current = 0;
         public int numberOfTimes;
 
         public KillTargets killTargets = new KillTargets();
-        public DefendTargets defendTargets = new DefendTargets();
         public GatherTargets gatherTargets = new GatherTargets();
     }
 
@@ -105,13 +110,7 @@ namespace RPG.QuestSystem
     {
         public BattleCharacters npcType;
     }
-
-    [System.Serializable]
-    public class DefendTargets
-    {
-        public QuestEnums.DefendType npcType;
-    }
-
+       
     [System.Serializable]
     public class GatherTargets
     {
@@ -132,5 +131,6 @@ namespace RPG.QuestSystem
     {
         //Player level
         public int level;
+        public int questID = -1;
     }
 }

@@ -18,7 +18,7 @@ namespace RPG.QuestSystem
        
         public static System.Action<NPC> AddNPCLocation;
 
-        public static System.Action<Quest> StartDialogue;
+        public static System.Action<List<string>, bool> StartDialogue;
         public static System.Action QuestAccepted;
     }
 }
