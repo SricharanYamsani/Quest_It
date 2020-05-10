@@ -398,7 +398,7 @@ public class
 
     public void PlayReaction(string animation = "")
     {
-        GameObject m = new GameObject();
+        GameObject m = null;
 
         if (PlayerState == PlayerState.BLOCK)
         {
@@ -421,7 +421,10 @@ public class
 
         DOVirtual.DelayedCall(1, () =>
         {
-            Destroy(m.gameObject);
+            if (m != null)
+            {
+                Destroy(m.gameObject);
+            }
         });
 
         PlayerState = PlayerState.NONE;
