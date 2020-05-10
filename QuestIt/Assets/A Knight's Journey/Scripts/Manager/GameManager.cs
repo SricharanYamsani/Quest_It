@@ -6,17 +6,24 @@ using RPG.QuestSystem;
 using System;
 using RPG.Control;
 using UnityEngine.PlayerLoop;
+using RPG.NPCs;
 
 public class GameManager : Singleton<GameManager>
 {
     public static List<Consumables> allConsumables;
 
-    private PlayerInventory playerInventory;
+    [SerializeField]private PlayerInventory playerInventory;
 
     public List<Quest> playerQuests = new List<Quest>();
     [SerializeField] List<Quest> completedQuests = new List<Quest>();
     Quest currentTrackedQuest;
-    
+
+    public List<Transform> spawnPositions;
+    public DuelNPC []currentDuelNPCs;
+    public int currentNPCId;
+
+    public bool hasPlayerLost;
+
     //-------------------------------
     private QuestLog questLog = null;
     public QuestLog QuestLogInstance
@@ -60,6 +67,7 @@ public class GameManager : Singleton<GameManager>
     }
 
     public Vector3 playerWorldPos;
+    public Vector3 hospitalWorldPos;
 
     public string worldScene = "World";
 
@@ -68,6 +76,8 @@ public class GameManager : Singleton<GameManager>
         isDontDestroyOnLoad = true;
         QuestEvents.QuestCompleted += AddCompletedQuestToList;
         base.Awake();
+
+        currentDuelNPCs = FindObjectsOfType<DuelNPC>();
     }
 
     private void Start()
@@ -129,8 +139,25 @@ public class GameManager : Singleton<GameManager>
                 }
             }            
         }
-
         BattleInitializer.Instance.lobbyPlayers.Clear();
+    }
+
+    //-----------------------------------------
+    public Vector3 GetRandomSpawnPointForNPC()
+    {
+        return spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)].position;
+    }
+
+    //--------------------------------------------
+    public Vector3 GetPlayerSpawnPosition()
+    {
+        //if(hasPlayerLost)
+        //{
+        //    hasPlayerLost = false;
+        //    return hospitalWorldPos;
+        //}
+
+        return playerWorldPos;
     }
 
     //----------------------------------------------

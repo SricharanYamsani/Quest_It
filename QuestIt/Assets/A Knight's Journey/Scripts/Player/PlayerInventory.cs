@@ -5,8 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerInventory
 {
-    Dictionary<Consumables, int> playerConsumables;
-    int coins;
+    [SerializeField]Dictionary<Consumables, int> playerConsumables;
+    [SerializeField]int coins;
 
     public PlayerInventory()
     {

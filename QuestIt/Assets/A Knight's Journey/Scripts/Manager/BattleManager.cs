@@ -115,6 +115,10 @@ public class BattleManager : Singleton<BattleManager>
 
         data.Outcome = blueLost ? BattleOutcome.WIN : BattleOutcome.LOSE;
 
+        Debug.LogError(data.Outcome);
+
+        GameManager.Instance.hasPlayerLost = !blueLost;
+
         GameManager.Instance.UpdateQuests(data);
 
         LootManager.Instance.GenerateLoot(1, alliesAlive, alliesHealth, false);
