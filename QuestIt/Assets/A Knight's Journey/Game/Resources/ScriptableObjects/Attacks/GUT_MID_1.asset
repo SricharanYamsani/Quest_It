@@ -24,12 +24,12 @@ MonoBehaviour:
   MoveTurnsType: 2
   m_AnimationClip: 7
   ICON: {fileID: 21300000, guid: 767add28989c640b0b1427dd497b97b9, type: 3}
-  m_CurrencyAmount: 0
+  m_CurrencyAmount: 10
   moveAffectDuration: 5
   attributeChange: 35
   endTime: 5
   description: 
-  moveName: SWORD
+  moveName: Gash
   move: 202
-  slashAttack: {fileID: 8586001506225626225, guid: 2d051abfebeda054eac2b6a15edf6d4e,
+  slashAttack: {fileID: -101188854264143142, guid: 67374d3ca0b3eb74983e945af267bc0d,
     type: 3}

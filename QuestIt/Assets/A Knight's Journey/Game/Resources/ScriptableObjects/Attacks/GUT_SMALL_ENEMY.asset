@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 747f570aefda144efb49fd0700aebe62, type: 3}
-  m_Name: GUT_SMALL_1
+  m_Name: GUT_SMALL_ENEMY
   m_EditorClassIdentifier: 
   battleTask: 6
-  targetRange: 1
+  targetRange: 2
   TargetCondition: 2
   percentageType: 0
   choiceType: 1
@@ -29,7 +29,7 @@ MonoBehaviour:
   attributeChange: 20
   endTime: 5
   description: 
-  moveName: Barbarous Slice
-  move: 200
+  moveName: Barbarous Smash
+  move: 201
   slashAttack: {fileID: -3713231385161006817, guid: 77d6e8e3fa15a0b419d018e3e16931f6,
     type: 3}

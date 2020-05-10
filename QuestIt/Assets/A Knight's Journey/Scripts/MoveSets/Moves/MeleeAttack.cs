@@ -37,7 +37,12 @@ public class MeleeAttack : MoveChoice
 
                     mObject.moveDuration = MoveTurnsType;
 
-                    mObject.Trigger();
+                    mObject.Trigger(target[i]);
+
+                    if (soundClip != null)
+                    {
+                        SoundManager.Instance.PlaySound(soundClip.ToString());
+                    }
                 }
             }));
 

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 868e5de027caf4dc28638616f0a673d6, type: 3}
-  m_Name: ARCHER_ONE_SHOT
+  m_Script: {fileID: 11500000, guid: 747f570aefda144efb49fd0700aebe62, type: 3}
+  m_Name: THROB_SMALL_1
   m_EditorClassIdentifier: 
   battleTask: 6
   targetRange: 1
@@ -22,14 +22,15 @@ MonoBehaviour:
   playerCondition: 0
   damagePercentage: 0
   MoveTurnsType: 2
-  m_AnimationClip: 6
-  ICON: {fileID: 21300000, guid: 54d7b8e456f3c43eca206adfe1ebfb00, type: 3}
+  m_AnimationClip: 7
+  ICON: {fileID: 21300000, guid: bc26e5dea2dc8423cad54e69ccdc08de, type: 3}
+  soundClip: {fileID: 0}
   m_CurrencyAmount: 0
   moveAffectDuration: 0
-  attributeChange: 45
-  endTime: 7
-  description: Godly Arrow which greatly inflict damage to your opponnent.
-  moveName: Pierce Through
-  move: 1
-  Bow: {fileID: 4042279297866727367, guid: c330e66a0481a4e9c8151c787830bcc0, type: 3}
-  arrow: {fileID: 2886713559955451662, guid: 11bed329b649d4978ba8e6d2348e1d10, type: 3}
+  attributeChange: 35
+  endTime: 5
+  description: 
+  moveName: 
+  move: 206
+  slashAttack: {fileID: -2471122607369754470, guid: 73a3a14a35c722943ad82f0150bfeb69,
+    type: 3}

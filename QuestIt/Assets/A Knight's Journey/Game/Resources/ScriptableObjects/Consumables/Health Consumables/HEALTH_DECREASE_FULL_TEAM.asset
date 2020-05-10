@@ -9,27 +9,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 747f570aefda144efb49fd0700aebe62, type: 3}
-  m_Name: GUT_SMALL_1
+  m_Script: {fileID: 11500000, guid: 18d9f4dd4241c492dadee23b4cd59cf6, type: 3}
+  m_Name: HEALTH_DECREASE_FULL_TEAM
   m_EditorClassIdentifier: 
   battleTask: 6
-  targetRange: 1
+  targetRange: 2
   TargetCondition: 2
-  percentageType: 0
-  choiceType: 1
+  percentageType: 3
+  choiceType: 3
   affectedAttribute: 1
-  m_Currency: 2
+  m_Currency: 0
   playerCondition: 0
   damagePercentage: 0
   MoveTurnsType: 2
   m_AnimationClip: 7
-  ICON: {fileID: 21300000, guid: 767add28989c640b0b1427dd497b97b9, type: 3}
-  m_CurrencyAmount: 10
+  ICON: {fileID: 21300000, guid: efe3f31d067f24e998a90be1810a5355, type: 3}
+  soundClip: {fileID: 0}
+  m_CurrencyAmount: 0
   moveAffectDuration: 5
-  attributeChange: 20
+  attributeChange: 0
   endTime: 5
   description: 
-  moveName: Barbarous Slice
-  move: 200
-  slashAttack: {fileID: -3713231385161006817, guid: 77d6e8e3fa15a0b419d018e3e16931f6,
+  moveName: 
+  itemName: 12
+  consumableWeapon: {fileID: -6779147246751792646, guid: ff672eaca96d32c419d7a1f1b0346e8d,
     type: 3}

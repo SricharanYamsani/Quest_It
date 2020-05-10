@@ -20,7 +20,7 @@ public class TacticsSelection : MonoBehaviour
 
         for (int i = 0; i < tacticSelections.Count; i++)
         {
-            if(i<team.Count)
+            if (i < team.Count)
             {
                 tacticSelections[i].Setup(team[i]);
                 tacticSelections[i].gameObject.SetActive(true);

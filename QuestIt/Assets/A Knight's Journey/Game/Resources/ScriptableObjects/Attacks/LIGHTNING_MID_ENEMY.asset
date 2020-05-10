@@ -9,27 +9,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 747f570aefda144efb49fd0700aebe62, type: 3}
-  m_Name: GUT_SMALL_1
+  m_Script: {fileID: 11500000, guid: 9c5efcd0c63c74205956db0720e0e88a, type: 3}
+  m_Name: LIGHTNING_MID_ENEMY
   m_EditorClassIdentifier: 
   battleTask: 6
-  targetRange: 1
+  targetRange: 2
   TargetCondition: 2
-  percentageType: 0
+  percentageType: 2
   choiceType: 1
   affectedAttribute: 1
-  m_Currency: 2
+  m_Currency: 1
   playerCondition: 0
   damagePercentage: 0
   MoveTurnsType: 2
   m_AnimationClip: 7
-  ICON: {fileID: 21300000, guid: 767add28989c640b0b1427dd497b97b9, type: 3}
+  ICON: {fileID: 21300000, guid: e0f8d40a40396435d85f755d3dfa582f, type: 3}
+  soundClip: {fileID: 0}
   m_CurrencyAmount: 10
-  moveAffectDuration: 5
-  attributeChange: 20
-  endTime: 5
-  description: 
-  moveName: Barbarous Slice
-  move: 200
-  slashAttack: {fileID: -3713231385161006817, guid: 77d6e8e3fa15a0b419d018e3e16931f6,
+  moveAffectDuration: 0
+  attributeChange: 45
+  endTime: 6
+  description: Lightning Strike
+  moveName: LIGHNING STRIKE
+  move: 65
+  lightningEffect: {fileID: 1966368628428095605, guid: 190808e74206041f7b81741b16ebb4eb,
     type: 3}
