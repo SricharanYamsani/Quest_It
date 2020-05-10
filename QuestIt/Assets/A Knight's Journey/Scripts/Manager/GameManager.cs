@@ -37,6 +37,12 @@ public class GameManager : Singleton<GameManager>
 
     public PlayerInventory GetPlayerInventory()
     {
+        if(playerInventory == null)
+        {
+            Debug.LogError("Player inventory was null");
+            playerInventory = new PlayerInventory();
+        }
+
         return playerInventory;
     }
 
