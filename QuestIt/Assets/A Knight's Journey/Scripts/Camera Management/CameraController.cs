@@ -274,6 +274,11 @@ namespace RPG.CameraControl
         int count = 0;
         public void RegisterTarget(int id, Transform targetTransform, bool isTeamRed)
         {
+            if(isTeamRed)
+            {
+                return;
+            }
+
             if(!targetDict.ContainsKey(id))
             {
                 targetDict.Add(id, targetTransform);
@@ -301,17 +306,19 @@ namespace RPG.CameraControl
             {
                 float y = 0f;
                 int id = ids[i];
-                Transform targetTransform = targetDict[i];
+                Transform targetTransform = targetDict[id];
                 Vector2 diff = new Vector2(camParent.position.x, camParent.position.z) - new Vector2(targetTransform.position.x, targetTransform.position.z);
 
                 Debug.DrawLine(camParent.transform.position, targetTransform.position, Color.red, 10000f);
 
                 y = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg ;
 
-                Debug.Log(y);
+                //Debug.Log(y);
 
                 yAngles.Add(id, y);
             }
+            camParent.localRotation = Quaternion.Euler(new Vector3(0, 45, 0));
+            
         }
 
         public void SwitchToActivePlayer(int playerId)
