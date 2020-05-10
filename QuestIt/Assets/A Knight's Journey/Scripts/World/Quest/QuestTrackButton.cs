@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class QuestTrackButton : MonoBehaviour
 {
-    public byte[] questID;
+    public int questID;
     public bool track;
 }

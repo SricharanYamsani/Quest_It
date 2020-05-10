@@ -27,15 +27,18 @@ public class QuestArrow : MonoBehaviour
     //-----------
     void Update()
     {
-        Vector3 resultingPosition = Camera.main.transform.position + Camera.main.transform.forward * distanceFromCamera;
-        resultingPosition.y = yPos;
-        transform.position = resultingPosition;
+        if (target != null)
+        {
+            Vector3 resultingPosition = Camera.main.transform.position + Camera.main.transform.forward * distanceFromCamera;
+            resultingPosition.y = yPos;
+            transform.position = resultingPosition;
 
-        transform.LookAt(target.transform);
+            transform.LookAt(target.transform);
 
-        Vector3 distanceTextPos = Camera.main.WorldToScreenPoint(this.transform.position);
-        distanceText.transform.position = distanceTextPos;
-        distanceText.text = ((int)Vector3.Distance(playerTransform.position, target.transform.position)).ToString();
+            Vector3 distanceTextPos = Camera.main.WorldToScreenPoint(this.transform.position);
+            distanceText.transform.position = distanceTextPos;
+            distanceText.text = ((int)Vector3.Distance(playerTransform.position, target.transform.position)).ToString();
+        }
     }
 
     //------------------------------

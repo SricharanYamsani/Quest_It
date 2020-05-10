@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.QuestSystem;
+using System;
 using TMPro;
 
 namespace RPG.NPCs
@@ -21,12 +22,34 @@ namespace RPG.NPCs
         public override void Start()
         {
             base.Start();
-            npcType = NPCType.Quest;
+            npcType = NPCType.QuestGiver;
             questLog = FindObjectOfType<QuestLog>();
-            CheckQuestAvailable();
 
             QuestEvents.QuestAccepted += QuestAccepted;
             QuestEvents.QuestCompleted += CheckQuestAvailable;
+
+            RemoveQuests();
+        }
+
+        //Removes acquired and completed quests from quest list
+        //-------------------------
+        private void RemoveQuests()
+        {
+            //Remove quests from list that have already been acquired by the player
+            List<Quest> playerQuests = GameManager.Instance.GetPlayerQuests();
+            for (int i = 0; i < playerQuests.Count; i++)
+            {
+                int index = quests.FindIndex((Quest quest) => quest.id == playerQuests[i].id);
+                quests.RemoveAt(index);
+            }
+            //Remove quests that have already been completed
+            List<Quest> completedQuests = GameManager.Instance.GetCompletedQuests();
+            for (int i = 0; i < completedQuests.Count; i++)
+            {
+                int index = quests.FindIndex((Quest quest) => quest.id == completedQuests[i].id);
+                quests.RemoveAt(index);
+            }
+            CheckQuestAvailable();
         }
 
         //-------------------
@@ -48,17 +71,17 @@ namespace RPG.NPCs
             }
         }
 
-        //-------------------------------
-        public void CheckQuestAvailable()
+        //-------------------------------------------------
+        public void CheckQuestAvailable(Quest quest = null)
         {
             //Get quests that are available according to the player level
-            List<Quest> unlockedQuests = quests.FindAll((Quest quest) =>
-                                quest.questType.unlockRequirements.level == 0);
+            List<Quest> unlockedQuests = quests.FindAll((Quest item) =>
+                                item.questType.unlockRequirements.level == 0);
 
             for (int i = 0; i < unlockedQuests.Count; i++)
             {
                 //Find a quest that is not yet given to the player
-                Quest playerHasQuest = questLog.quests.Find((Quest quest) => quest.id == unlockedQuests[i].id);
+                Quest playerHasQuest = GameManager.Instance.playerQuests.Find((Quest item) => item.id == unlockedQuests[i].id);
                 if (playerHasQuest == null)
                 {
                     availableQuest = unlockedQuests[i];
@@ -74,7 +97,7 @@ namespace RPG.NPCs
         }
 
         //---------------------------------------
-        public override void InteractWithPlayer()
+        public override void OnPlayerInteraction()
         {
             //Disable Player movement while dialog is active
             QuestEvents.InteractionStarted();
@@ -91,7 +114,10 @@ namespace RPG.NPCs
             QuestEvents.InteractionFinished();
 
             questLog.DisplayQuest(availableQuest.questDesc);
-            questLog.AddQuest(availableQuest);
+            questLog.SetupQuestInQuestLog(availableQuest);
+            GameManager.Instance.playerQuests.Add(availableQuest);
+            questLog.ToggleQuestActive(availableQuest.id);
+
             //Remove quest given to player from quest list
             for (int j = 0; j < quests.Count; j++)
             {

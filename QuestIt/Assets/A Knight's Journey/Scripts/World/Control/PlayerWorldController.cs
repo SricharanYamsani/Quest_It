@@ -26,6 +26,8 @@ namespace RPG.Control
             Input.multiTouchEnabled = false;
             playerInfo.IsPlayer = true;
             playerInfo.IsTeamRed = true;
+
+            transform.position = GameManager.Instance.playerWorldPos;
         }
 
         //-------------------

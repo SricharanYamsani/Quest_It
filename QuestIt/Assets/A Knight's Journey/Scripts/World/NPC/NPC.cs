@@ -9,11 +9,11 @@ namespace RPG.NPCs
     public class NPC : MonoBehaviour
     {
         //=========================Variables=====================//
-        public PlayerInfo playerInfo;
+        public PlayerInfo npcInfo;
         
-        public enum NPCType { Vendor, Duel, Quest };
+        public enum NPCType { Vendor, Duel, QuestGiver, QuestItem };
         public NPCType npcType;
-        public NPCWorldController worldController;
+        
         public PlayerWorldController player;
         public QuestLog questLog;
         public float interactionRange;
@@ -23,11 +23,10 @@ namespace RPG.NPCs
         //-------------------------
         public virtual void Start()
         {
-            worldController = GetComponent<NPCWorldController>();
             player = FindObjectOfType<PlayerWorldController>();      
         }
                 
         public virtual void CreateQuest() { }
-        public virtual void InteractWithPlayer() { } 
+        public virtual void OnPlayerInteraction() { } 
     }
 }

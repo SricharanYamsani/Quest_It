@@ -10,7 +10,7 @@ namespace RPG.NPCs
 
         public void Interact()
         {
-            parentNPC.InteractWithPlayer();
+            parentNPC.OnPlayerInteraction();
         }
     }
 }

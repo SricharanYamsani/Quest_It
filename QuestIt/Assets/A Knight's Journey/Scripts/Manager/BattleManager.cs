@@ -110,7 +110,7 @@ public class BattleManager : Singleton<BattleManager>
 
         data.Outcome = blueLost ? BattleOutcome.WIN : BattleOutcome.LOSE;
 
-        GameManager.Instance.CheckForQuestCompletion((response) => { }, data);
+        GameManager.Instance.UpdateQuests(data);
     }
 
     private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over

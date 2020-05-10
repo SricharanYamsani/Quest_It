@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System;
 using RPG.NPCs;
 
 namespace RPG.QuestSystem
@@ -19,12 +18,14 @@ namespace RPG.QuestSystem
     public class Quest 
     {
         //============================Variables=====================//
-        [HideInInspector] public byte[] id;
+        public int id;
         public QuestType questType;
         public string questDesc;
         public List<QuestTask> questTasks = new List<QuestTask>();
-        int currentQuestTaskIndex;
+        public int currentQuestTaskIndex;
+
         [HideInInspector] public bool completedQuest;
+        [HideInInspector] public bool questCompletionDisplayed;
 
         public List<string> questDialogue;
         public int currentDialogueIndex;
@@ -34,18 +35,24 @@ namespace RPG.QuestSystem
         //-----------------------------------------------------------
         public void TrackNextTask(TextMeshProUGUI sceneQuestInfoText)
         {
+            questTasks[currentQuestTaskIndex].DisplayTaskDescription(sceneQuestInfoText);
+            QuestEvents.TrackTask(questTasks[currentQuestTaskIndex]);
+        }
+
+        //-----------------------
+        public void UpdateQuest()
+        {
+            questTasks[currentQuestTaskIndex].UpdateTask();
             if (questTasks[currentQuestTaskIndex].completedTask == true)
             {
-                QuestEvents.TaskCompleted();
                 currentQuestTaskIndex++;
                 if (currentQuestTaskIndex >= questTasks.Count)
                 {
                     completedQuest = true;
+                    QuestEvents.QuestCompleted(this);
                     return;
                 }
             }
-            questTasks[currentQuestTaskIndex].DisplayTaskDescription(sceneQuestInfoText);
-            QuestEvents.TrackTask(questTasks[currentQuestTaskIndex]);
         }
     }
 
@@ -69,8 +76,7 @@ namespace RPG.QuestSystem
             if (taskType.current >= taskType.numberOfTimes)
             {
                 completedTask = true;                
-            }
-            QuestEvents.TaskUpdated();
+            }            
         }
 
         //--------------------------------------------------------------------
