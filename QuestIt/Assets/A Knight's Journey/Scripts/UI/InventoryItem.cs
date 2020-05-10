@@ -6,10 +6,10 @@ using UnityEngine.UI;
 
 public class InventoryItem : MonoBehaviour
 {
-    Image itemImage;
-    
-    TextMeshProUGUI nameText;
-    TextMeshProUGUI quantityText;
+    [SerializeField] Image itemImage;
+
+    [SerializeField] TextMeshProUGUI nameText;
+    [SerializeField] TextMeshProUGUI quantityText;
 
     public void Init (string name,int quantity,Sprite sprite = null)
     {

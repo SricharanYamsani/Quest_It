@@ -12,8 +12,8 @@ public class UIManager : MonoBehaviour
     }
 
     public Canvas mainCanvas;
-    public RectTransform HUDPanel;
-    public RectTransform OverlayPanel;
+    public RectTransform hudPanel;
+    public RectTransform overlayPanel;
 
     [SerializeField]
     public RPG.Control.PlayerWorldController playerController;
@@ -65,7 +65,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            playerCharacteristicsManager = Instantiate(playerCharacteristicsManagerPrefab, OverlayPanel.transform);
+            playerCharacteristicsManager = Instantiate(playerCharacteristicsManagerPrefab, overlayPanel.transform);
         }
     }
 
