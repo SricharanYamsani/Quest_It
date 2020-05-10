@@ -14,4 +14,9 @@ public class LightningStrikeItem : IWeapon
             targets.PlayReaction();
         }
     }
+
+    public override void RoundSystems()
+    {
+        base.RoundSystems();
+    }
 }

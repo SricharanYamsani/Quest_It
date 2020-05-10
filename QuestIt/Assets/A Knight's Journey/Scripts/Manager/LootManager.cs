@@ -18,17 +18,16 @@ public class LootManager : Singleton<LootManager>
         {
             lootPanel = Instantiate(lootPanelPrefab, UIManager.Instance.overlayPanel);
         }
-
-        for (int i = alliesLeft; i > 0; i--)
+        if (instantiatePanel)
         {
-            Consumables randomConsumable = GameManager.allConsumables[Random.Range(0, GameManager.allConsumables.Count)];
-
-            int quantity = Random.Range(1, difficulty * alliesLeft);
-
-            playerInventory.AddConsumable(randomConsumable, quantity);
-
-            if(instantiatePanel)
+            for (int i = alliesLeft; i > 0; i--)
             {
+                Consumables randomConsumable = GameManager.allConsumables[Random.Range(0, GameManager.allConsumables.Count)];
+
+                int quantity = Random.Range(1, difficulty * alliesLeft);
+
+                playerInventory.AddConsumable(randomConsumable, quantity);
+
                 lootPanel.AddLoot(randomConsumable, quantity);
             }
         }

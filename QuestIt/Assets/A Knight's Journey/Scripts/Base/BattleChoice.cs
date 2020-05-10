@@ -28,6 +28,8 @@ public abstract class BattleChoice : ScriptableObject
 
     public Sprite ICON;
 
+    public AudioClip soundClip = null;
+
     public int m_CurrencyAmount = 0;
 
     public int moveAffectDuration;

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 747f570aefda144efb49fd0700aebe62, type: 3}
   m_Name: GUT_SMALL_1
   m_EditorClassIdentifier: 
-  battleTask: 5
+  battleTask: 6
   targetRange: 1
   TargetCondition: 2
   percentageType: 0
@@ -29,7 +29,7 @@ MonoBehaviour:
   attributeChange: 20
   endTime: 5
   description: 
-  moveName: 
+  moveName: Barbarous Slice
   move: 200
-  slashAttack: {fileID: -3874019135900359893, guid: 4e42a2081531c814fa4774bd0d6b45df,
+  slashAttack: {fileID: -3713231385161006817, guid: 77d6e8e3fa15a0b419d018e3e16931f6,
     type: 3}

@@ -115,10 +115,13 @@ public class BattleManager : Singleton<BattleManager>
 
         data.Outcome = blueLost ? BattleOutcome.WIN : BattleOutcome.LOSE;
 
+        Debug.LogError(data.Outcome);
+
+        GameManager.Instance.hasPlayerLost = !blueLost;
+
         GameManager.Instance.UpdateQuests(data);
 
-        LootManager.Instance.GenerateLoot(1, alliesAlive, alliesHealth, true);
-
+        LootManager.Instance.GenerateLoot(1, alliesAlive, alliesHealth, false);
     }
 
     private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over
@@ -329,7 +332,7 @@ public class BattleManager : Singleton<BattleManager>
                 {
                     IsSelecting = true;
 
-                    yield return StartCoroutine(cameraController.StartCameraSwitch(currentPlayer.UNIQUE_ID));
+                    //yield return StartCoroutine(cameraController.StartCameraSwitch(currentPlayer.UNIQUE_ID));
                     
                     currentPlayer.PerformMoveFocus(true);
 

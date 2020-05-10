@@ -23,12 +23,10 @@ public class FixedData : MonoBehaviour
 
         info.chosenMoves = new List<Moves>
         {
-            Moves.BRING_DOWN_FIRE_1,
-            Moves.BRING_DOWN_FIRE_ENEMY,
             Moves.LIGHNING_MAX_1,
             Moves.LIGHNING_MID_1,
-            Moves.LIGHNING_MID_TEAM,
-            Moves.LIGHTNING_MAX_TEAM,
+            Moves.LIGHNING_MID_ENEMY,
+            Moves.LIGHTNING_MAX_ENEMY,
             Moves.MAGIC_HEAL_MID_1
         };
 

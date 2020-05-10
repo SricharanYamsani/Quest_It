@@ -12,11 +12,11 @@ public class PlayerMoveUI : MonoBehaviour
     public void SetUpMoveUI(Moves _move)
     {
         move = _move;
-    }
 
-    Image GetImageFromMove(Moves _move)
-    {
-        Image someImage = null;
-        return someImage;
+        MoveChoice choice = ResourceManager.Instance.GetChoiceFromMove[_move];
+        if(choice.ICON != null)
+        {
+            image.sprite = choice.ICON;
+        }
     }
 }

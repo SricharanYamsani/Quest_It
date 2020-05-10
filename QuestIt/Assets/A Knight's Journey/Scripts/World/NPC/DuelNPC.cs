@@ -8,6 +8,8 @@ namespace RPG.NPCs
 {
     public class DuelNPC : NPC
     {
+        public int duelNPCId;
+
         public BattleCharacters npcKillType;
         
         //--------------------------
@@ -15,7 +17,18 @@ namespace RPG.NPCs
         {
             base.Start();
             npcType = NPCType.Duel;
-            QuestEvents.TrackTask += TrackTask;            
+            QuestEvents.TrackTask += TrackTask;
+
+            CheckIfCurrentNPC();
+        }
+
+        //--------------------------
+        public void CheckIfCurrentNPC()
+        {
+            if(duelNPCId == GameManager.Instance.currentNPCId)
+            {
+                transform.position = GameManager.Instance.GetRandomSpawnPointForNPC();
+            }
         }
 
         //-------------------
@@ -48,6 +61,7 @@ namespace RPG.NPCs
             npcInfo.IsTeamRed = false;
             player.playerInfo.IsTeamRed = true;
 
+            GameManager.Instance.currentNPCId = duelNPCId;
             GameManager.Instance.PreBattleSetup(npcInfo, player.playerInfo);            
         }
 

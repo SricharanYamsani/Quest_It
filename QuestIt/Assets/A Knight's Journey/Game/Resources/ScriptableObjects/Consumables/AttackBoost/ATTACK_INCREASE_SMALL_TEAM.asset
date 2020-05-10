@@ -19,17 +19,18 @@ MonoBehaviour:
   choiceType: 3
   affectedAttribute: 4
   m_Currency: 0
-  playerCondition: 2
+  playerCondition: 0
   damagePercentage: 0
   MoveTurnsType: 2
   m_AnimationClip: 7
   ICON: {fileID: 21300000, guid: 54d7b8e456f3c43eca206adfe1ebfb00, type: 3}
+  soundClip: {fileID: 0}
   m_CurrencyAmount: 0
   moveAffectDuration: 0
   attributeChange: 3
   endTime: 5
   description: 
-  moveName: 
+  moveName: Heatherstone
   itemName: 31
   consumableWeapon: {fileID: 2930685039041452339, guid: 31bea997407d42b4c815aff8926295bb,
     type: 3}

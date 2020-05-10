@@ -7,7 +7,14 @@ using TMPro;
 using DG.Tweening;
 using Photon.Realtime;
 
-public class BattlePlayer : MonoBehaviour
+public class
+
+
+
+
+
+
+    BattlePlayer : MonoBehaviour
 {
     public PlayerInfo playerInfo = new PlayerInfo();
 
@@ -306,7 +313,7 @@ public class BattlePlayer : MonoBehaviour
                 else
                 {
                     // AI Shit to go here.
-                    AIChoice();
+                    DOVirtual.DelayedCall(1.5f, () => { AIChoice(); });
                 }
                 
                 glowRing.gameObject.SetActive(true);
@@ -391,7 +398,7 @@ public class BattlePlayer : MonoBehaviour
 
     public void PlayReaction(string animation = "")
     {
-        GameObject m = new GameObject();
+        GameObject m = null;
 
         if (PlayerState == PlayerState.BLOCK)
         {
@@ -414,7 +421,10 @@ public class BattlePlayer : MonoBehaviour
 
         DOVirtual.DelayedCall(1, () =>
         {
-            Destroy(m.gameObject);
+            if (m != null)
+            {
+                Destroy(m.gameObject);
+            }
         });
 
         PlayerState = PlayerState.NONE;

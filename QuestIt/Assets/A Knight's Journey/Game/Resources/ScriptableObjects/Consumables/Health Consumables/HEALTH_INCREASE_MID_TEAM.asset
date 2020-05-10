@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18d9f4dd4241c492dadee23b4cd59cf6, type: 3}
+  m_Name: HEALTH_INCREASE_MID_TEAM
+  m_EditorClassIdentifier: 
+  battleTask: 5
+  targetRange: 4
+  TargetCondition: 2
+  percentageType: 2
+  choiceType: 3
+  affectedAttribute: 1
+  m_Currency: 0
+  playerCondition: 0
+  damagePercentage: 0
+  MoveTurnsType: 2
+  m_AnimationClip: 7
+  ICON: {fileID: 21300000, guid: efe3f31d067f24e998a90be1810a5355, type: 3}
+  soundClip: {fileID: 0}
+  m_CurrencyAmount: 0
+  moveAffectDuration: 5
+  attributeChange: 0
+  endTime: 5
+  description: 
+  moveName: 
+  itemName: 9
+  consumableWeapon: {fileID: -6779147246751792646, guid: ff672eaca96d32c419d7a1f1b0346e8d,
+    type: 3}
