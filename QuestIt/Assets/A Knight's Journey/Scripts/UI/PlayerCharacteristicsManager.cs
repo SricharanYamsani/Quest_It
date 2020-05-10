@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 
 public class PlayerCharacteristicsManager : MonoBehaviour
 {
@@ -17,6 +17,8 @@ public class PlayerCharacteristicsManager : MonoBehaviour
     public List<PlayerMoveUI> otherMoves;
 
     public Image playerIcon;
+
+    public Text playerName;
     private void Start()
     {
         SetUpButtons();
@@ -27,7 +29,7 @@ public class PlayerCharacteristicsManager : MonoBehaviour
         {
             SetUpAllStatsUI(currentPlayerInfo);
             SetUpAllMovesUI(currentPlayerInfo);
-            SetPlayerImage();
+            SetPlayerInfo();
         }
     }
 
@@ -74,9 +76,10 @@ public class PlayerCharacteristicsManager : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    void SetPlayerImage()
+    void SetPlayerInfo()
     {
         playerIcon.sprite = UIManager.Instance.GetPlayerImage(currentPlayerInfo.character);
+        playerName.text = currentPlayerInfo.character.ToString();
     }
 
     public enum EStat

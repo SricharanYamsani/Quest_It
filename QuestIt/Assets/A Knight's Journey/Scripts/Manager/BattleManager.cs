@@ -74,11 +74,16 @@ public class BattleManager : Singleton<BattleManager>
 
         bool blueLost = true;
 
+        int alliesAlive = 0;
+        int alliesHealth = 0;
+
         for (int i = 0; i < CurrentBlueTeam.Count; i++)
         {
             if (CurrentBlueTeam[i].IsAlive)
             {
                 blueLost = false;
+                alliesAlive++;
+                alliesHealth += CurrentBlueTeam[i].CurrentHealth;
             }
         }
         foreach (BattlePlayer player in CurrentBlueTeam)
@@ -111,6 +116,9 @@ public class BattleManager : Singleton<BattleManager>
         data.Outcome = blueLost ? BattleOutcome.WIN : BattleOutcome.LOSE;
 
         GameManager.Instance.UpdateQuests(data);
+
+        LootManager.Instance.GenerateLoot(1, alliesAlive, alliesHealth, true);
+
     }
 
     private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over

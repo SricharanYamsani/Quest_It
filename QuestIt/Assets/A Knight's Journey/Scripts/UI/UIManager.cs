@@ -12,13 +12,15 @@ public class UIManager : MonoBehaviour
     }
 
     public Canvas mainCanvas;
-    public RectTransform HUDPanel;
-    public RectTransform OverlayPanel;
+    public RectTransform hudPanel;
+    public RectTransform overlayPanel;
 
     [SerializeField]
     public RPG.Control.PlayerWorldController playerController;
 
     public Button playerCharacteristicsButton;
+
+    public Image playerCharacteristicsIcon;
 
     [HideInInspector]public PlayerCharacteristicsManager playerCharacteristicsManager;
     public PlayerCharacteristicsManager playerCharacteristicsManagerPrefab;
@@ -55,6 +57,8 @@ public class UIManager : MonoBehaviour
         playerCharacteristicsButton.onClick.RemoveAllListeners();
 
         playerCharacteristicsButton.onClick.AddListener(OnPlayerCharacteristicsButtonClicked);
+
+        playerCharacteristicsIcon.sprite = GetPlayerImage(playerController.playerInfo.character);
     }
 
     void OnPlayerCharacteristicsButtonClicked()
@@ -65,7 +69,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            playerCharacteristicsManager = Instantiate(playerCharacteristicsManagerPrefab, OverlayPanel.transform);
+            playerCharacteristicsManager = Instantiate(playerCharacteristicsManagerPrefab, overlayPanel.transform);
         }
     }
 
