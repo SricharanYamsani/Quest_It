@@ -79,7 +79,7 @@ public class BattleManager : Singleton<BattleManager>
 
         for (int i = 0; i < CurrentRedTeam.Count; i++)
         {
-            if (CurrentBlueTeam[i].IsAlive)
+            if (CurrentRedTeam[i].IsAlive)
             {
                 playerLost = false;
                 alliesAlive++;
@@ -113,7 +113,7 @@ public class BattleManager : Singleton<BattleManager>
 
         data.TurnsPlayed = Turns;
 
-        data.Outcome = playerLost ? BattleOutcome.LOSE : BattleOutcome.WIN;
+        data.Outcome = playerLost ? BattleOutcome.WIN : BattleOutcome.LOSE;
 
         Debug.LogError(data.Outcome);
 
