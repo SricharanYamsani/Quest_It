@@ -114,7 +114,7 @@ public class BattleManager : Singleton<BattleManager>
 
         data.TurnsPlayed = Turns;
 
-        data.Outcome = playerLost ? BattleOutcome.WIN : BattleOutcome.LOSE;
+        data.Outcome = playerLost ? BattleOutcome.LOSE : BattleOutcome.WIN;
 
         Debug.LogError(data.Outcome);
 
@@ -283,7 +283,7 @@ public class BattleManager : Singleton<BattleManager>
 
             player.SetPlayer();
 
-            if (!player.IsTeamRed)
+            if (player.IsTeamRed)
             {
                 CurrentRedTeam.Add(player);
             }
