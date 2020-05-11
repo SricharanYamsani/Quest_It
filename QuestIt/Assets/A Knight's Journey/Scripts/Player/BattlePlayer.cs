@@ -336,26 +336,36 @@ public class
     {
         List<BattleChoice> allowed = new List<BattleChoice>();
 
+        BattleChoice m_Choice = null;
+
         for (int i = 0; i < validChoices.Count; i++)
         {
-            if (validChoices[i].m_Currency == Currency.HEALTH)
+            m_Choice = validChoices[i];
+
+            if (m_Choice.m_Currency == Currency.HEALTH)
             {
-                if (CurrentHealth - validChoices[i].m_CurrencyAmount > 1)
+                if (CurrentHealth > m_Choice.m_CurrencyAmount)
                 {
-                    allowed.Add(validChoices[i]);
+                    Debug.LogError("HEALTH ->" + CurrentHealth);
+
+                    Debug.LogError(m_Choice.m_CurrencyAmount);
+
+                    allowed.Add(m_Choice);
                 }
             }
-            else if (validChoices[i].m_Currency == Currency.MANA)
+            else if (m_Choice.m_Currency == Currency.MANA)
             {
-                if (CurrentMana - validChoices[i].m_CurrencyAmount > 0)
+                if (CurrentMana > m_Choice.m_CurrencyAmount)
                 {
-                    allowed.Add(validChoices[i]);
+                    Debug.LogError("MANA ->" + CurrentMana);
+
+                    allowed.Add(m_Choice);
                 }
             }
         }
         if (allowed.Count > 0)
         {
-            currentChoice = validChoices[UnityEngine.Random.Range(0, allowed.Count)];
+            currentChoice = allowed[UnityEngine.Random.Range(0, allowed.Count)];
 
             bool canSelect = false;
 
