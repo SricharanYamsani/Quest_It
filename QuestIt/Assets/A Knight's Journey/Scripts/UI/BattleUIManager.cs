@@ -13,6 +13,8 @@ public class BattleUIManager : Singleton<BattleUIManager>
     public RectTransform playerHUD;
     public RectTransform enemyHUD;
 
+    public Transform canvasTransform;
+    public GameObject battleCanvas;
 
     // Selection Panel
     public RectTransform selectionPanel;
@@ -212,7 +214,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
     private void GameOverScreen()
     {
-        gameOverScreen.SetActive(true);
+        //gameOverScreen.SetActive(true);
     }
 
     private void MoveOptionsLayer(bool isTrue)
