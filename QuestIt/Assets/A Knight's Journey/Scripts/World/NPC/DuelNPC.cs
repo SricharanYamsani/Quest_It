@@ -13,9 +13,9 @@ namespace RPG.NPCs
         public BattleCharacters npcKillType;
         
         //--------------------------
-        public override void Start()
+        public override void Awake()
         {
-            base.Start();
+            base.Awake();
             npcType = NPCType.Duel;
             QuestEvents.TrackTask += TrackTask;
 

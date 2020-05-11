@@ -22,7 +22,7 @@ namespace RPG.NPCs
                                                    
         //=========================Functions=====================//
         //-------------------------
-        public virtual void Start()
+        public virtual void Awake()
         {
             player = FindObjectOfType<PlayerWorldController>();      
         }
