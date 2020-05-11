@@ -333,53 +333,61 @@ public class
     }
 
     private void AIChoice()
-    { 
+    {
         List<BattleChoice> allowed = new List<BattleChoice>();
 
         for (int i = 0; i < validChoices.Count; i++)
         {
             if (validChoices[i].m_Currency == Currency.HEALTH)
             {
-                if (playerInfo.myAttributes.health.current - validChoices[i].m_CurrencyAmount > 1)
+                if (CurrentHealth - validChoices[i].m_CurrencyAmount > 1)
                 {
                     allowed.Add(validChoices[i]);
                 }
             }
             else if (validChoices[i].m_Currency == Currency.MANA)
             {
-                if (playerInfo.myAttributes.mana.current - validChoices[i].m_CurrencyAmount > 0)
+                if (CurrentMana - validChoices[i].m_CurrencyAmount > 0)
                 {
                     allowed.Add(validChoices[i]);
                 }
             }
         }
-
-        bool canSelect = false;
-
-
-        List<BattlePlayer> myTargets = BattleManager.Instance.GetTargetPlayers(currentChoice, ref canSelect);
-
-        List<BattlePlayer> temp_Target = new List<BattlePlayer>();
-
-        if (myTargets.Count > 0 && allowed.Count > 0)
+        if (allowed.Count > 0)
         {
             currentChoice = validChoices[UnityEngine.Random.Range(0, allowed.Count)];
-            if (canSelect)
-            {
-                int x = UnityEngine.Random.Range(0, myTargets.Count);
 
-                temp_Target.Add(myTargets[x]);
+            bool canSelect = false;
+
+            List<BattlePlayer> myTargets = BattleManager.Instance.GetTargetPlayers(currentChoice, ref canSelect);
+
+            List<BattlePlayer> temp_Target = new List<BattlePlayer>();
+
+            if (myTargets.Count > 0)
+            {
+                if (canSelect)
+                {
+                    int x = UnityEngine.Random.Range(0, myTargets.Count);
+
+                    temp_Target.Add(myTargets[x]);
+                }
+                else
+                {
+                    temp_Target = myTargets;
+                }
+                foreach (BattlePlayer target in temp_Target)
+                {
+                    ChoiceManager.Instance.AddPlayer(target, false);
+                }
+
+                ChoiceManager.Instance.OnSelectionCompleted();
             }
+
             else
             {
-                temp_Target = myTargets;
-            }
-            foreach (BattlePlayer target in temp_Target)
-            {
-                ChoiceManager.Instance.AddPlayer(target, false);
+                BattleManager.Instance.IsSelecting = false;
             }
 
-            ChoiceManager.Instance.OnSelectionCompleted();
         }
         else
         {
