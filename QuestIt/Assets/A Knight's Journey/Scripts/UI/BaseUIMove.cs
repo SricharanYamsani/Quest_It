@@ -32,40 +32,53 @@ public class BaseUIMove : MonoBehaviour
         }
     }
 
-    public void SetupChoice ( )
+    public void SetupChoice()
     {
-        if ( m_Choice )
+        if (m_Choice)
         {
-            if ( m_Icon )
+            if (m_Icon)
             {
                 m_Icon.sprite = m_Choice.ICON;
             }
 
-            if ( m_MoveName )
+            if (m_MoveName)
             {
                 m_MoveName.text = m_Choice.moveName;
             }
 
-            if ( m_Description )
+            if (m_Description)
             {
                 m_Description.text = m_Choice.description;
             }
-
-            if ( choiceStyleIcon )
+            if (currencyIcon)
             {
-                //choiceStyleIcon.sprite = ResourceManager.Instance.choiceSpritesRef [ m_Choice.AttackStyle.ToString ( ) ];
+                currencyIcon.sprite = ResourceManager.Instance.currencySpritesRef[m_Choice.m_Currency.ToString()];
             }
-            if ( currencyIcon )
+            if (m_ChoiceStyle)
             {
-                //currencyIcon.sprite = ResourceManager.Instance.currencySpritesRef [ m_Choice.m_Currency.ToString ( ) ];
+                if (m_Choice.percentageType == PercentageType.NONE)
+                {
+                    m_ChoiceStyle.text = m_Choice.attributeChange.ToString();
+                }
+                else
+                {
+                    if (m_Choice.percentageType == PercentageType.SMALL)
+                    {
+                        m_ChoiceStyle.text = string.Format("{0}%", 25f);
+                    }
+                    else if (m_Choice.percentageType == PercentageType.MID)
+                    {
+                        m_ChoiceStyle.text = string.Format("{0}%", 50f);
+                    }
+                    else
+                    {
+                        m_ChoiceStyle.text = string.Format("{0}%", 100);
+                    }
+                }
             }
-            if(m_ChoiceStyle)
+            if (m_CurrencyText)
             {
-                m_ChoiceStyle.text = m_Choice.attributeChange.ToString ( );
-            }
-            if(m_CurrencyText)
-            {
-                m_CurrencyText.text = m_Choice.m_CurrencyAmount.ToString ( );
+                m_CurrencyText.text = m_Choice.m_CurrencyAmount.ToString();
             }
 
             this.gameObject.SetActive(true);

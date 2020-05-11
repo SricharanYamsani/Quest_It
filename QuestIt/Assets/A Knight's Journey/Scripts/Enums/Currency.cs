@@ -6,5 +6,5 @@ public enum Currency
 {
     NONE,
     MANA,
-    BRUTE
+    HEALTH
 }

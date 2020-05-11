@@ -25,7 +25,7 @@ MonoBehaviour:
   m_AnimationClip: 7
   ICON: {fileID: 21300000, guid: efe3f31d067f24e998a90be1810a5355, type: 3}
   soundClip: {fileID: 0}
-  m_CurrencyAmount: 0
+  m_CurrencyAmount: 45
   moveAffectDuration: 5
   attributeChange: 0
   endTime: 5

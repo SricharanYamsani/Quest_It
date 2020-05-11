@@ -271,7 +271,7 @@ public class BattleUIManager : Singleton<BattleUIManager>
 
                 if (t_Choices[i].m_Choice != null)
                 {
-                    if (t_Choices[i].m_Choice.m_Currency == Currency.BRUTE)
+                    if (t_Choices[i].m_Choice.m_Currency == Currency.HEALTH)
                     {
                         if (currentPlayer.CurrentHealth - t_Choices[i].m_Choice.m_CurrencyAmount > 1)
                         {

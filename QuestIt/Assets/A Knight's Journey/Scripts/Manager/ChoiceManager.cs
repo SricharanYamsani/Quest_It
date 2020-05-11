@@ -100,7 +100,7 @@ public class ChoiceManager : Singleton<ChoiceManager>
             target.SetReaction(isHurt);
         }
 
-        if (move.m_Currency == Currency.BRUTE)
+        if (move.m_Currency == Currency.HEALTH)
         {
             currentAttacker.CurrentHealth -= move.m_CurrencyAmount;
         }
