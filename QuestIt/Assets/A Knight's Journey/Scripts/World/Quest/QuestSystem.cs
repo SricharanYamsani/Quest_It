@@ -18,6 +18,8 @@ namespace RPG.QuestSystem
     public class Quest 
     {
         //============================Variables=====================//
+        public int questGiverID;
+
         public int id;
         public QuestType questType;
         public string questDesc;
@@ -63,7 +65,6 @@ namespace RPG.QuestSystem
     public class QuestTask
     {
         //==========================Variables===================//
-        public Quest parentQuest;
         [HideInInspector] public bool completedTask;
         public string description;  //Description of the task
         public TaskType taskType;
@@ -87,7 +88,11 @@ namespace RPG.QuestSystem
         {
             if (taskType.numberOfTimes > 0)
             {
-                sceneQuestInfoText.text = description + " " + taskType.current + "/" + taskType.numberOfTimes;
+                sceneQuestInfoText.text = description;// + " " + taskType.current + "/" + taskType.numberOfTimes;
+            }
+            else
+            {
+                sceneQuestInfoText.text = description;
             }
         }
     }
@@ -95,14 +100,15 @@ namespace RPG.QuestSystem
     [System.Serializable]
     public class TaskType
     {
-        public enum Types { KILL, DEFEND, GATHER, RETURN_TO_QUESTGIVER }
-        public Types type;
+        public enum Types { KILL, DEFEND, GATHER, TALK_TO_NPC }
+        public Types type;            
 
         [HideInInspector] public int current = 0;
         public int numberOfTimes;
 
         public KillTargets killTargets = new KillTargets();
         public GatherTargets gatherTargets = new GatherTargets();
+        public TalkToNPC talkToNPC = new TalkToNPC();
     }
 
     [System.Serializable]
@@ -111,6 +117,12 @@ namespace RPG.QuestSystem
         public BattleCharacters npcType;
     }
        
+    [System.Serializable]
+    public class TalkToNPC
+    {
+        public int npcID;
+    }
+
     [System.Serializable]
     public class GatherTargets
     {

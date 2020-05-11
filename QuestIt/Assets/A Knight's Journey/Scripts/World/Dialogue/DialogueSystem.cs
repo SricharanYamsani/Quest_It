@@ -15,8 +15,8 @@ public class DialogueSystem : MonoBehaviour
     public bool questInitiationDialog;
     public int currentDialogIndex;
 
-    public GameObject proceedButton;
     public GameObject backButton;
+    public int dialogInitiatingNPCID;
 
     //------------------
     private void Start()
@@ -24,11 +24,12 @@ public class DialogueSystem : MonoBehaviour
         QuestEvents.StartDialogue += StartDialogue;
     }
 
-    //-----------------------------------------------------------------------------
-    public void StartDialogue(List<string> questDialog, bool questInitiationDialog)
+    //----------------------------------------------------------------------------------------
+    public void StartDialogue(List<string> questDialog, bool questInitiationDialog, int npcID)
     {
         this.questDialog = questDialog;
         this.questInitiationDialog = questInitiationDialog;
+        dialogInitiatingNPCID = npcID;
 
         dialoguePanel.SetActive(true);
         dialogueText.text = questDialog[0];
@@ -40,7 +41,7 @@ public class DialogueSystem : MonoBehaviour
             }
             else
             {
-                proceedButton.SetActive(false);
+                proceedButtonText.text = "Close";
             }
         }
     }
@@ -49,6 +50,12 @@ public class DialogueSystem : MonoBehaviour
     public void ShowNextDialogue()
     {
         currentDialogIndex++;
+        
+        if(currentDialogIndex > 0)
+        {
+            backButton.SetActive(true);
+        }
+
         if (currentDialogIndex == questDialog.Count - 1)
         {
             if (questInitiationDialog)
@@ -57,14 +64,13 @@ public class DialogueSystem : MonoBehaviour
             }
             else
             {
-                proceedButton.SetActive(false);
+                proceedButtonText.text = "Close";
             }
         }
        
         if (currentDialogIndex >= questDialog.Count)
         {
-            ExitDialogue();
-            QuestEvents.QuestAccepted();
+            ExitDialogue();            
         }
         else
         {
@@ -77,8 +83,13 @@ public class DialogueSystem : MonoBehaviour
     {
         currentDialogIndex--;
         currentDialogIndex = Mathf.Clamp(currentDialogIndex, 0, questDialog.Count - 1);
-        
-        if(currentDialogIndex < questDialog.Count - 1)
+
+        if (currentDialogIndex == 0)
+        {
+            backButton.SetActive(false);
+        }
+
+        if (currentDialogIndex < questDialog.Count - 1)
         {
             proceedButtonText.text = "Next";
         }
@@ -100,7 +111,6 @@ public class DialogueSystem : MonoBehaviour
         //If dialog not part of quest initiation i.e. part of a quest task
         if(!questInitiationDialog)
         {
-            proceedButton.SetActive(true);
             List<Quest> playerQuests = GameManager.Instance.GetPlayerQuests();
             for (int i = 0; i < playerQuests.Count; i++)
             {
@@ -110,12 +120,16 @@ public class DialogueSystem : MonoBehaviour
 
                 //If item type matches quest task requirement update task
                 /* TODO : only a single quest is updated */
-                if (currentQuestTaskType.type == TaskType.Types.RETURN_TO_QUESTGIVER)
+                if (currentQuestTaskType.type == TaskType.Types.TALK_TO_NPC)
                 {
                     quest.UpdateQuest();
                     break;                    
                 }
             }
+        }
+        else
+        {
+            QuestEvents.QuestAccepted(dialogInitiatingNPCID);
         }
     }
 

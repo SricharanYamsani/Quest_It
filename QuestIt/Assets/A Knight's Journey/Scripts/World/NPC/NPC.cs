@@ -10,6 +10,7 @@ namespace RPG.NPCs
     {
         //=========================Variables=====================//
         public PlayerInfo npcInfo;
+        public int npcID;
         
         public enum NPCType { Vendor, Duel, QuestGiver, QuestItem };
         public NPCType npcType;

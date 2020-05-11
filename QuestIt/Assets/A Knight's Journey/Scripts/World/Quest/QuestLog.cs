@@ -27,6 +27,7 @@ namespace RPG.QuestSystem
         public TextMeshProUGUI questInfoText;
         public GameObject questCompletedInfo;
         public TextMeshProUGUI questCompletedInfoText;
+        public TextMeshProUGUI questNameText;
 
         //Quest information that is shown to the player in the scene
         //when the quest gets updated i.e. next task description, quest completed etc.
@@ -100,7 +101,7 @@ namespace RPG.QuestSystem
             //UI related
             if (questCompletedInfoText.canvasRenderer.GetAlpha() == 0 && questCompletedInfo.activeSelf)
             {
-                questCompletedInfo.SetActive(false);
+                questCompletedInfo.SetActive(false);                
             }
         }
 
@@ -117,6 +118,10 @@ namespace RPG.QuestSystem
             questCompletedInfoText.canvasRenderer.SetAlpha(1.0f);
             questCompletedInfoText.CrossFadeAlpha(0, 10f, false);
             questCompletedInfoText.text = "Quest Completed";
+
+            questNameText.text = quest.questDesc;
+            questNameText.canvasRenderer.SetAlpha(1.0f);
+            questNameText.CrossFadeAlpha(0, 10f, false);
 
             for (int i = 0; i < questInfoPanelInstances.Count; i++)
             {

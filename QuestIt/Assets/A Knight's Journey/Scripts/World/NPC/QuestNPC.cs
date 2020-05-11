@@ -15,8 +15,8 @@ namespace RPG.NPCs
         public List<Quest> quests = new List<Quest>();
         public Quest availableQuest;
 
-        public List<string> questDialog;
-        public bool questInitiationDialog;
+        List<string> questDialog;
+        bool questInitiationDialog;
 
         //============================Functions=====================//
 
@@ -30,21 +30,27 @@ namespace RPG.NPCs
 
             QuestEvents.TrackTask += TrackTask;
             QuestEvents.QuestAccepted += QuestAccepted;
-            QuestEvents.QuestCompleted += CheckQuestAvailable;
+            QuestEvents.QuestCompleted += RemoveQuests;
 
             RemoveQuests();
         }
 
         //Removes acquired and completed quests from quest list
-        //-------------------------
-        private void RemoveQuests()
+        //-------------------------------------------
+        private void RemoveQuests(Quest quest = null)
         {
             //Remove quests from list that have already been acquired by the player
             List<Quest> playerQuests = GameManager.Instance.GetPlayerQuests();
             for (int i = 0; i < playerQuests.Count; i++)
             {
-                int index = quests.FindIndex((Quest quest) => quest.id == playerQuests[i].id);
-                quests.RemoveAt(index);
+                if (playerQuests[i].questGiverID == npcID)
+                {
+                    int index = quests.FindIndex((Quest item) => item.id == playerQuests[i].id);
+                    if (index != -1)
+                    {
+                        quests.RemoveAt(index);
+                    }
+                }
             }
             //Remove quests that have already been completed
             List<Quest> completedQuests = GameManager.Instance.GetCompletedQuests();
@@ -52,9 +58,15 @@ namespace RPG.NPCs
             {
                 for (int i = 0; i < completedQuests.Count; i++)
                 {
-                    int index = quests.FindIndex((Quest quest) => quest.id == completedQuests[i].id);
+                    if (completedQuests[i].questGiverID == npcID)
+                    {
+                        int index = quests.FindIndex((Quest item) => item.id == completedQuests[i].id);
+                        if (index != -1)
+                        {
+                            quests.RemoveAt(index);
+                        }
+                    }
                     CheckQuestAvailable(completedQuests[i]);
-                    quests.RemoveAt(index);
                 }
             }
             else
@@ -66,24 +78,28 @@ namespace RPG.NPCs
         //-------------------
         private void Update()
         {
-            //Player in interaction range and quest available
-            if(Vector3.Distance(player.transform.position, transform.position) <= interactionRange)
+            if (questDialog != null)
             {
-                questIcon.SetActive(false);
-                interactionIcon.SetActive(true);
-            }
-            //Player out of interaction range and quest available
-            else if(Vector3.Distance(player.transform.position, transform.position) > interactionRange)
-            {
-                questIcon.SetActive(true);
-                interactionIcon.SetActive(false);
+                //Player in interaction range and quest available
+                if (Vector3.Distance(player.transform.position, transform.position) <= interactionRange)
+                {
+                    questIcon.SetActive(false);
+                    interactionIcon.SetActive(true);
+                }
+                //Player out of interaction range and quest available
+                else if (Vector3.Distance(player.transform.position, transform.position) > interactionRange)
+                {
+                    questIcon.SetActive(true);
+                    interactionIcon.SetActive(false);
+                }
             }
         }
 
         //----------------------------------------
         public void TrackTask(QuestTask questTask)
         {
-            if (questTask.taskType.type == TaskType.Types.RETURN_TO_QUESTGIVER)
+            if (questTask.taskType.type == TaskType.Types.TALK_TO_NPC &&
+                questTask.taskType.talkToNPC.npcID == npcID)
             {
                 QuestEvents.AddNPCLocation(this);
                 questDialog = questTask.taskDialog;
@@ -94,6 +110,8 @@ namespace RPG.NPCs
         //-------------------------------------------------
         public void CheckQuestAvailable(Quest quest = null)
         {
+            questDialog = null;
+
             //Get quests that are available according to the player level
             List<Quest> unlockedQuests = new List<Quest>();
             for (int i = 0; i < quests.Count; i++)
@@ -101,13 +119,14 @@ namespace RPG.NPCs
                 //TODO : Replace 0 with actual player level
                 if(quests[i].questType.unlockRequirements.level == 0)
                 {
-                    if(quests[i].questType.unlockRequirements.questID != -1 &&
-                        quests[i].questType.unlockRequirements.questID == quest.id)
+                    if(quests[i].questType.unlockRequirements.questID != -1)
                     {
-                        unlockedQuests.Add(quests[i]);
+                        if (quest != null && quests[i].questType.unlockRequirements.questID == quest.id)
+                        {
+                            unlockedQuests.Add(quests[i]);
+                        }                        
                     }
-
-                    if(quests[i].questType.unlockRequirements.questID == -1)
+                    else
                     {
                         unlockedQuests.Add(quests[i]);
                     }
@@ -141,38 +160,44 @@ namespace RPG.NPCs
             QuestEvents.InteractionStarted();
 
             //Start Dialogue
-            QuestEvents.StartDialogue(questDialog, questInitiationDialog);
+            QuestEvents.StartDialogue(questDialog, questInitiationDialog, npcID);
             interactionIcon.SetActive(false);            
         }
 
-        //--------------------------
-        private void QuestAccepted()
+        //-----------------------------------
+        private void QuestAccepted(int npcID)
         {
-            //Enable player movement
-            QuestEvents.InteractionFinished();
-
-            questLog.DisplayQuest(availableQuest.questDesc);
-            questLog.SetupQuestInQuestLog(availableQuest);
-            GameManager.Instance.AddAvailableQuestToPlayerQuests(availableQuest);
-            questLog.ToggleQuestActive(availableQuest.id);
-
-            //Remove quest given to player from quest list
-            for (int j = 0; j < quests.Count; j++)
+            if (this.npcID == npcID)
             {
-                if (availableQuest.id == quests[j].id)
-                {
-                    quests.RemoveAt(j);
-                }
-            }
+                //Enable player movement
+                QuestEvents.InteractionFinished();
 
-            //CheckQuestAvailable();
+                questLog.DisplayQuest(availableQuest.questDesc);
+                questLog.SetupQuestInQuestLog(availableQuest);
+                GameManager.Instance.AddAvailableQuestToPlayerQuests(availableQuest);
+                questLog.ToggleQuestActive(availableQuest.id);
+
+                //Remove quest given to player from quest list
+                for (int j = 0; j < quests.Count; j++)
+                {
+                    if (availableQuest.id == quests[j].id)
+                    {
+                        quests.RemoveAt(j);
+                    }
+                }
+
+                questDialog = null;
+                questIcon.SetActive(false);
+                interactionIcon.SetActive(false);
+                //CheckQuestAvailable();
+            }
         }
 
         //----------------------
         private void OnDisable()
         {
             QuestEvents.QuestAccepted -= QuestAccepted;
-            QuestEvents.QuestCompleted -= CheckQuestAvailable;
+            QuestEvents.QuestCompleted -= RemoveQuests;
             QuestEvents.TrackTask -= TrackTask;
         }
     }

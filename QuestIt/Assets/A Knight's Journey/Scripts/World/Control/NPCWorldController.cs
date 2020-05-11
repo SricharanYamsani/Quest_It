@@ -52,24 +52,27 @@ namespace RPG.Control
         //------------------------------
         public void MoveToNextWaypoint()
         {
-            //Set Initial way point and start moving
-            if(nextWayPoint == null)
+            if (wayPoints.Count > 0)
             {
-                nextWayPoint = wayPoints[0];
-            }
-
-            //Reached current waypoint
-            if (Vector3.Distance(transform.position, nextWayPoint.position) < 0.1f)
-            {
-                wayPointIndex++;
-                //Reset to initial waypoint
-                if (wayPointIndex == wayPoints.Count)
+                //Set Initial way point and start moving
+                if (nextWayPoint == null)
                 {
-                    wayPointIndex = 0;
+                    nextWayPoint = wayPoints[0];
                 }
-                nextWayPoint = wayPoints[wayPointIndex];
+
+                //Reached current waypoint
+                if (Vector3.Distance(transform.position, nextWayPoint.position) < 0.1f)
+                {
+                    wayPointIndex++;
+                    //Reset to initial waypoint
+                    if (wayPointIndex == wayPoints.Count)
+                    {
+                        wayPointIndex = 0;
+                    }
+                    nextWayPoint = wayPoints[wayPointIndex];
+                }
+                worldMovement.StartMoveAction(nextWayPoint.position);
             }
-            worldMovement.StartMoveAction(nextWayPoint.position);
         }
 
         //-------------------------

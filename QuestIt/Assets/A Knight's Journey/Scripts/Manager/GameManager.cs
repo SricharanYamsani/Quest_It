@@ -142,7 +142,7 @@ public class GameManager : Singleton<GameManager>
         BattleInitializer.Instance.lobbyPlayers.Clear();
     }
 
-    //-----------------------------------------
+    //----------------------------------------
     public Vector3 GetRandomSpawnPointForNPC()
     {
         return spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)].position;
@@ -177,11 +177,7 @@ public class GameManager : Singleton<GameManager>
     //------------------------------------------------------
     public void AddAvailableQuestToPlayerQuests(Quest quest)
     {
-        playerQuests.Add(quest);
-        for (int i = 0; i < quest.questTasks.Count; i++)
-        {
-            quest.questTasks[i].parentQuest = quest;
-        }
+        playerQuests.Add(quest);        
     }
 
     //----------------------------------
