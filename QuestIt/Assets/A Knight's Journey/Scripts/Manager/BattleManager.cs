@@ -84,6 +84,7 @@ public class BattleManager : Singleton<BattleManager>
                 playerLost = false;
                 alliesAlive++;
                 alliesHealth += CurrentRedTeam[i].CurrentHealth;
+                Debug.LogError(alliesAlive + alliesHealth);
             }
         }
         foreach (BattlePlayer player in CurrentBlueTeam)
@@ -121,7 +122,10 @@ public class BattleManager : Singleton<BattleManager>
 
         GameManager.Instance.UpdateQuests(data);
 
-        LootManager.Instance.GenerateLoot(1, alliesAlive, alliesHealth, false);
+        LootManager.Instance.GenerateLoot(1, alliesAlive, alliesHealth, data.Outcome, () =>
+         {
+             BattleInitializer.Instance.LoadWorldScene(GameManager.Instance.worldScene);
+         }, true);
     }
 
     private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over

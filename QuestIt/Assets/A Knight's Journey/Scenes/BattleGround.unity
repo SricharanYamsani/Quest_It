@@ -1687,6 +1687,8 @@ MonoBehaviour:
   isDontDestroyOnLoad: 0
   playerHUD: {fileID: 648413978}
   enemyHUD: {fileID: 2020258778}
+  canvasTransform: {fileID: 1237171516}
+  battleCanvas: {fileID: 318590244}
   selectionPanel: {fileID: 530155519}
   playerIconRef: {fileID: 4585958101792560679, guid: 9629186ef37b94e8dafe0e56a9e3201e,
     type: 3}
@@ -2561,7 +2563,7 @@ Camera:
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 40
+  m_FocalLength: 44.999996
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -2570,7 +2572,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 33.398487
+  field of view: 29.862837
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -2595,8 +2597,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1523925978}
-  m_LocalRotation: {x: 0.15304591, y: -0.6903456, z: 0.15304591, w: 0.6903456}
-  m_LocalPosition: {x: 13.5, y: 3.1000004, z: 0}
+  m_LocalRotation: {x: 0.14622447, y: -0.719801, z: 0.15957603, w: 0.659576}
+  m_LocalPosition: {x: 14.8, y: 2.6000004, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

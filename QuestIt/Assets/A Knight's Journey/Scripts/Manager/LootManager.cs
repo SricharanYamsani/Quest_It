@@ -5,10 +5,10 @@ using UnityEngine;
 public class LootManager : Singleton<LootManager>
 {
     [SerializeField] LootPanel lootPanelPrefab;
-    public void GenerateLoot(int difficulty, int alliesLeft, int totalHealthLeft, bool instantiatePanel = true)
+    public void GenerateLoot(int difficulty, int alliesLeft, int totalHealthLeft,BattleOutcome outcome,UnityEngine.Events.UnityAction action, bool instantiatePanel = true)
     {
         int coins = 50 * difficulty + 20 * alliesLeft + totalHealthLeft;
-
+        Debug.LogError(coins);
         PlayerInventory playerInventory = GameManager.Instance.GetPlayerInventory();
 
         playerInventory.AddCoins(coins);
@@ -16,9 +16,12 @@ public class LootManager : Singleton<LootManager>
         LootPanel lootPanel = null;
         if (instantiatePanel)
         {
-            lootPanel = Instantiate(lootPanelPrefab, UIManager.Instance.overlayPanel);
+            BattleUIManager.Instance.battleCanvas.SetActive(false);
+            lootPanel = Instantiate(lootPanelPrefab, BattleUIManager.Instance.canvasTransform);
+            lootPanel.Init(outcome, action);
+            lootPanel.AddCoins(coins);
         }
-        if (instantiatePanel)
+        if (instantiatePanel && GameManager.allConsumables != null && GameManager.allConsumables.Count > 0)
         {
             for (int i = alliesLeft; i > 0; i--)
             {
