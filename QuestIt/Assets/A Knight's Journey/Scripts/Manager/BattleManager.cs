@@ -72,40 +72,40 @@ public class BattleManager : Singleton<BattleManager>
     {
         BattleData data = new BattleData();
 
-        bool blueLost = true;
+        bool playerLost = true;
 
         int alliesAlive = 0;
         int alliesHealth = 0;
 
-        for (int i = 0; i < CurrentBlueTeam.Count; i++)
+        for (int i = 0; i < CurrentRedTeam.Count; i++)
         {
             if (CurrentBlueTeam[i].IsAlive)
             {
-                blueLost = false;
+                playerLost = false;
                 alliesAlive++;
-                alliesHealth += CurrentBlueTeam[i].CurrentHealth;
+                alliesHealth += CurrentRedTeam[i].CurrentHealth;
             }
         }
         foreach (BattlePlayer player in CurrentBlueTeam)
         {
-            if (blueLost)
+            if (playerLost)
             {
-                data.BattleLosers.Add(player.playerInfo.character);
+                data.BattleWinners.Add(player.playerInfo.character);
             }
             else
             {
-                data.BattleWinners.Add(player.playerInfo.character);
+                data.BattleLosers.Add(player.playerInfo.character);
             }
         }
         foreach (BattlePlayer player in CurrentRedTeam)
         {
-            if (!blueLost)
+            if (!playerLost)
             {
-                data.BattleLosers.Add(player.playerInfo.character);
+                data.BattleWinners.Add(player.playerInfo.character);
             }
             else
             {
-                data.BattleWinners.Add(player.playerInfo.character);
+                data.BattleLosers.Add(player.playerInfo.character);
             }
         }
 
@@ -113,11 +113,11 @@ public class BattleManager : Singleton<BattleManager>
 
         data.TurnsPlayed = Turns;
 
-        data.Outcome = blueLost ? BattleOutcome.WIN : BattleOutcome.LOSE;
+        data.Outcome = playerLost ? BattleOutcome.LOSE : BattleOutcome.WIN;
 
         Debug.LogError(data.Outcome);
 
-        GameManager.Instance.hasPlayerLost = !blueLost;
+        GameManager.Instance.hasPlayerLost = playerLost;
 
         GameManager.Instance.UpdateQuests(data);
 

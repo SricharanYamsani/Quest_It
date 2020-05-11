@@ -125,8 +125,8 @@ public class GameManager : Singleton<GameManager>
 
             //If npc matches quest task requirement update task
             /* TODO : Function currently takes into account 1v1 battles and therefore
-                      only a single quest is updated */               
-               
+                      only a single quest is updated */
+
             if (currentQuestTaskType.type == TaskType.Types.KILL)
             {
                 foreach (BattleCharacters character in data.BattleLosers)
@@ -137,9 +137,12 @@ public class GameManager : Singleton<GameManager>
                         break;
                     }
                 }
-            }            
+            }
         }
-        BattleInitializer.Instance.lobbyPlayers.Clear();
+        if (BattleInitializer.Instance.lobbyPlayers != null)
+        {
+            BattleInitializer.Instance.lobbyPlayers.Clear();
+        }
     }
 
     //----------------------------------------
