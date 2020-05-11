@@ -340,14 +340,14 @@ public class
         {
             if (validChoices[i].m_Currency == Currency.HEALTH)
             {
-                if (playerInfo.myAttributes.health.current - validChoices[i].m_CurrencyAmount > 1)
+                if (CurrentHealth - validChoices[i].m_CurrencyAmount > 1)
                 {
                     allowed.Add(validChoices[i]);
                 }
             }
             else if (validChoices[i].m_Currency == Currency.MANA)
             {
-                if (playerInfo.myAttributes.mana.current - validChoices[i].m_CurrencyAmount > 0)
+                if (CurrentMana - validChoices[i].m_CurrencyAmount > 0)
                 {
                     allowed.Add(validChoices[i]);
                 }
