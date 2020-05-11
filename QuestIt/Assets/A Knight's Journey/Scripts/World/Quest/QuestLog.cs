@@ -85,7 +85,7 @@ namespace RPG.QuestSystem
                 if (!completedQuests[i].questCompletionDisplayed)
                 {
                     DisplayQuestCompleted(completedQuests[i]);
-                    yield return new WaitForSeconds(10f);
+                    yield return new WaitForSeconds(5f);
                 }
             }
         }
@@ -116,12 +116,12 @@ namespace RPG.QuestSystem
 
             questCompletedInfo.SetActive(true);
             questCompletedInfoText.canvasRenderer.SetAlpha(1.0f);
-            questCompletedInfoText.CrossFadeAlpha(0, 10f, false);
+            questCompletedInfoText.CrossFadeAlpha(0, 5f, false);
             questCompletedInfoText.text = "Quest Completed";
 
             questNameText.text = quest.questDesc;
             questNameText.canvasRenderer.SetAlpha(1.0f);
-            questNameText.CrossFadeAlpha(0, 10f, false);
+            questNameText.CrossFadeAlpha(0, 5f, false);
 
             for (int i = 0; i < questInfoPanelInstances.Count; i++)
             {

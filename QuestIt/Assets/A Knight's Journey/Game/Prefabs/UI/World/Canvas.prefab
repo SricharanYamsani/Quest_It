@@ -456,7 +456,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &501010207
 RectTransform:
   m_ObjectHideFlags: 0
@@ -502,7 +502,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Fixing the wing
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -610,7 +610,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &614833063
 RectTransform:
   m_ObjectHideFlags: 0
@@ -668,7 +668,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &646272826
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1985,7 +1985,17 @@ PrefabInstance:
     - target: {fileID: 8096416533775014406, guid: 23636677ed9f2a642933be6514675853,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.69970703
+      value: -0.6999512
+      objectReference: {fileID: 0}
+    - target: {fileID: 8096416533775014407, guid: 23636677ed9f2a642933be6514675853,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 257
+      objectReference: {fileID: 0}
+    - target: {fileID: 8096416533775014407, guid: 23636677ed9f2a642933be6514675853,
+        type: 3}
+      propertyPath: m_margin.y
+      value: 73.44451
       objectReference: {fileID: 0}
     - target: {fileID: 8096416534339945048, guid: 23636677ed9f2a642933be6514675853,
         type: 3}
