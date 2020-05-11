@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db902cb7e59084629b2fd3e8b8f24b9f, type: 3}
-  m_Name: MAGIC_HEAL_MID_2
+  m_Name: MAGIC_HEAL_MID_TEAM
   m_EditorClassIdentifier: 
   battleTask: 5
-  targetRange: 3
+  targetRange: 4
   TargetCondition: 2
   percentageType: 2
   choiceType: 1
@@ -31,6 +31,6 @@ MonoBehaviour:
   endTime: 3.5
   description: 
   moveName: Magic Heal
-  move: 52
+  move: 53
   healWeapon: {fileID: -6779147246751792646, guid: ff672eaca96d32c419d7a1f1b0346e8d,
     type: 3}
