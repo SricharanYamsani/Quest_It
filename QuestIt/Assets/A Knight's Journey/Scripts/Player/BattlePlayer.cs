@@ -333,17 +333,37 @@ public class
     }
 
     private void AIChoice()
-    {
-        currentChoice = validChoices[UnityEngine.Random.Range(0, validChoices.Count)];
+    { 
+        List<BattleChoice> allowed = new List<BattleChoice>();
+
+        for (int i = 0; i < validChoices.Count; i++)
+        {
+            if (validChoices[i].m_Currency == Currency.HEALTH)
+            {
+                if (playerInfo.myAttributes.health.current - validChoices[i].m_CurrencyAmount > 1)
+                {
+                    allowed.Add(validChoices[i]);
+                }
+            }
+            else if (validChoices[i].m_Currency == Currency.MANA)
+            {
+                if (playerInfo.myAttributes.mana.current - validChoices[i].m_CurrencyAmount > 0)
+                {
+                    allowed.Add(validChoices[i]);
+                }
+            }
+        }
 
         bool canSelect = false;
+
 
         List<BattlePlayer> myTargets = BattleManager.Instance.GetTargetPlayers(currentChoice, ref canSelect);
 
         List<BattlePlayer> temp_Target = new List<BattlePlayer>();
 
-        if (myTargets.Count > 0)
+        if (myTargets.Count > 0 && allowed.Count > 0)
         {
+            currentChoice = validChoices[UnityEngine.Random.Range(0, allowed.Count)];
             if (canSelect)
             {
                 int x = UnityEngine.Random.Range(0, myTargets.Count);
