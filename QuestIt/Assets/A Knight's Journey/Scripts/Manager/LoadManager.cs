@@ -85,10 +85,12 @@ public class LoadManager : Singleton<LoadManager>
                 {
                     yield return null;
                 }
-
-                loadUI.backgroundCanvas.DOFade(0, 0.2f).OnComplete(() =>
+                loadUI.loadingImage.DOFillAmount(1, 0.3f).OnComplete(() =>
                 {
-                    loadUI.gameObject.SetActive(false);
+                    loadUI.backgroundCanvas.DOFade(0, 0.5f).OnComplete(() =>
+                    {
+                        loadUI.gameObject.SetActive(false);
+                    });
                 });
             }
         }

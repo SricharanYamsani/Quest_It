@@ -346,10 +346,6 @@ public class
             {
                 if (CurrentHealth > m_Choice.m_CurrencyAmount)
                 {
-                    Debug.LogError("HEALTH ->" + CurrentHealth);
-
-                    Debug.LogError(m_Choice.m_CurrencyAmount);
-
                     allowed.Add(m_Choice);
                 }
             }
@@ -357,8 +353,6 @@ public class
             {
                 if (CurrentMana > m_Choice.m_CurrencyAmount)
                 {
-                    Debug.LogError("MANA ->" + CurrentMana);
-
                     allowed.Add(m_Choice);
                 }
             }
