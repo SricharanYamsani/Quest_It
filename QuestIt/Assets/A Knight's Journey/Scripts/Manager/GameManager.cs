@@ -11,6 +11,7 @@ using RPG.NPCs;
 public class GameManager : Singleton<GameManager>
 {
     public static List<Consumables> allConsumables;
+    public static List<Moves> availableMoves;
 
     [SerializeField]private PlayerInventory playerInventory;
 

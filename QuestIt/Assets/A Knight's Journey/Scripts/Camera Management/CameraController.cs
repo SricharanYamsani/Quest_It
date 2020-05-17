@@ -317,7 +317,7 @@ namespace RPG.CameraControl
 
                 yAngles.Add(id, y);
             }
-            camParent.localRotation = Quaternion.Euler(new Vector3(0, 45, 0));
+            camParent.localRotation = Quaternion.Euler(new Vector3(0, 75, 0));
             
         }
 
