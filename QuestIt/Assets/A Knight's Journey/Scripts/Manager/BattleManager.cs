@@ -278,6 +278,8 @@ public class BattleManager : Singleton<BattleManager>
 
             GameInit?.Invoke();
 
+            SoundManager.Instance.PlayBGMusic("Stage1");
+
             SwitchPlayState(BattleStates.BATTLE);
         });
     }

@@ -13,5 +13,8 @@ public abstract class IMenuButtons : MonoBehaviour
 
         myButton.onClick.AddListener(() => { OnButtonPress(); });
     }
-    public abstract void OnButtonPress();
+    public virtual void OnButtonPress()
+    {
+        SoundManager.Instance.StopBGMusic();
+    }
 }

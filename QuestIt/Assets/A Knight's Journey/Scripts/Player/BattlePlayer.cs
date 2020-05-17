@@ -7,14 +7,7 @@ using TMPro;
 using DG.Tweening;
 using Photon.Realtime;
 
-public class
-
-
-
-
-
-
-    BattlePlayer : MonoBehaviour
+public class BattlePlayer : MonoBehaviour
 {
     public PlayerInfo playerInfo = new PlayerInfo();
 
@@ -57,8 +50,6 @@ public class
 
     public Transform torsoTransform;
 
-    public RectTransform reactionLabel;
-
     public Transform OriginalSpawn; // player spawn Position
 
     public Transform bottomTransform;
@@ -78,8 +69,6 @@ public class
     public Transform TorsoParent;
 
     #endregion
-
-    public TextMeshProUGUI reactionText;
 
     #region Properties
     /// <summary>Returns true if Battle Player is the user. </summary>
@@ -436,8 +425,6 @@ public class
         {
             mPlayerController.SetTrigger(AnimationType.BLOCK.ToString());
 
-            reactionText.text = "MISS!";
-
             m = Instantiate<GameObject>(ResourceManager.Instance.reactionObjects["Shield"], leftHandSpawnOutside);
         }
         else if (PlayerState == PlayerState.HURT)
@@ -445,8 +432,6 @@ public class
             mPlayerController.SetTrigger(AnimationType.MIDHIT.ToString());
 
             m = Instantiate<GameObject>(ResourceManager.Instance.reactionObjects["Blood"], torsoTransform);
-
-            reactionText.text = "HIT";
         }
         // need to show a shield or blood work.
         SetUpdateUI();

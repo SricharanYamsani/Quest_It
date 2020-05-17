@@ -7,6 +7,8 @@ public class PlayButton : IMenuButtons
 {
     public override void OnButtonPress()
     {
+        base.Awake();
+
         MainMenuManager.Instance.faderCanvas.SetFader(1, 0.75f, () =>
         {
             SceneManager.LoadScene(GameManager.Instance.worldScene);

@@ -13,6 +13,9 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     private void Start()
     {
-        faderCanvas.SetFader(0, 1);
+        faderCanvas.SetFader(0, 1, () =>
+        {
+            SoundManager.Instance.PlayBGMusic("Menu");
+        });
     }
 }

@@ -6,28 +6,31 @@ public class SoundManager : Singleton<SoundManager>
 {
     public Dictionary<string, AudioClip> soundClips = new Dictionary<string, AudioClip>();
 
-    public AudioSource settings;
-
-    public AudioSource bgAudioSource = null;
+    private BackgroundSoundManager bsm;
 
     protected override void Awake()
     {
         base.Awake();
-
-        if(bgAudioSource == null)
-        {
-            bgAudioSource = this.gameObject.AddComponent<AudioSource>();
-        }
     }
 
     public void PlayBGMusic(string musicName)
     {
-        // if bg music resources contains shit. play that
+        if (bsm == null)
+        {
+            bsm = Instantiate(Resources.Load<BackgroundSoundManager>("Prefabs/BSM"));
+        }
+
+        bsm.PlayBackgroundAudio(musicName);
     }
 
     public void StopBGMusic()
     {
-        bgAudioSource.Stop();
+        if (bsm == null)
+        {
+            bsm = Instantiate(Resources.Load<BackgroundSoundManager>("Prefabs/BSM"));
+        }
+
+        bsm.StopBackgroundAudio();
     }
 
     public void PlaySound(string sound)
@@ -44,11 +47,6 @@ public class SoundManager : Singleton<SoundManager>
                 GameObject soundObject = new GameObject(sound + " SFX", typeof(AudioSource));
 
                 AudioSource mySource = soundObject.GetComponent<AudioSource>();
-
-                if (settings)
-                {
-                    mySource.volume = settings.volume;
-                }
 
                 mySource.PlayOneShot(soundClips[sound]);
 

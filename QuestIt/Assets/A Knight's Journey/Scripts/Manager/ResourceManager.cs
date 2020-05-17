@@ -47,6 +47,8 @@ public class ResourceManager : Singleton<ResourceManager>
 
         AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds/SFX");
 
+        AudioClip[] _clips = Resources.LoadAll<AudioClip>("Sounds/Background");
+
         BattlePlayer[] models = Resources.LoadAll<BattlePlayer>("Models");
 
         IWeapon[] p_Effects = Resources.LoadAll<IWeapon>("IWeapons");
@@ -106,6 +108,14 @@ public class ResourceManager : Singleton<ResourceManager>
             if (!soundClips.ContainsKey(clips[i].name))
             {
                 soundClips.Add(clips[i].name, clips[i]);
+            }
+        }
+
+        for (int i = 0; i < _clips.Length; i++) // Audio Clips Loading in Dictionary
+        {
+            if (!soundClips.ContainsKey(_clips[i].name))
+            {
+                bgClips.Add(_clips[i].name, _clips[i]);
             }
         }
 
