@@ -11,7 +11,7 @@ public class PlayButton : IMenuButtons
 
         MainMenuManager.Instance.faderCanvas.SetFader(1, 0.75f, () =>
         {
-            SceneManager.LoadScene(GameManager.Instance.worldScene);
+            BattleInitializer.Instance.LoadWorldScene(GameManager.Instance.worldScene);
         });
     }
 }
