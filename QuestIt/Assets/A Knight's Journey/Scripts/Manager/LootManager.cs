@@ -7,6 +7,10 @@ public class LootManager : Singleton<LootManager>
     [SerializeField] LootPanel lootPanelPrefab;
     public void GenerateLoot(int difficulty, int alliesLeft, int totalHealthLeft,BattleOutcome outcome,UnityEngine.Events.UnityAction action, bool instantiatePanel = true)
     {
+        if (lootPanelPrefab == null)
+        {
+            lootPanelPrefab = Resources.Load<LootPanel>("Prefabs/UI/LootPanel");
+        }
         int coins = 50 * difficulty + 20 * alliesLeft + totalHealthLeft;
         Debug.LogError(coins);
         PlayerInventory playerInventory = GameManager.Instance.GetPlayerInventory();

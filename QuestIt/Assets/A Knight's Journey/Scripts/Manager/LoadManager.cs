@@ -13,6 +13,8 @@ public class LoadManager : Singleton<LoadManager>
 
     protected override void Awake()
     {
+        isDontDestroyOnLoad = true;
+
         base.Awake();
     }
     public void LoadBattleScene(List<PlayerInfo> listOfPlayers, string battleGround)

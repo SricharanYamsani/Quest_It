@@ -438,7 +438,6 @@ GameObject:
   - component: {fileID: 1059653061104428913}
   - component: {fileID: 8061681722895640831}
   - component: {fileID: 5966655348788807466}
-  - component: {fileID: 3819559302046270944}
   m_Layer: 5
   m_Name: LootPanel
   m_TagString: Untagged
@@ -521,24 +520,3 @@ MonoBehaviour:
   contentTransform: {fileID: 6657363081864723522}
   okButton: {fileID: 1694709606064311840}
   headerText: {fileID: 6771241773421293427}
---- !u!223 &3819559302046270944
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6144807333120097307}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 1
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 500
-  m_TargetDisplay: 0

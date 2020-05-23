@@ -124,13 +124,13 @@ public class BattleManager : Singleton<BattleManager>
 
         GameManager.Instance.UpdateQuests(data);
 
-        faderCanvas.SetFader(1, 1f, () =>
-        {
-            LootManager.Instance.GenerateLoot(1, alliesAlive, alliesHealth, data.Outcome, () =>
-             {
-                 BattleInitializer.Instance.LoadWorldScene(GameManager.Instance.worldScene);
-             }, true);
-        });
+        LootManager.Instance.GenerateLoot(1, alliesAlive, alliesHealth, data.Outcome, () =>
+         {
+             faderCanvas.SetFader(1, 1f, () =>
+                 {
+                     BattleInitializer.Instance.LoadWorldScene(GameManager.Instance.worldScene);
+                 });
+         }, true);
     }
 
     private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over
