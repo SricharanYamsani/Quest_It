@@ -27,6 +27,8 @@ public class BattleManager : Singleton<BattleManager>
 
     public List<SpawnPoint> spawns = new List<SpawnPoint>();
 
+    public ViewFader faderCanvas;
+
     // Events 
     public event Action GameInit;
 
@@ -124,7 +126,10 @@ public class BattleManager : Singleton<BattleManager>
 
         LootManager.Instance.GenerateLoot(1, alliesAlive, alliesHealth, data.Outcome, () =>
          {
-             BattleInitializer.Instance.LoadWorldScene(GameManager.Instance.worldScene);
+             faderCanvas.SetFader(1, 1f, () =>
+                 {
+                     BattleInitializer.Instance.LoadWorldScene(GameManager.Instance.worldScene);
+                 });
          }, true);
     }
 
@@ -189,9 +194,8 @@ public class BattleManager : Singleton<BattleManager>
         {
             GeneratePlayers();
         }
+            InitializeBattle(InformationHandler.Instance.lobbyPlayers);
        
-        InitializeBattle(InformationHandler.Instance.lobbyPlayers);
-
         //cameraController.SwitchCameraType(VirtualCameraType.GROUPCOMPOSER);
     }
 
@@ -266,16 +270,21 @@ public class BattleManager : Singleton<BattleManager>
     {
         yield return null;
 
-        CalculateTeamPlayers();
+        faderCanvas.SetFader(0, 2f, () =>
+        {
+            CalculateTeamPlayers();
 
-        Sortplayers();
+            Sortplayers();
 
-        GameInit?.Invoke();
+            GameInit?.Invoke();
 
-        SwitchPlayState(BattleStates.BATTLE);
+            SoundManager.Instance.PlayBGMusic("Stage1");
+
+            SwitchPlayState(BattleStates.BATTLE);
+        });
     }
-    #endregion
-    public void CalculateTeamPlayers() // Calculate if it is Team Red or Team Blue
+        #endregion
+        public void CalculateTeamPlayers() // Calculate if it is Team Red or Team Blue
     {
         foreach (BattlePlayer player in validPlayers)
         {

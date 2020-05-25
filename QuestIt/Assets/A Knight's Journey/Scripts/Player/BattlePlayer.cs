@@ -7,14 +7,7 @@ using TMPro;
 using DG.Tweening;
 using Photon.Realtime;
 
-public class
-
-
-
-
-
-
-    BattlePlayer : MonoBehaviour
+public class BattlePlayer : MonoBehaviour
 {
     public PlayerInfo playerInfo = new PlayerInfo();
 
@@ -57,8 +50,6 @@ public class
 
     public Transform torsoTransform;
 
-    public RectTransform reactionLabel;
-
     public Transform OriginalSpawn; // player spawn Position
 
     public Transform bottomTransform;
@@ -78,8 +69,6 @@ public class
     public Transform TorsoParent;
 
     #endregion
-
-    public TextMeshProUGUI reactionText;
 
     #region Properties
     /// <summary>Returns true if Battle Player is the user. </summary>
@@ -336,26 +325,30 @@ public class
     {
         List<BattleChoice> allowed = new List<BattleChoice>();
 
+        BattleChoice m_Choice = null;
+
         for (int i = 0; i < validChoices.Count; i++)
         {
-            if (validChoices[i].m_Currency == Currency.HEALTH)
+            m_Choice = validChoices[i];
+
+            if (m_Choice.m_Currency == Currency.HEALTH)
             {
-                if (CurrentHealth - validChoices[i].m_CurrencyAmount > 1)
+                if (CurrentHealth > m_Choice.m_CurrencyAmount)
                 {
-                    allowed.Add(validChoices[i]);
+                    allowed.Add(m_Choice);
                 }
             }
-            else if (validChoices[i].m_Currency == Currency.MANA)
+            else if (m_Choice.m_Currency == Currency.MANA)
             {
-                if (CurrentMana - validChoices[i].m_CurrencyAmount > 0)
+                if (CurrentMana > m_Choice.m_CurrencyAmount)
                 {
-                    allowed.Add(validChoices[i]);
+                    allowed.Add(m_Choice);
                 }
             }
         }
         if (allowed.Count > 0)
         {
-            currentChoice = validChoices[UnityEngine.Random.Range(0, allowed.Count)];
+            currentChoice = allowed[UnityEngine.Random.Range(0, allowed.Count)];
 
             bool canSelect = false;
 
@@ -432,8 +425,6 @@ public class
         {
             mPlayerController.SetTrigger(AnimationType.BLOCK.ToString());
 
-            reactionText.text = "MISS!";
-
             m = Instantiate<GameObject>(ResourceManager.Instance.reactionObjects["Shield"], leftHandSpawnOutside);
         }
         else if (PlayerState == PlayerState.HURT)
@@ -441,8 +432,6 @@ public class
             mPlayerController.SetTrigger(AnimationType.MIDHIT.ToString());
 
             m = Instantiate<GameObject>(ResourceManager.Instance.reactionObjects["Blood"], torsoTransform);
-
-            reactionText.text = "HIT";
         }
         // need to show a shield or blood work.
         SetUpdateUI();

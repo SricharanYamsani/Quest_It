@@ -9,9 +9,9 @@ public class StartLobbyButton : MonoBehaviour
 {
     public GameObject lobbyGameObject;
 
-    public List<Image> teamRed = new List<Image>();
+    public Image teamRed;
 
-    public List<Image> teamBlue = new List<Image>();
+    public Image teamBlue;
 
     private List<BattleCharacters> redCharacters = new List<BattleCharacters>();
 
@@ -22,6 +22,10 @@ public class StartLobbyButton : MonoBehaviour
     public Image fillCircle;
 
     public TextMeshProUGUI fillAmount;
+
+    public RectTransform redTransform;
+
+    public RectTransform blueTransform;
 
     private void Start()
     {
@@ -38,41 +42,26 @@ public class StartLobbyButton : MonoBehaviour
                 blueCharacters.Add(pInfo.character);
             }
         }
+        teamRed.sprite = ResourceManager.Instance.playerIcons[redCharacters[0].ToString()];
 
-        for (int i = 0; i < teamRed.Count; i++)
-        {
-            if (i < redCharacters.Count)
-            {
-                teamRed[i].sprite = ResourceManager.Instance.playerIcons[redCharacters[i].ToString()];
+        teamBlue.sprite = ResourceManager.Instance.playerIcons[blueCharacters[0].ToString()];
 
-                teamRed[i].gameObject.SetActive(true);
-            }
-            else
-            {
-                teamRed[i].gameObject.SetActive(false);
-            }
-        }
-        for (int j = 0; j < teamBlue.Count; j++)
-        {
-            if (j < blueCharacters.Count)
-            {
-                teamBlue[j].sprite = ResourceManager.Instance.playerIcons[blueCharacters[j].ToString()];
+        redTransform.anchoredPosition = blueTransform.anchoredPosition = new Vector2(0, -1030);
 
-                teamBlue[j].gameObject.SetActive(true);
-            }
-            else
-            {
-                teamBlue[j].gameObject.SetActive(false);
-            }
-        }
+        Sequence m_Sequence = DOTween.Sequence();
 
         fillCircle.fillAmount = 0;
 
-        fillCircle.DOFillAmount(1, 5).OnUpdate(() =>
+        m_Sequence.Append(redTransform.DOAnchorPosY(0, 0.7f));
+
+        m_Sequence.Join(blueTransform.DOAnchorPosY(0, 0.75f));
+
+        m_Sequence.Append(fillCircle.DOFillAmount(1, 5).OnUpdate(() =>
         {
             fillAmount.text = ((fillCircle.fillAmount) * 100).ToString("0");
-        })
-         .OnComplete(() =>
+        }));
+
+        m_Sequence.OnComplete(() =>
         {
             battleStance.StartLobby();
 

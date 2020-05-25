@@ -30,7 +30,7 @@ MonoBehaviour:
   attributeChange: 0
   endTime: 5
   description: 
-  moveName: 
+  moveName: MuPanacea!
   itemName: 11
   consumableWeapon: {fileID: -6779147246751792646, guid: ff672eaca96d32c419d7a1f1b0346e8d,
     type: 3}

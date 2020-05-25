@@ -13,6 +13,8 @@ public class LoadManager : Singleton<LoadManager>
 
     protected override void Awake()
     {
+        isDontDestroyOnLoad = true;
+
         base.Awake();
     }
     public void LoadBattleScene(List<PlayerInfo> listOfPlayers, string battleGround)
@@ -79,16 +81,19 @@ public class LoadManager : Singleton<LoadManager>
             {
                 InformationHandler.Instance.SetLobby(listOfPlayers);
 
-                loadOperation.allowSceneActivation = true;
-
                 while (!InformationHandler.Instance.isLoaded)
                 {
                     yield return null;
                 }
 
-                loadUI.backgroundCanvas.DOFade(0, 0.2f).OnComplete(() =>
+                loadOperation.allowSceneActivation = true;
+
+                loadUI.loadingImage.DOFillAmount(1, 0.3f).OnComplete(() =>
                 {
-                    loadUI.gameObject.SetActive(false);
+                    loadUI.backgroundCanvas.DOFade(0, 0.5f).OnComplete(() =>
+                    {
+                        loadUI.gameObject.SetActive(false);
+                    });
                 });
             }
         }
@@ -106,12 +111,11 @@ public class LoadManager : Singleton<LoadManager>
 
             if (loadOperation.progress >= 0.9f)
             {
-                loadOperation.allowSceneActivation = true;
+                yield return new WaitForSeconds(1);
 
-                while (!InformationHandler.Instance.isLoaded)
-                {
-                    yield return null;
-                }
+                loadUI.loadingImage.fillAmount = 1;
+
+                loadOperation.allowSceneActivation = true;
 
                 loadUI.backgroundCanvas.DOFade(0, 0.2f).OnComplete(() =>
                 {

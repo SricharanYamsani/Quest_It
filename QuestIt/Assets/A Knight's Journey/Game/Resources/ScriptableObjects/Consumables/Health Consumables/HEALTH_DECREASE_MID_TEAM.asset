@@ -15,7 +15,7 @@ MonoBehaviour:
   battleTask: 6
   targetRange: 2
   TargetCondition: 2
-  percentageType: 2
+  percentageType: 0
   choiceType: 3
   affectedAttribute: 1
   m_Currency: 0
@@ -26,11 +26,11 @@ MonoBehaviour:
   ICON: {fileID: 21300000, guid: efe3f31d067f24e998a90be1810a5355, type: 3}
   soundClip: {fileID: 0}
   m_CurrencyAmount: 50
-  moveAffectDuration: 5
+  moveAffectDuration: 0
   attributeChange: 0
   endTime: 5
   description: 
-  moveName: 
+  moveName: PuMudoon
   itemName: 10
   consumableWeapon: {fileID: -6779147246751792646, guid: ff672eaca96d32c419d7a1f1b0346e8d,
     type: 3}

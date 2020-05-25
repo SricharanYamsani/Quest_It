@@ -5,25 +5,23 @@ using System;
 using DG.Tweening;
 using UnityEngine.UI;
 
-public class ViewFader : Singleton<ViewFader>
+public class ViewFader : MonoBehaviour
 {
-    public Image background;
+    public FaderCanvas m_Canvas = null;
 
-    public void SetFader(bool fade, Action callback = null)
+    private Sequence m_Sequence;
+
+    public void SetFader(float fade, float time = 1f, Action callback = null)
     {
-        if (!fade)
+        if (m_Sequence != null)
         {
-            background.gameObject.SetActive(true);
+            m_Sequence.Kill((true));
         }
 
-        background.DOFade(fade ? 0 : 1, 0.4f).OnComplete(() =>
-        {
-            callback?.Invoke();
+        m_Sequence = DOTween.Sequence();
 
-            if (fade)
-            {
-                background.gameObject.SetActive(false);
-            }
-        });
+        m_Sequence.Append(m_Canvas.background.DOFade(fade, time));
+
+        m_Sequence.OnComplete(() => { callback?.Invoke(); });
     }
 }
