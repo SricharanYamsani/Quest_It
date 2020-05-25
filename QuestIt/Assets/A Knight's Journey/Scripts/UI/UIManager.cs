@@ -15,6 +15,8 @@ public class UIManager : MonoBehaviour
     public RectTransform hudPanel;
     public RectTransform overlayPanel;
 
+    [SerializeField] StreamVideo videoPlayer;
+
     [SerializeField]
     public RPG.Control.PlayerWorldController playerController;
 
@@ -58,7 +60,7 @@ public class UIManager : MonoBehaviour
 
         playerCharacteristicsButton.onClick.AddListener(OnPlayerCharacteristicsButtonClicked);
 
-        playerCharacteristicsIcon.sprite = GetPlayerImage(playerController.playerInfo.character);
+        //playerCharacteristicsIcon.sprite = GetPlayerImage(playerController.playerInfo.character);
     }
 
     void OnPlayerCharacteristicsButtonClicked()
@@ -69,7 +71,8 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            playerCharacteristicsManager = Instantiate(playerCharacteristicsManagerPrefab, overlayPanel.transform);
+            playerCharacteristicsManagerPrefab.GetComponent<BgVideoPlayer>().videoPlayer = videoPlayer;
+            playerCharacteristicsManager = Instantiate(playerCharacteristicsManagerPrefab, overlayPanel.transform);            
         }
     }
 

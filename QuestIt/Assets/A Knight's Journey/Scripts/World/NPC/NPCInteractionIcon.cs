@@ -8,9 +8,16 @@ namespace RPG.NPCs
     {
         [SerializeField] NPC parentNPC;
 
+        //--------------------
         public void Interact()
         {
             parentNPC.OnPlayerInteraction();
+        }
+
+        //-----------------------
+        public NPC GetParentNPC()
+        {
+            return parentNPC;
         }
     }
 }

@@ -18,7 +18,7 @@ public class PlayerCharacteristicsManager : MonoBehaviour
 
     public Image playerIcon;
 
-    public Text playerName;
+    public TextMeshProUGUI playerName;
     private void Start()
     {
         SetUpButtons();

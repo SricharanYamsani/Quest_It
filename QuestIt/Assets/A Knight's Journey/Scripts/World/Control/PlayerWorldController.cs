@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using RPG.Movement;
 using RPG.NPCs;
+using System;
 
 namespace RPG.Control
 {
@@ -16,13 +17,23 @@ namespace RPG.Control
         [SerializeField] EventSystem eventSystem;
         public PlayerInfo playerInfo;
 
+        public enum CursorType { None, Duel, Dialogue }
+        [System.Serializable]
+        struct CursorMapping
+        {
+            public CursorType cursorType;
+            public Texture2D texture;
+            public Vector2 hotspot;
+        }
+        [SerializeField] List<CursorMapping> cursorMappings;
+
         //============================Functions=====================//
 
         //------------------
         private void Start()
         {
             worldMovement = GetComponent<WorldMovement>();
-            follow = GetComponent<FollowNPC>();
+            follow = GetComponent<FollowNPC>();                         
             Input.multiTouchEnabled = false;
             playerInfo.IsPlayer = true;
             playerInfo.IsTeamRed = true;
@@ -34,10 +45,23 @@ namespace RPG.Control
         //-------------------
         private void Update()
         {
+            if(InteractWithUI()) { return; }
+
             //Action priority to prioritize NPC interaction over movement
             if (InteractWithNPC()) { return; }
             if (GoToNPC()) { return; }
             MoveToCursor();
+            SetCursor();
+        }        
+
+        //--------------------------
+        public bool InteractWithUI()
+        {
+            if(eventSystem.IsPointerOverGameObject())
+            {
+                return true;
+            }
+            return false;
         }
 
         //Moves to the point defined by the mouse cursor position in world space
@@ -46,102 +70,94 @@ namespace RPG.Control
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (!eventSystem.IsPointerOverGameObject())
+                RaycastHit hit;
+                if (Physics.Raycast(GetRayFromInput(Input.mousePosition), out hit))
                 {
-                    RaycastHit hit;
-                    if (Physics.Raycast(GetRayFromInput(Input.mousePosition), out hit))
-                    {
-                        worldMovement.StartMoveAction(hit.point);
-                    }
-                }
-            }
-
-            else if(Input.touchCount > 0)
-            {
-                if (!eventSystem.IsPointerOverGameObject())
-                {
-                    RaycastHit hit;
-                    if (Physics.Raycast(GetRayFromInput(Input.GetTouch(0).position), out hit))
-                    {
-                        worldMovement.StartMoveAction(hit.point);
-                    }
-                }
-            }
-        }
-
-        //------------
-        bool GoToNPC()
-        {
-            if(Input.GetMouseButtonDown(0))
-            {
-                if (!eventSystem.IsPointerOverGameObject())
-                {
-                    RaycastHit[] hits = Physics.RaycastAll(GetRayFromInput(Input.mousePosition));
-
-                    for (int i = 0; i < hits.Length; i++)
-                    {
-                        if (hits[i].transform.GetComponent<NPC>())
-                        {
-                            worldMovement.StartMoveAction(hits[i].point);
-                            follow.SetTargetTransform(hits[i].transform);
-                            return true;
-                        }
-                    }
+                    worldMovement.StartMoveAction(hit.point);
                 }
             }
 
             else if (Input.touchCount > 0)
             {
-                if (!eventSystem.IsPointerOverGameObject())
+                RaycastHit hit;
+                if (Physics.Raycast(GetRayFromInput(Input.GetTouch(0).position), out hit))
                 {
-                    RaycastHit hit;
-                    if (Physics.Raycast(GetRayFromInput(Input.GetTouch(0).position), out hit))
-                    {
-                        worldMovement.StartMoveAction(hit.point);
-                    }
+                    worldMovement.StartMoveAction(hit.point);
                 }
-            }
+            }           
+        }        
 
+        //------------
+        bool GoToNPC()
+        {
+            RaycastHit[] hits = Physics.RaycastAll(GetRayFromInput(Input.mousePosition));
+
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].transform.GetComponent<NPC>())
+                {
+                    if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
+                    {
+                        worldMovement.StartMoveAction(hits[i].point);
+                        follow.SetTargetTransform(hits[i].transform);
+                    }
+                    SetCursor(hits[i].transform.GetComponent<NPC>());
+                    return true;
+                }
+            }         
             return false;
         }
 
         //--------------------
         bool InteractWithNPC()
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (!eventSystem.IsPointerOverGameObject())
-                {
-                    RaycastHit[] hits = Physics.RaycastAll(GetRayFromInput(Input.mousePosition));
+            RaycastHit[] hits = Physics.RaycastAll(GetRayFromInput(Input.mousePosition));
 
-                    for (int i = 0; i < hits.Length; i++)
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].transform.GetComponent<NPCInteractionIcon>())
+                {
+                    if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
                     {
-                        if (hits[i].transform.GetComponent<NPCInteractionIcon>())
-                        {
-                            hits[i].transform.GetComponent<NPCInteractionIcon>().Interact();
-                            return true;
-                        }
+                        hits[i].transform.GetComponent<NPCInteractionIcon>().Interact();
                     }
+                    SetCursor(hits[i].transform.GetComponent<NPCInteractionIcon>().GetParentNPC());
+                    return true;
                 }
             }
-            else if(Input.touchCount > 0)
-            {
-                if (!eventSystem.IsPointerOverGameObject())
-                {
-                    RaycastHit[] hits = Physics.RaycastAll(GetRayFromInput(Input.GetTouch(0).position));
-
-                    for (int i = 0; i < hits.Length; i++)
-                    {
-                        if (hits[i].transform.GetComponent<NPCInteractionIcon>())
-                        {
-                            hits[i].transform.GetComponent<NPCInteractionIcon>().Interact();
-                            return true;
-                        }
-                    }
-                }
-            }
-
             return false;
+        }
+
+        //------------------------------------
+        private void SetCursor(NPC npc = null)
+        {
+            CursorMapping cursorMapping = GetCursorMapping(CursorType.None);
+            if (npc != null)
+            {
+                if (npc.npcType == NPC.NPCType.Duel)
+                {
+                    cursorMapping = GetCursorMapping(CursorType.Duel);
+                }
+                else if (npc.npcType == NPC.NPCType.QuestGiver)
+                {
+                    cursorMapping = GetCursorMapping(CursorType.Dialogue);
+                }
+            }
+            
+            Cursor.SetCursor(cursorMapping.texture, cursorMapping.hotspot, CursorMode.Auto);
+        }
+
+        //-----------------------------------------------------
+        private CursorMapping GetCursorMapping(CursorType type)
+        {
+            for (int i = 0; i < cursorMappings.Count; i++)
+            {
+                if(cursorMappings[i].cursorType == type)
+                {
+                    return cursorMappings[i];
+                }
+            }
+            return cursorMappings[0];
         }
 
         //--------------------------------------------------
