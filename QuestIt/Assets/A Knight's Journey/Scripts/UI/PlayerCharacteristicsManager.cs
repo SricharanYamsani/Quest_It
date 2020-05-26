@@ -25,7 +25,7 @@ public class PlayerCharacteristicsManager : MonoBehaviour
 
     public Image playerIcon;
 
-    public Text playerName;
+    public TextMeshProUGUI playerName;
 
     bool movesPanelActive;
 
