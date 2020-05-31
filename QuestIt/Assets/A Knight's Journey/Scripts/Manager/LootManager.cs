@@ -5,7 +5,7 @@ using UnityEngine;
 public class LootManager : Singleton<LootManager>
 {
     [SerializeField] LootPanel lootPanelPrefab;
-    public void GenerateLoot(int difficulty, int alliesLeft, int totalHealthLeft,BattleOutcome outcome,UnityEngine.Events.UnityAction action, bool instantiatePanel = true)
+    public void GenerateLoot(int difficulty,int experienceGained ,int alliesLeft, int totalHealthLeft,BattleOutcome outcome,UnityEngine.Events.UnityAction action, bool instantiatePanel = true)
     {
         if (lootPanelPrefab == null)
         {

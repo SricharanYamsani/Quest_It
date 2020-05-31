@@ -124,13 +124,47 @@ public class BattleManager : Singleton<BattleManager>
 
         GameManager.Instance.UpdateQuests(data);
 
-        LootManager.Instance.GenerateLoot(1, alliesAlive, alliesHealth, data.Outcome, () =>
-         {
-             faderCanvas.SetFader(1, 1f, () =>
-                 {
-                     BattleInitializer.Instance.LoadWorldScene(GameManager.Instance.worldScene);
-                 });
-         }, true);
+        int xpGained = CalculateExperienceGained(data);
+
+        LootManager.Instance.GenerateLoot(1, xpGained, alliesAlive, alliesHealth, data.Outcome, () =>
+          {
+              faderCanvas.SetFader(1, 1f, () =>
+                  {
+                      BattleInitializer.Instance.LoadWorldScene(GameManager.Instance.worldScene);
+                  });
+          }, true);
+    }
+
+    private int CalculateExperienceGained(BattleData data)
+    {
+        int xpPoints = 0;
+
+        if (data.Outcome == BattleOutcome.WIN)
+        {
+            xpPoints += 100;
+
+            if (data.RoundsPlayed < 5)
+            {
+                xpPoints += 75;
+            }
+            else
+            {
+                xpPoints += 25;
+            }
+        }
+        else
+        {
+            xpPoints += 35;
+
+            if (data.RoundsPlayed > 5)
+            {
+                xpPoints += 75;
+            }
+        }
+
+        xpPoints *= (GameManager.PlayerLevel + 1);
+
+        return xpPoints;
     }
 
     private void RoundOverFunc() // Round Over Method  - Call It EveryTime and Check for Game Over

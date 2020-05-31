@@ -13,14 +13,14 @@ public class GameManager : Singleton<GameManager>
     public static List<Consumables> allConsumables;
     public static List<Moves> availableMoves;
 
-    [SerializeField]private PlayerInventory playerInventory;
+    [SerializeField] private PlayerInventory playerInventory;
 
     [SerializeField] List<Quest> playerQuests = new List<Quest>();
     [SerializeField] List<Quest> completedQuests = new List<Quest>();
     Quest currentTrackedQuest;
 
     public List<Transform> spawnPositions;
-    public DuelNPC []currentDuelNPCs;
+    public DuelNPC[] currentDuelNPCs;
     public int currentNPCId;
 
     public bool hasPlayerLost;
@@ -36,7 +36,7 @@ public class GameManager : Singleton<GameManager>
                 questLog = FindObjectOfType<QuestLog>();
             }
             return questLog;
-        }        
+        }
     }
 
     //------------------------------------------
@@ -67,6 +67,23 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    private static int experience;
+
+    public static int Experience
+    {
+        get
+        {
+            return experience;
+        }
+        private set
+        {
+            experience = value;
+
+            PlayerLevel = CalculateLevel(Experience);
+        }
+    }
+
+
     public Vector3 playerWorldPos;
     public Vector3 hospitalWorldPos;
 
@@ -88,7 +105,7 @@ public class GameManager : Singleton<GameManager>
 
     public PlayerInventory GetPlayerInventory()
     {
-        if(playerInventory == null)
+        if (playerInventory == null)
         {
             Debug.LogError("Player inventory was null");
             playerInventory = new PlayerInventory();
@@ -170,18 +187,18 @@ public class GameManager : Singleton<GameManager>
         completedQuests.Add(quest);
         for (int i = 0; i < playerQuests.Count; i++)
         {
-            if(playerQuests[i].id == quest.id)
+            if (playerQuests[i].id == quest.id)
             {
                 playerQuests.RemoveAt(i);
                 break;
             }
         }
-    }    
+    }
 
     //------------------------------------------------------
     public void AddAvailableQuestToPlayerQuests(Quest quest)
     {
-        playerQuests.Add(quest);        
+        playerQuests.Add(quest);
     }
 
     //----------------------------------
@@ -206,6 +223,26 @@ public class GameManager : Singleton<GameManager>
     public void OnDisable()
     {
         QuestEvents.QuestCompleted -= AddCompletedQuestToList;
+    }
+
+    private static int CalculateLevel(int exp)
+    {
+        int level = -1;
+
+        for (int i = 0; i < 100; i++)
+        {
+            if (Mathf.Pow(9, i) > exp)
+            {
+                level = i - 1;
+            }
+        }
+
+        if (level.Equals(-1))
+        {
+            level = 100;
+        }
+
+        return level;
     }
 }
 
