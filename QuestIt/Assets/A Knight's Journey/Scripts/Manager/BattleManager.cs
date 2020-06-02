@@ -126,6 +126,8 @@ public class BattleManager : Singleton<BattleManager>
 
         int xpGained = CalculateExperienceGained(data);
 
+        GameManager.Experience += xpGained;
+
         LootManager.Instance.GenerateLoot(1, xpGained, alliesAlive, alliesHealth, data.Outcome, () =>
           {
               faderCanvas.SetFader(1, 1f, () =>

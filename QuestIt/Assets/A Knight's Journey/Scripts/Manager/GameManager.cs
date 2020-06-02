@@ -75,7 +75,7 @@ public class GameManager : Singleton<GameManager>
         {
             return experience;
         }
-        private set
+        set
         {
             experience = value;
 
