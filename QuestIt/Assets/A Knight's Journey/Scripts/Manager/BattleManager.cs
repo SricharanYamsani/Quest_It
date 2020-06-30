@@ -441,9 +441,15 @@ public class BattleManager : Singleton<BattleManager>
         {
             validPlayers[i].UNIQUE_ID = i;
             //cameraController.AddTransformToTargetGroup(validPlayers[i].torsoTransform);
-            cameraController.RegisterTarget(i, validPlayers[i].torsoTransform, validPlayers[i].IsTeamRed);
+            if(cameraController != null)
+            {
+                cameraController.RegisterTarget(i, validPlayers[i].torsoTransform, validPlayers[i].IsTeamRed);
+            }
         }
-        cameraController.OnTargetsRegistered();
+        if(cameraController != null)
+        {
+            cameraController.OnTargetsRegistered();
+        }
 
 
         Setup();
