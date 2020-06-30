@@ -39,7 +39,7 @@ namespace RPG.Control
             playerInfo.IsTeamRed = true;
 
             transform.position = GameManager.Instance.GetPlayerSpawnPosition();
-            Debug.LogError(transform.position);
+            //Debug.LogError(transform.position);
         }
 
         //-------------------

@@ -12,7 +12,7 @@ public class LootManager : Singleton<LootManager>
             lootPanelPrefab = Resources.Load<LootPanel>("Prefabs/UI/LootPanel");
         }
         int coins = 50 * difficulty + 20 * alliesLeft + totalHealthLeft;
-        Debug.LogError(coins);
+        //Debug.LogError(coins);
         PlayerInventory playerInventory = GameManager.Instance.GetPlayerInventory();
 
         playerInventory.AddCoins(coins);

@@ -86,7 +86,7 @@ public class BattleManager : Singleton<BattleManager>
                 playerLost = false;
                 alliesAlive++;
                 alliesHealth += CurrentRedTeam[i].CurrentHealth;
-                Debug.LogError(alliesAlive + alliesHealth);
+                //Debug.LogError(alliesAlive + alliesHealth);
             }
         }
         foreach (BattlePlayer player in CurrentBlueTeam)
@@ -118,7 +118,7 @@ public class BattleManager : Singleton<BattleManager>
 
         data.Outcome = playerLost ? BattleOutcome.LOSE : BattleOutcome.WIN;
 
-        Debug.LogError(data.Outcome);
+        //Debug.LogError(data.Outcome);
 
         GameManager.Instance.hasPlayerLost = playerLost;
 
