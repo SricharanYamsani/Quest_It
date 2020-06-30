@@ -16,7 +16,7 @@ public class UIHighlight : MonoBehaviour, IPointerEnterHandler, ISelectHandler, 
     //----------------------------------------------------
     public void OnPointerEnter(PointerEventData eventData)
     {
-        colorTween = image.DOColor(tweenColor, duration).SetLoops(-1, LoopType.Yoyo);
+        colorTween = image.DOColor(tweenColor, duration);
     }
 
     public void OnSelect(BaseEventData eventData)
@@ -31,7 +31,7 @@ public class UIHighlight : MonoBehaviour, IPointerEnterHandler, ISelectHandler, 
         {
             colorTween.Kill();
         }
-        image.color = defColor;
+        colorTween = image.DOColor(defColor, duration);
     }
 
     //----------------------
