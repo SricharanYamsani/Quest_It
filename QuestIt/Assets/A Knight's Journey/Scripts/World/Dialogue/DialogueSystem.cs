@@ -104,6 +104,7 @@ public class DialogueSystem : MonoBehaviour
     {
         currentDialogIndex = 0;
         dialoguePanel.SetActive(false);
+        backButton.SetActive(false);
         proceedButtonText.text = "Next";
 
         QuestEvents.InteractionFinished();
